@@ -1,4 +1,4 @@
-package com.assertthat.screnshotter.core;
+package com.assertthat.selenium_screnshotter.core;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,9 +10,9 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.assertthat.screnshotter.utils.ImageProcessor;
-import com.assertthat.screnshotter.utils.WebDriverHelper;
-import com.assertthat.screnshotter.utils.WebElementWrapper;
+import com.assertthat.selenium_screnshotter.utils.ImageProcessor;
+import com.assertthat.selenium_screnshotter.utils.WebDriverHelper;
+import com.assertthat.selenium_screnshotter.utils.WebElementWrapper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 

@@ -1,4 +1,4 @@
-package com.assertthat.screnshotter.core;
+package com.assertthat.selenium_screnshotter.core;
 
 import org.openqa.selenium.*;
 

@@ -1,4 +1,4 @@
-package com.assertthat.screnshotter.utils;
+package com.assertthat.selenium_screnshotter.utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

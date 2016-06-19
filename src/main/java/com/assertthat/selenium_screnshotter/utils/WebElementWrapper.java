@@ -1,9 +1,8 @@
-package com.assertthat.screnshotter.utils;
+package com.assertthat.selenium_screnshotter.utils;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.internal.Coordinates;
 
 /**
  * Created by Glib_Briia on 18/06/2016.

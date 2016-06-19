@@ -1,10 +1,10 @@
-package com.assertthat.screnshotter.core;
+package com.assertthat.selenium_screnshotter.core;
 
 import java.awt.Color;
 import java.awt.Font;
 
-import com.assertthat.screnshotter.utils.ImageProcessor;
-import com.assertthat.screnshotter.utils.WebElementWrapper;
+import com.assertthat.selenium_screnshotter.utils.ImageProcessor;
+import com.assertthat.selenium_screnshotter.utils.WebElementWrapper;
 import org.openqa.selenium.*;
 
 /**
