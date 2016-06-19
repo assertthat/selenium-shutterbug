@@ -11,12 +11,9 @@ import org.openqa.selenium.Dimension;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
 import com.assertthat.selenium_screnshotter.utils.ImageProcessor;
 import com.assertthat.selenium_screnshotter.utils.WebDriverHelper;
 import com.assertthat.selenium_screnshotter.utils.WebElementWrapper;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -27,7 +24,7 @@ import javax.imageio.ImageIO;
  */
 public abstract class Screenshot<T extends Screenshot<T>> {
 
-	protected BufferedImage image;
+    protected BufferedImage image;
     private static final String extension = "PNG";
     private String fileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss_SSS"))
             +"."+extension.toLowerCase();

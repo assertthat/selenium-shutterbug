@@ -55,13 +55,9 @@ public class WebDriverHelper {
 
     public static BufferedImage takeScreenshotEntirePage(WebDriver driver) throws IOException {
         int docHeight = executeJsScriptReturn(driver, MAX_DOC_HEIGHT_JS);
-        System.out.println(docHeight);
         int docWidth = executeJsScriptReturn(driver, MAX_DOC_WIDTH_JS);
-        System.out.println(docWidth);
         int viewportWidth = executeJsScriptReturn(driver, VIEWPORT_WIDTH_JS);
-        System.out.println(viewportWidth);
         int viewportHeight = executeJsScriptReturn(driver, VIEWPORT_HEIGHT_JS);
-        System.out.println(viewportHeight);
         BufferedImage combinedImage = new BufferedImage(docWidth, docHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D  g = combinedImage.createGraphics();
         int horizontalIterations =(int) Math.ceil(((double)docWidth)/viewportWidth);
