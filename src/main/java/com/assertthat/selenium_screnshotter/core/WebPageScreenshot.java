@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import com.assertthat.selenium_screnshotter.utils.ImageProcessor;
+import com.assertthat.selenium_screnshotter.utils.WebDriverHelper;
 import com.assertthat.selenium_screnshotter.utils.WebElementWrapper;
 import org.openqa.selenium.*;
 

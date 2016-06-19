@@ -1,10 +1,8 @@
 package com.assertthat.selenium_screnshotter.utils;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
+import java.awt.color.ColorSpace;
+import java.awt.image.*;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
@@ -77,6 +75,12 @@ public class ImageProcessor {
         addText(combined, 0,textFont.getSize() , title, color, textFont);
         g.dispose();
         return combined;
+    }
+
+    public static BufferedImage convertToGrayAndWhite(BufferedImage sourceImage){
+        ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+        op.filter(sourceImage, sourceImage);
+        return sourceImage;
     }
 
 }

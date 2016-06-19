@@ -6,13 +6,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.Dimension;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import com.assertthat.selenium_screnshotter.utils.ImageProcessor;
 import com.assertthat.selenium_screnshotter.utils.WebDriverHelper;
 import com.assertthat.selenium_screnshotter.utils.WebElementWrapper;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -59,6 +63,11 @@ public abstract class Screenshot<T extends Screenshot<T>> {
 		return self();
 	}
 
+    public T monochrome(){
+        this.image = ImageProcessor.convertToGrayAndWhite(this.image);
+        return self();
+    }
+
     protected void setImage(BufferedImage image){
         self().image = image;
     }
@@ -78,6 +87,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
             ImageIO.write(image, extension, screenshotFile);
         } catch (IOException e) {
             e.printStackTrace();
+            //TODO
         }
     }
 
@@ -95,9 +105,13 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     public static WebElementScreenshot element(WebDriver driver, WebElement element){
         WebElementScreenshot el = new WebElementScreenshot(driver, element);
         try {
+            WebDriverHelper.scrollToElement(driver,element);
             el.setImage(WebDriverHelper.takeScreenshot(driver));
             WebElementWrapper wrapper = new WebElementWrapper(element);
-            el.setImage(ImageProcessor.getElement(el.getImage(), wrapper.getWidth(),wrapper.getHeight(), wrapper.getX(), wrapper.getY()));
+            Object[] rect = WebDriverHelper.getBoundingClientRect(element, driver);
+            Point start = (Point) rect[0];
+            Dimension size = (Dimension) rect[1];
+            el.setImage(ImageProcessor.getElement(el.getImage(), wrapper.getWidth(),wrapper.getHeight(), start.getX(),start.getY()));
         } catch (IOException e) {
             e.printStackTrace();
             //TODO
