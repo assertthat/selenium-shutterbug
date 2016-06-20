@@ -10,51 +10,51 @@ import org.openqa.selenium.*;
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
-public class WebPageScreenshot extends Screenshot<WebPageScreenshot> {
+public class PageScreenshot extends Screenshot<PageScreenshot> {
 
-    WebPageScreenshot(WebDriver driver) {
+    PageScreenshot(WebDriver driver) {
         this.driver = driver;
     }
 
-    public WebPageScreenshot highlight(WebElement element) {
+    public PageScreenshot highlight(WebElement element) {
         highlight(element, Color.red, 3);
         return this;
     }
 
-    public WebPageScreenshot highlight(WebElement element, Color color, int lineWidth) {
+    public PageScreenshot highlight(WebElement element, Color color, int lineWidth) {
         image = ImageProcessor.highlight(image, new Coordinates(element), color, lineWidth);
         return this;
     }
 
-    public WebPageScreenshot highlightWithText(WebElement element, String text) {
+    public PageScreenshot highlightWithText(WebElement element, String text) {
         highlightWithText(element, Color.red, 3, text, Color.red, new Font("Serif", Font.BOLD, 20));
         return this;
     }
 
-    public WebPageScreenshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
+    public PageScreenshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
         highlight(element, elementColor, 0);
         Coordinates coords = new Coordinates(element);
         image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
         return this;
     }
 
-    public WebPageScreenshot blur() {
+    public PageScreenshot blur() {
         image = ImageProcessor.blur(image);
         return this;
     }
 
-    public WebPageScreenshot blur(WebElement element) {
+    public PageScreenshot blur(WebElement element) {
         image = ImageProcessor.blurArea(image, new Coordinates(element));
         return this;
     }
 
-    public WebPageScreenshot blurExcept(WebElement element) {
+    public PageScreenshot blurExcept(WebElement element) {
         image = ImageProcessor.blurExceptArea(image, new Coordinates(element));
         return this;
     }
 
     @Override
-    protected WebPageScreenshot self() {
+    protected PageScreenshot self() {
         return this;
     }
 

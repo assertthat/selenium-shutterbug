@@ -87,35 +87,35 @@ public abstract class Screenshot<T extends Screenshot<T>> {
         }
     }
 
-    public static WebPageScreenshot page(WebDriver driver) {
+    public static PageScreenshot page(WebDriver driver) {
         Browser browser = new Browser(driver);
-        WebPageScreenshot webPageScreenshot = new WebPageScreenshot(driver);
-        webPageScreenshot.setImage(Screenshotter.takeScreenshot(browser));
-        return webPageScreenshot;
+        PageScreenshot pageScreenshot = new PageScreenshot(driver);
+        pageScreenshot.setImage(Screenshotter.takeScreenshot(browser));
+        return pageScreenshot;
     }
 
-    public static WebPageScreenshot page(WebDriver driver, ScrollStrategy scroll) {
+    public static PageScreenshot page(WebDriver driver, ScrollStrategy scroll) {
         Browser browser = new Browser(driver);
-        WebPageScreenshot webPageScreenshot = new WebPageScreenshot(driver);
+        PageScreenshot pageScreenshot = new PageScreenshot(driver);
         switch (scroll) {
             case HORIZONTALLY:
-                webPageScreenshot.setImage(Screenshotter.takeScreenshotScrollHorizontally(browser));
+                pageScreenshot.setImage(Screenshotter.takeScreenshotScrollHorizontally(browser));
             case VERTICALLY:
-                webPageScreenshot.setImage(Screenshotter.takeScreenshotScrollVertically(browser));
+                pageScreenshot.setImage(Screenshotter.takeScreenshotScrollVertically(browser));
             case BOTH_DIRECTIONS:
-                webPageScreenshot.setImage(Screenshotter.takeScreenshotEntirePage(browser));
+                pageScreenshot.setImage(Screenshotter.takeScreenshotEntirePage(browser));
         }
-        return webPageScreenshot;
+        return pageScreenshot;
     }
 
 
-    public static WebElementScreenshot element(WebDriver driver, WebElement element) {
+    public static ElementScreenshot element(WebDriver driver, WebElement element) {
         Browser browser = new Browser(driver);
-        WebElementScreenshot el = new WebElementScreenshot(driver, element);
+        ElementScreenshot elementScreenshot = new ElementScreenshot(driver, element);
         browser.scrollToElement(element);
-        el.setImage(Screenshotter.takeScreenshot(browser));
-        el.setImage(ImageProcessor.getElement(el.getImage(), browser.getBoundingClientRect(element)));
-        return el;
+        elementScreenshot.setImage(Screenshotter.takeScreenshot(browser));
+        elementScreenshot.setImage(ImageProcessor.getElement(elementScreenshot.getImage(), browser.getBoundingClientRect(element)));
+        return elementScreenshot;
     }
 
 }
