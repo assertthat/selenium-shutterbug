@@ -111,5 +111,4 @@ public abstract class Screenshot<T extends Screenshot<T>> {
         }
         FileUtil.writeImage(image, extension, screenshotFile);
     }
-
 }
