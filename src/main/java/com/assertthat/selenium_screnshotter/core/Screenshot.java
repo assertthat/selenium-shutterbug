@@ -43,8 +43,10 @@ public abstract class Screenshot<T extends Screenshot<T>> {
         switch (scroll) {
             case HORIZONTALLY:
                 pageScreenshot.setImage(Screenshotter.takeScreenshotScrollHorizontally(browser));
+                break;
             case VERTICALLY:
                 pageScreenshot.setImage(Screenshotter.takeScreenshotScrollVertically(browser));
+                break;
             case BOTH_DIRECTIONS:
                 pageScreenshot.setImage(Screenshotter.takeScreenshotEntirePage(browser));
         }

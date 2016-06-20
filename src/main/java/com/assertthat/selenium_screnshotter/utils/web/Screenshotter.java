@@ -24,7 +24,7 @@ public class Screenshotter {
     }
 
     public static BufferedImage takeScreenshotEntirePage(Browser browser) {
-        BufferedImage combinedImage = new BufferedImage(browser.getDocWidth(), browser.getDocWidth(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage combinedImage = new BufferedImage(browser.getDocWidth(), browser.getDocHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = combinedImage.createGraphics();
         int horizontalIterations = (int) Math.ceil(((double) browser.getDocWidth()) / browser.getViewportWidth());
         int verticalIterations = (int) Math.ceil(((double) browser.getDocHeight()) / browser.getViewportHeight());
@@ -32,6 +32,7 @@ public class Screenshotter {
             browser.scrollTo(0, j * browser.getViewportHeight());
             for (int i = 0; i < horizontalIterations; i++) {
                 browser.scrollTo(i * browser.getViewportWidth(), browser.getViewportHeight() * j);
+                browser.wait(50);
                 g.drawImage(takeScreenshot(browser), browser.getCurrentScrollX(), browser.getCurrentScrollY(), null);
             }
         }
