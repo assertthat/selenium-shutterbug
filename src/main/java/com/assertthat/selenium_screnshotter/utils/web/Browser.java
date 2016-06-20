@@ -1,10 +1,8 @@
 package com.assertthat.selenium_screnshotter.utils.web;
 
 import com.assertthat.selenium_screnshotter.utils.file.FileUtil;
-import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +30,14 @@ public class Browser {
 
     public Browser(WebDriver driver) {
         this.driver = driver;
+    }
+
+    public static void wait(int milis) {
+        try {
+            Thread.sleep(milis);
+        } catch (InterruptedException e) {
+            throw new UnableTakeScreenshotException(e);
+        }
     }
 
     public WebDriver getUnderlyingDriver() {
@@ -82,13 +88,5 @@ public class Browser {
         String script = FileUtil.getJsScript(filePath);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         return js.executeScript(script, arg);
-    }
-
-    public static void wait(int milis) {
-        try {
-            Thread.sleep(milis);
-        } catch (InterruptedException e) {
-            throw new UnableTakeScreenshotException(e);
-        }
     }
 }

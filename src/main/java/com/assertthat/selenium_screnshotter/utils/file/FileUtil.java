@@ -4,6 +4,9 @@ package com.assertthat.selenium_screnshotter.utils.file;
 import com.assertthat.selenium_screnshotter.utils.web.UnableTakeScreenshotException;
 import org.apache.commons.io.IOUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -16,6 +19,14 @@ public class FileUtil {
             return IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath));
         } catch (IOException e) {
             throw new UnableTakeScreenshotException("Unable to load JS script", e);
+        }
+    }
+
+    public static void writeImage(BufferedImage imageFile, String extension, File fileToWriteTo) {
+        try {
+            ImageIO.write(imageFile, extension, fileToWriteTo);
+        } catch (IOException e) {
+            throw new UnableTakeScreenshotException(e);
         }
     }
 }

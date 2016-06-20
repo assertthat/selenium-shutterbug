@@ -1,7 +1,7 @@
 package com.assertthat.selenium_screnshotter.utils.web;
 
-import org.apache.commons.io.IOUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

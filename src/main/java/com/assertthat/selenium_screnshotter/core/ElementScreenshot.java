@@ -1,6 +1,7 @@
 package com.assertthat.selenium_screnshotter.core;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * Created by Glib_Briia on 17/06/2016.

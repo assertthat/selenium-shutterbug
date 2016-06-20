@@ -1,11 +1,11 @@
 package com.assertthat.selenium_screnshotter.core;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import com.assertthat.selenium_screnshotter.utils.image.ImageProcessor;
 import com.assertthat.selenium_screnshotter.utils.web.Coordinates;
-import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import java.awt.*;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
