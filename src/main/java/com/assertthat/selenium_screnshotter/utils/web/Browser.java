@@ -39,38 +39,32 @@ public class Browser {
     }
 
     public int getCurrentScrollX() {
-        return executeJsScript(Browser.CURRENT_SCROLL_X_JS);
+        return ((Long) executeJsScript(Browser.CURRENT_SCROLL_X_JS)).intValue();
     }
 
     public int getCurrentScrollY() {
-        return executeJsScript(Browser.CURRENT_SCROLL_Y_JS);
+        return ((Long) executeJsScript(Browser.CURRENT_SCROLL_Y_JS)).intValue();
     }
 
     public int getDocWidth() {
-        return docWidth != -1 ? docWidth : executeJsScript(MAX_DOC_WIDTH_JS);
+        return docWidth != -1 ? docWidth : ((Long) executeJsScript(MAX_DOC_WIDTH_JS)).intValue();
     }
 
     public int getDocHeight() {
-        return docHeight != -1 ? docHeight : executeJsScript(MAX_DOC_HEIGHT_JS);
+        return docHeight != -1 ? docHeight : ((Long) executeJsScript(MAX_DOC_HEIGHT_JS)).intValue();
     }
 
     public int getViewportWidth() {
-        return viewportWidth != -1 ? viewportWidth : executeJsScript(VIEWPORT_WIDTH_JS);
+        return viewportWidth != -1 ? viewportWidth : ((Long) executeJsScript(VIEWPORT_WIDTH_JS)).intValue();
     }
 
     public int getViewportHeight() {
-        return viewportHeight != -1 ? viewportHeight : executeJsScript(VIEWPORT_HEIGHT_JS);
+        return viewportHeight != -1 ? viewportHeight : ((Long) executeJsScript(VIEWPORT_HEIGHT_JS)).intValue();
     }
 
     public Coordinates getBoundingClientRect(WebElement element) {
-        String script = null;
-        try {
-            script = IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(RELATIVE_COORDS_JS));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        ArrayList<String> list = (ArrayList<String>) js.executeScript(script, element);
+        String script = FileUtil.getJsScript(RELATIVE_COORDS_JS);
+        ArrayList<String> list = (ArrayList<String>) executeJsScript(RELATIVE_COORDS_JS, element);
         Point start = new Point(Integer.parseInt(list.get(0)), Integer.parseInt(list.get(1)));
         Dimension size = new Dimension(Integer.parseInt(list.get(2)), Integer.parseInt(list.get(3)));
         return new Coordinates(start, size);
@@ -84,16 +78,10 @@ public class Browser {
         executeJsScript(SCROLL_TO_JS, x, y);
     }
 
-    public int executeJsScript(String filePath) {
+    public Object executeJsScript(String filePath, Object... arg) {
         String script = FileUtil.getJsScript(filePath);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        return ((Long) js.executeScript(script)).intValue();
-    }
-
-    public void executeJsScript(String filePath, Object... args) {
-        String script = FileUtil.getJsScript(filePath);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript(script, args);
+        return js.executeScript(script, arg);
     }
 
     public static void wait(int milis) {
