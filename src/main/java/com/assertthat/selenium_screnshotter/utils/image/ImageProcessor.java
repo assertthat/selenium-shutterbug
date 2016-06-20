@@ -84,5 +84,4 @@ public class ImageProcessor {
         op.filter(sourceImage, sourceImage);
         return sourceImage;
     }
-
 }
