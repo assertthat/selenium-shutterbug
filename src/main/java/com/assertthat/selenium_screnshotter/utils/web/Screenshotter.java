@@ -32,7 +32,7 @@ public class Screenshotter {
             browser.scrollTo(0, j * browser.getViewportHeight());
             for (int i = 0; i < horizontalIterations; i++) {
                 browser.scrollTo(i * browser.getViewportWidth(), browser.getViewportHeight() * j);
-                browser.wait(50);
+                Browser.wait(50);
                 g.drawImage(takeScreenshot(browser), browser.getCurrentScrollX(), browser.getCurrentScrollY(), null);
             }
         }
