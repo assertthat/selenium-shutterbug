@@ -58,6 +58,16 @@ public class ImageProcessor {
         return combined;
     }
 
+    public static BufferedImage monochromeArea(BufferedImage sourceImage, Coordinates coords) {
+        BufferedImage monochromedImage = convertToGrayAndWhite(sourceImage.getSubimage(coords.getX(), coords.getY(), coords.getWidth(), coords.getHeight()));
+        BufferedImage combined = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combined.createGraphics();
+        g.drawImage(sourceImage, 0, 0, null);
+        g.drawImage(monochromedImage, coords.getX(), coords.getY(), null);
+        g.dispose();
+        return combined;
+    }
+
     public static BufferedImage blurExceptArea(BufferedImage sourceImage, Coordinates coords) {
         BufferedImage subImage = sourceImage.getSubimage(coords.getX(), coords.getY(), coords.getWidth(), coords.getHeight());
         BufferedImage blurredImage = blur(sourceImage);

@@ -48,6 +48,11 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
         return this;
     }
 
+    public PageScreenshot monochrome(WebElement element) {
+        image = ImageProcessor.monochromeArea(image, new Coordinates(element));
+        return this;
+    }
+
     public PageScreenshot blurExcept(WebElement element) {
         image = ImageProcessor.blurExceptArea(image, new Coordinates(element));
         return this;
