@@ -1,4 +1,4 @@
-package com.assertthat.selenium_screnshotter.utils.web;
+package com.assertthat.selenium_screenshotter.utils.web;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;

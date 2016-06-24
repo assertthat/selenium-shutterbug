@@ -1,7 +1,7 @@
-package com.assertthat.selenium_screnshotter.core;
+package com.assertthat.selenium_screenshotter.core;
 
-import com.assertthat.selenium_screnshotter.utils.image.ImageProcessor;
-import com.assertthat.selenium_screnshotter.utils.web.Coordinates;
+import com.assertthat.selenium_screenshotter.utils.image.ImageProcessor;
+import com.assertthat.selenium_screenshotter.utils.web.Coordinates;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 

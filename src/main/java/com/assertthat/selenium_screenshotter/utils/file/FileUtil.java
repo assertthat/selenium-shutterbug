@@ -1,7 +1,7 @@
-package com.assertthat.selenium_screnshotter.utils.file;
+package com.assertthat.selenium_screenshotter.utils.file;
 
 
-import com.assertthat.selenium_screnshotter.utils.web.UnableTakeScreenshotException;
+import com.assertthat.selenium_screenshotter.utils.web.UnableTakeScreenshotException;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;

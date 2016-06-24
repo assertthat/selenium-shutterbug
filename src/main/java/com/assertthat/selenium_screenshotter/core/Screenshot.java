@@ -1,10 +1,10 @@
-package com.assertthat.selenium_screnshotter.core;
+package com.assertthat.selenium_screenshotter.core;
 
-import com.assertthat.selenium_screnshotter.utils.file.FileUtil;
-import com.assertthat.selenium_screnshotter.utils.image.ImageProcessor;
-import com.assertthat.selenium_screnshotter.utils.web.Browser;
-import com.assertthat.selenium_screnshotter.utils.web.Screenshotter;
-import com.assertthat.selenium_screnshotter.utils.web.ScrollStrategy;
+import com.assertthat.selenium_screenshotter.utils.file.FileUtil;
+import com.assertthat.selenium_screenshotter.utils.image.ImageProcessor;
+import com.assertthat.selenium_screenshotter.utils.web.Browser;
+import com.assertthat.selenium_screenshotter.utils.web.Screenshotter;
+import com.assertthat.selenium_screenshotter.utils.web.ScrollStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 

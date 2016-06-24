@@ -1,6 +1,6 @@
-package com.assertthat.selenium_screnshotter.utils.web;
+package com.assertthat.selenium_screenshotter.utils.web;
 
-import com.assertthat.selenium_screnshotter.utils.file.FileUtil;
+import com.assertthat.selenium_screenshotter.utils.file.FileUtil;
 import org.openqa.selenium.*;
 
 import java.util.ArrayList;

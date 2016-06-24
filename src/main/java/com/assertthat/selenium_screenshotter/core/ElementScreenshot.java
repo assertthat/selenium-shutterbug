@@ -1,4 +1,4 @@
-package com.assertthat.selenium_screnshotter.core;
+package com.assertthat.selenium_screenshotter.core;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

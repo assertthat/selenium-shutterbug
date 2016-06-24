@@ -1,6 +1,6 @@
-package com.assertthat.selenium_screnshotter.utils.image;
+package com.assertthat.selenium_screenshotter.utils.image;
 
-import com.assertthat.selenium_screnshotter.utils.web.Coordinates;
+import com.assertthat.selenium_screenshotter.utils.web.Coordinates;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
