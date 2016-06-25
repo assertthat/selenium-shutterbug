@@ -124,7 +124,6 @@ public class ImageProcessor {
         }
         double n = width1 * height1 * 3;
         double p = diff / n / 255.0;
-        System.out.println(p);
         return  p == 0 || p <= deviation;
     }
 }
