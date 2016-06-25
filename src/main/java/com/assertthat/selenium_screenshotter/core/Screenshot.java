@@ -11,7 +11,6 @@ import org.openqa.selenium.WebElement;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -32,7 +31,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
 
     /**
      * Make screenshot of the viewport only
-     *
+     * <p>
      * To be used when screenshotting the page
      * and don't need to scroll while making screenshots (FF, IE)
      *
@@ -47,7 +46,6 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     }
 
     /**
-     *
      * To be used when screenshotting the page
      * and need to scroll while making screenshots, either vertically or
      * horizontally or both directions (Chrome)
@@ -75,7 +73,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     /**
      * To be used when need to screenshot particular element
      *
-     * @param driver WebDriver instance
+     * @param driver  WebDriver instance
      * @param element WebElement instance to be screenshotted
      * @return ElementScreenshot instance
      */
@@ -122,6 +120,9 @@ public abstract class Screenshot<T extends Screenshot<T>> {
         return self();
     }
 
+    /**
+     * @return
+     */
     public BufferedImage getImage() {
         return image;
     }
@@ -131,10 +132,8 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     }
 
     /**
-     *
      * Final method to be called in the chain.
      * Actually saves processed image.
-     *
      */
     public void save() {
         File screenshotFile = new File(location.toString(), fileName);
@@ -145,10 +144,8 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     }
 
     /**
-     *
      * Final method to be called in the chain.
      * Actually saves processed image.
-     *
      */
     public void save(String location) {
         File screenshotFile = new File(location, fileName);
@@ -159,10 +156,8 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     }
 
     /**
-     *
      * Final method to be called in the chain.
      * Actually saves processed image.
-     *
      */
     public void save(Path location) {
         File screenshotFile = new File(location.toString(), fileName);
@@ -172,15 +167,24 @@ public abstract class Screenshot<T extends Screenshot<T>> {
         FileUtil.writeImage(image, extension, screenshotFile);
     }
 
+    /**
+     * @param o
+     * @param deviation
+     * @return
+     */
     public boolean equals(Object o, double deviation) {
         if (this == o) return true;
         if (!(o instanceof Screenshot)) return false;
 
         Screenshot<?> that = (Screenshot<?>) o;
 
-        return getImage() != null ? ImageProcessor.equals(getImage(), that.getImage(), deviation) : that.getImage() == null;
+        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), that.getImage(), deviation) : that.getImage() == null;
     }
 
+    /**
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -188,19 +192,31 @@ public abstract class Screenshot<T extends Screenshot<T>> {
 
         Screenshot<?> that = (Screenshot<?>) o;
 
-        return getImage() != null ? ImageProcessor.equals(getImage(), that.getImage(), 0) : that.getImage() == null;
+        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), that.getImage(), 0) : that.getImage() == null;
     }
 
+    /**
+     * @param image
+     * @return
+     */
     public boolean equals(BufferedImage image) {
         if (this.getImage() == image) return true;
-        return getImage() != null ? ImageProcessor.equals(getImage(), image, 0) : image == null;
+        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), image, 0) : image == null;
     }
 
+    /**
+     * @param image
+     * @param deviation
+     * @return
+     */
     public boolean equals(BufferedImage image, double deviation) {
         if (this.getImage() == image) return true;
-        return getImage() != null ? ImageProcessor.equals(getImage(), image, 0) : image == null;
+        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), image, 0) : image == null;
     }
 
+    /**
+     * @return
+     */
     @Override
     public int hashCode() {
         return getImage() != null ? getImage().hashCode() : 0;

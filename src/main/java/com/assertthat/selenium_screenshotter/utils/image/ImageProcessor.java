@@ -98,7 +98,7 @@ public class ImageProcessor {
         return sourceImage;
     }
 
-    public static boolean equals(BufferedImage image1, BufferedImage image2, double deviation) {
+    public static boolean imagesAreEquals(BufferedImage image1, BufferedImage image2, double deviation) {
         int width1 = image1.getWidth(null);
         int width2 = image2.getWidth(null);
         int height1 = image1.getHeight(null);
