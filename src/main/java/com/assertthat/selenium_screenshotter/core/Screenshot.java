@@ -113,30 +113,6 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     }
 
     /**
-     * @param path path to the resulted image.
-     *             By default will be saved in './screenshots/'
-     * @return instance of type Screenshot
-     */
-    public T saveTo(Path path) {
-        if (Files.exists(path)) {
-            this.location = path;
-        }
-        return self();
-    }
-
-    /**
-     * @param path path to the resulted image.
-     *             By default will be saved in './screenshots/'
-     * @return instance of type Screenshot
-     */
-    public T saveTo(String path) {
-        if (path != null) {
-            saveTo(Paths.get(path));
-        }
-        return self();
-    }
-
-    /**
      * Apply gray-and-white filter to the image
      *
      * @return instance of type Screenshot
@@ -146,7 +122,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
         return self();
     }
 
-    protected BufferedImage getImage() {
+    public BufferedImage getImage() {
         return image;
     }
 
@@ -160,12 +136,73 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      * Actually saves processed image.
      *
      */
-    public void take() {
+    public void save() {
         File screenshotFile = new File(location.toString(), fileName);
-        screenshotFile.mkdirs();
         if (title != null && !title.isEmpty()) {
             image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
         FileUtil.writeImage(image, extension, screenshotFile);
+    }
+
+    /**
+     *
+     * Final method to be called in the chain.
+     * Actually saves processed image.
+     *
+     */
+    public void save(String location) {
+        File screenshotFile = new File(location, fileName);
+        if (title != null && !title.isEmpty()) {
+            image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
+        }
+        FileUtil.writeImage(image, extension, screenshotFile);
+    }
+
+    /**
+     *
+     * Final method to be called in the chain.
+     * Actually saves processed image.
+     *
+     */
+    public void save(Path location) {
+        File screenshotFile = new File(location.toString(), fileName);
+        if (title != null && !title.isEmpty()) {
+            image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
+        }
+        FileUtil.writeImage(image, extension, screenshotFile);
+    }
+
+    public boolean equals(Object o, double deviation) {
+        if (this == o) return true;
+        if (!(o instanceof Screenshot)) return false;
+
+        Screenshot<?> that = (Screenshot<?>) o;
+
+        return getImage() != null ? ImageProcessor.equals(getImage(), that.getImage(), deviation) : that.getImage() == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Screenshot)) return false;
+
+        Screenshot<?> that = (Screenshot<?>) o;
+
+        return getImage() != null ? ImageProcessor.equals(getImage(), that.getImage(), 0) : that.getImage() == null;
+    }
+
+    public boolean equals(BufferedImage image) {
+        if (this.getImage() == image) return true;
+        return getImage() != null ? ImageProcessor.equals(getImage(), image, 0) : image == null;
+    }
+
+    public boolean equals(BufferedImage image, double deviation) {
+        if (this.getImage() == image) return true;
+        return getImage() != null ? ImageProcessor.equals(getImage(), image, 0) : image == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getImage() != null ? getImage().hashCode() : 0;
     }
 }
