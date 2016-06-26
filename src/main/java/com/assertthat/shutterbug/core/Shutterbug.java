@@ -1,15 +1,15 @@
-package com.assertthat.selenium_screenshotter.core;
+package com.assertthat.shutterbug.core;
 
-import com.assertthat.selenium_screenshotter.utils.image.ImageProcessor;
-import com.assertthat.selenium_screenshotter.utils.web.Browser;
-import com.assertthat.selenium_screenshotter.utils.web.ScrollStrategy;
+import com.assertthat.shutterbug.utils.image.ImageProcessor;
+import com.assertthat.shutterbug.utils.web.Browser;
+import com.assertthat.shutterbug.utils.web.ScrollStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
  * Created by Glib_Briia on 26/06/2016.
  */
-public class ScreenshotFactory {
+public class Shutterbug {
 
     /**
      * Make screenshot of the viewport only.
@@ -17,11 +17,11 @@ public class ScreenshotFactory {
      * and don't need to scroll while making screenshots (FF, IE).
      *
      * @param driver WebDriver instance
-     * @return PageScreenshot instance
+     * @return PageSnapshot instance
      */
-    public static PageScreenshot page(WebDriver driver) {
+    public static PageSnapshot shootPage(WebDriver driver) {
         Browser browser = new Browser(driver);
-        PageScreenshot pageScreenshot = new PageScreenshot(driver);
+        PageSnapshot pageScreenshot = new PageSnapshot(driver);
         pageScreenshot.setImage(browser.takeScreenshot());
         return pageScreenshot;
     }
@@ -33,11 +33,11 @@ public class ScreenshotFactory {
      *
      * @param driver WebDriver instance
      * @param scroll ScrollStrategy How you need to scroll
-     * @return PageScreenshot instance
+     * @return PageSnapshot instance
      */
-    public static PageScreenshot page(WebDriver driver, ScrollStrategy scroll) {
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll) {
         Browser browser = new Browser(driver);
-        PageScreenshot pageScreenshot = new PageScreenshot(driver);
+        PageSnapshot pageScreenshot = new PageSnapshot(driver);
         switch (scroll) {
             case HORIZONTALLY:
                 pageScreenshot.setImage(browser.takeScreenshotScrollHorizontally());
@@ -56,11 +56,11 @@ public class ScreenshotFactory {
      *
      * @param driver  WebDriver instance
      * @param element WebElement instance to be screenshotted
-     * @return ElementScreenshot instance
+     * @return ElementSnapshot instance
      */
-    public static ElementScreenshot element(WebDriver driver, WebElement element) {
+    public static ElementSnapshot shootElement(WebDriver driver, WebElement element) {
         Browser browser = new Browser(driver);
-        ElementScreenshot elementScreenshot = new ElementScreenshot(driver, element);
+        ElementSnapshot elementScreenshot = new ElementSnapshot(driver, element);
         browser.scrollToElement(element);
         elementScreenshot.setImage(browser.takeScreenshot());
         elementScreenshot.setImage(ImageProcessor.getElement(elementScreenshot.getImage(), browser.getBoundingClientRect(element)));

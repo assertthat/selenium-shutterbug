@@ -1,7 +1,7 @@
-package com.assertthat.selenium_screenshotter.core;
+package com.assertthat.shutterbug.core;
 
-import com.assertthat.selenium_screenshotter.utils.image.ImageProcessor;
-import com.assertthat.selenium_screenshotter.utils.web.Coordinates;
+import com.assertthat.shutterbug.utils.image.ImageProcessor;
+import com.assertthat.shutterbug.utils.web.Coordinates;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -10,9 +10,9 @@ import java.awt.*;
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
-public class PageScreenshot extends Screenshot<PageScreenshot> {
+public class PageSnapshot extends Snapshot {
 
-    PageScreenshot(WebDriver driver) {
+    PageSnapshot(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -21,9 +21,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      * and line width 3.
      *
      * @param element WebElement to be highlighted
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot highlight(WebElement element) {
+    public PageSnapshot highlight(WebElement element) {
         highlight(element, Color.red, 3);
         return this;
     }
@@ -35,9 +35,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      * @param element WebElement to be highlighted
      * @param color color of the line
      * @param lineWidth width of the line
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot highlight(WebElement element, Color color, int lineWidth) {
+    public PageSnapshot highlight(WebElement element, Color color, int lineWidth) {
         image = ImageProcessor.highlight(image, new Coordinates(element), color, lineWidth);
         return this;
     }
@@ -50,9 +50,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      *                and line width 3
      * @param text test to be places above highlighted element with
      *             Color.red, font "Serif", BOLD, size 20
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot highlightWithText(WebElement element, String text) {
+    public PageSnapshot highlightWithText(WebElement element, String text) {
         highlightWithText(element, Color.red, 3, text, Color.red, new Font("Serif", Font.BOLD, 20));
         return this;
     }
@@ -67,9 +67,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      * @param text text to be placed above the highlighted element
      * @param textColor color of the text
      * @param textFont text font
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
+    public PageSnapshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
         highlight(element, elementColor, 0);
         Coordinates coords = new Coordinates(element);
         image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
@@ -79,9 +79,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
     /**
      * Blur the entire page.
      *
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot blur() {
+    public PageSnapshot blur() {
         image = ImageProcessor.blur(image);
         return this;
     }
@@ -90,9 +90,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      * Blur provided element within the page only.
      *
      * @param element WebElement to be blurred
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot blur(WebElement element) {
+    public PageSnapshot blur(WebElement element) {
         image = ImageProcessor.blurArea(image, new Coordinates(element));
         return this;
     }
@@ -102,9 +102,9 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      * Original colors remain on the rest of the page.
      *
      * @param element WebElement within the page to be made 'monochrome'
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot monochrome(WebElement element) {
+    public PageSnapshot monochrome(WebElement element) {
         image = ImageProcessor.monochromeArea(image, new Coordinates(element));
         return this;
     }
@@ -113,15 +113,15 @@ public class PageScreenshot extends Screenshot<PageScreenshot> {
      * Blurs all the page except the element provided.
      *
      * @param element WebElement to stay not blurred
-     * @return instance of type PageScreenshot
+     * @return instance of type PageSnapshot
      */
-    public PageScreenshot blurExcept(WebElement element) {
+    public PageSnapshot blurExcept(WebElement element) {
         image = ImageProcessor.blurExceptArea(image, new Coordinates(element));
         return this;
     }
 
     @Override
-    protected PageScreenshot self() {
+    protected PageSnapshot self() {
         return this;
     }
 

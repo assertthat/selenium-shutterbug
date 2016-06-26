@@ -1,4 +1,4 @@
-package com.assertthat.selenium_screenshotter.utils.web;
+package com.assertthat.shutterbug.utils.web;
 
 /**
  * Created by Glib_Briia on 17/06/2016.

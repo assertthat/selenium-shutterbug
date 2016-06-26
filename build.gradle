@@ -1,16 +1,15 @@
 group 'com.assertthat'
 version '0.1'
 
-apply plugin: 'groovy'
+apply plugin: 'java'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile 'org.codehaus.groovy:groovy-test:2.4.3'
     testCompile 'junit:junit:4.12'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.0'
 }

@@ -1,8 +1,8 @@
-package com.assertthat.selenium_screenshotter.utils.web;
+package com.assertthat.shutterbug.utils.web;
 
-import com.assertthat.selenium_screenshotter.utils.file.FileUtil;
-import org.openqa.selenium.*;
+import com.assertthat.shutterbug.utils.file.FileUtil;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
 
 import javax.imageio.ImageIO;

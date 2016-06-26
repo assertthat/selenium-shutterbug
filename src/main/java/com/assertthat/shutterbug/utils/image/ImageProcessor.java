@@ -1,14 +1,11 @@
-package com.assertthat.selenium_screenshotter.utils.image;
+package com.assertthat.shutterbug.utils.image;
 
-import com.assertthat.selenium_screenshotter.utils.web.Coordinates;
+import com.assertthat.shutterbug.utils.web.Coordinates;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
@@ -105,7 +102,7 @@ public class ImageProcessor {
         int height1 = image1.getHeight(null);
         int height2 = image2.getHeight(null);
         if ((width1 != width2) || (height1 != height2)) {
-           throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - "+width1+"x"+height1+"; image2 - "+width2+"x"+height2);
+            throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + width1 + "x" + height1 + "; image2 - " + width2 + "x" + height2);
         }
         long diff = 0;
         for (int y = 0; y < height1; y++) {
@@ -125,17 +122,17 @@ public class ImageProcessor {
         }
         double n = width1 * height1 * 3;
         double p = diff / n / 255.0;
-        return  p == 0 || p <= deviation;
+        return p == 0 || p <= deviation;
     }
 
-    public static BufferedImage scale(BufferedImage source,double ratio) {
+    public static BufferedImage scale(BufferedImage source, double ratio) {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
         BufferedImage scaledImage = getCompatibleImage(w, h);
         Graphics2D g2d = scaledImage.createGraphics();
         double xScale = (double) w / source.getWidth();
         double yScale = (double) h / source.getHeight();
-        AffineTransform at = AffineTransform.getScaleInstance(xScale,yScale);
+        AffineTransform at = AffineTransform.getScaleInstance(xScale, yScale);
         g2d.drawRenderedImage(source, at);
         g2d.dispose();
         return scaledImage;

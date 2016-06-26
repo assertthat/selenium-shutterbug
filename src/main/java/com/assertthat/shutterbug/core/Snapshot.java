@@ -1,30 +1,27 @@
-package com.assertthat.selenium_screenshotter.core;
+package com.assertthat.shutterbug.core;
 
-import com.assertthat.selenium_screenshotter.utils.file.FileUtil;
-import com.assertthat.selenium_screenshotter.utils.image.ImageProcessor;
-import com.assertthat.selenium_screenshotter.utils.web.Browser;
-import com.assertthat.selenium_screenshotter.utils.web.ScrollStrategy;
+import com.assertthat.shutterbug.utils.file.FileUtil;
+import com.assertthat.shutterbug.utils.image.ImageProcessor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
-public abstract class Screenshot<T extends Screenshot<T>> {
+public abstract class Snapshot<T extends Snapshot> {
 
     private static final String extension = "PNG";
     protected BufferedImage image;
     protected BufferedImage thumbnailImage;
     protected WebDriver driver;
-    private String fileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss_SSS"))
+    private String fileName = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date())
             + "." + extension.toLowerCase();
     private Path location = Paths.get("./screenshots/");
     private String title;
@@ -34,7 +31,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     /**
      * @param name file name of the resulted image
      *             by default will be timestamp in format: 'yyyy_MM_dd_HH_mm_ss_SSS'.
-     * @return instance of type Screenshot
+     * @return instance of type Snapshot
      */
     public T withName(String name) {
         if (name != null) {
@@ -46,7 +43,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     /**
      * @param title title of the resulted image.
      *              Won't be assigned by default.
-     * @return instance of type Screenshot
+     * @return instance of type Snapshot
      */
     public T withTitle(String title) {
         this.title = title;
@@ -61,12 +58,12 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      * @param path to save thumbnail image to
      * @param name of the resulting image
      * @param scale to apply
-     * @return instance of type Screenshot
+     * @return instance of type Snapshot
      */
     public T withThumbnail(String path, String name, double scale) {
         File thumbnailFile = new File(path.toString(), name);
         thumbnailFile.mkdirs();
-        thumbnailImage=ImageProcessor.scale(image,0.5);
+        thumbnailImage=ImageProcessor.scale(image,scale);
         FileUtil.writeImage(thumbnailImage, extension, thumbnailFile);
         return self();
     }
@@ -76,7 +73,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      * Will save different thumbnails depends on when it was called in the chain.
      *
      * @param scale to apply
-     * @return instance of type Screenshot
+     * @return instance of type Snapshot
      */
     public T withThumbnail(double scale) {
         withThumbnail(Paths.get(location.toString(),"./thumbnails").toString(),"thumb_"+fileName,scale);
@@ -86,7 +83,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
     /**
      * Apply gray-and-white filter to the image.
      *
-     * @return instance of type Screenshot
+     * @return instance of type Snapshot
      */
     public T monochrome() {
         this.image = ImageProcessor.convertToGrayAndWhite(this.image);
@@ -134,24 +131,24 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      */
     public boolean equals(Object o, double deviation) {
         if (this == o) return true;
-        if (!(o instanceof Screenshot)) return false;
+        if (!(o instanceof Snapshot)) return false;
 
-        Screenshot<?> that = (Screenshot<?>) o;
+        Snapshot that = (Snapshot) o;
 
         return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), that.getImage(), deviation) : that.getImage() == null;
     }
 
     /**
      * @param o Object to compare with
-     * @return true if the the provided object is of type Screenshot
+     * @return true if the the provided object is of type Snapshot
      * and images are strictly equal.
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Screenshot)) return false;
+        if (!(o instanceof Snapshot)) return false;
 
-        Screenshot<?> that = (Screenshot<?>) o;
+        Snapshot that = (Snapshot) o;
 
         return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), that.getImage(), 0) : that.getImage() == null;
     }

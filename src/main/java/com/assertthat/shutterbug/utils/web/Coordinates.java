@@ -1,4 +1,4 @@
-package com.assertthat.selenium_screenshotter.utils.web;
+package com.assertthat.shutterbug.utils.web;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
