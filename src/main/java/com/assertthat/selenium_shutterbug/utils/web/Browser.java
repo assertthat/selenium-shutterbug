@@ -59,7 +59,7 @@ public class Browser {
         try {
             Thread.sleep(milis);
         } catch (InterruptedException e) {
-            throw new UnableTakeScreenshotException(e);
+            throw new UnableTakeSnapshotException(e);
         }
     }
 
@@ -68,7 +68,7 @@ public class Browser {
         try {
             return ImageIO.read(srcFile);
         } catch (IOException e) {
-            throw new UnableTakeScreenshotException(e);
+            throw new UnableTakeSnapshotException(e);
         }
     }
 

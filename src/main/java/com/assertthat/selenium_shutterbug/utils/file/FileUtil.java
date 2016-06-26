@@ -17,7 +17,7 @@
 package com.assertthat.selenium_shutterbug.utils.file;
 
 
-import com.assertthat.selenium_shutterbug.utils.web.UnableTakeScreenshotException;
+import com.assertthat.selenium_shutterbug.utils.web.UnableTakeSnapshotException;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
@@ -34,7 +34,7 @@ public class FileUtil {
         try {
             return IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath));
         } catch (IOException e) {
-            throw new UnableTakeScreenshotException("Unable to load JS script", e);
+            throw new UnableTakeSnapshotException("Unable to load JS script", e);
         }
     }
 
@@ -42,7 +42,7 @@ public class FileUtil {
         try {
             ImageIO.write(imageFile, extension, fileToWriteTo);
         } catch (IOException e) {
-            throw new UnableTakeScreenshotException(e);
+            throw new UnableSaveSnapshotException(e);
         }
     }
 }

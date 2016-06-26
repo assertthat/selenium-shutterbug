@@ -21,21 +21,21 @@ import org.openqa.selenium.WebDriverException;
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
-public class UnableTakeScreenshotException extends WebDriverException {
+public class UnableTakeSnapshotException extends WebDriverException {
 
-    public UnableTakeScreenshotException() {
+    public UnableTakeSnapshotException() {
         super();
     }
 
-    public UnableTakeScreenshotException(String message) {
+    public UnableTakeSnapshotException(String message) {
         super(message);
     }
 
-    public UnableTakeScreenshotException(Throwable cause) {
+    public UnableTakeSnapshotException(Throwable cause) {
         super(cause);
     }
 
-    public UnableTakeScreenshotException(String message, Throwable cause) {
+    public UnableTakeSnapshotException(String message, Throwable cause) {
         super(message, cause);
     }
 }
