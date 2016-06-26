@@ -21,7 +21,7 @@ class ImageProcessorTest extends GroovyTestCase {
         def height = 300
         def msg = shouldFail(UnableToCompareImagesException) {
             ImageProcessor.imagesAreEquals(new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB)
-                    , new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB),0.0)
+                    , new BufferedImage(width,height+1,BufferedImage.TYPE_INT_ARGB),0.0)
         }
         assert 'Images dimensions mismatch: image1 - '+width+'x'+height+'; image2 - '+width+'x'+(height+1) == msg
 
