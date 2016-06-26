@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
-    testCompile "org.codehaus.groovy:groovy:2.4.4"
+    testCompile 'org.codehaus.groovy:groovy-test:2.4.3'
+    testCompile 'junit:junit:4.12'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.0'
 }
