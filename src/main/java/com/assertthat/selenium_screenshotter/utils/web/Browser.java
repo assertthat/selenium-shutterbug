@@ -2,7 +2,14 @@ package com.assertthat.selenium_screenshotter.utils.web;
 
 import com.assertthat.selenium_screenshotter.utils.file.FileUtil;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +45,57 @@ public class Browser {
         } catch (InterruptedException e) {
             throw new UnableTakeScreenshotException(e);
         }
+    }
+
+    public BufferedImage takeScreenshot() {
+        File srcFile = ((TakesScreenshot) this.getUnderlyingDriver()).getScreenshotAs(OutputType.FILE);
+        try {
+            return ImageIO.read(srcFile);
+        } catch (IOException e) {
+            throw new UnableTakeScreenshotException(e);
+        }
+    }
+
+    public BufferedImage takeScreenshotEntirePage() {
+        BufferedImage combinedImage = new BufferedImage(this.getDocWidth(), this.getDocHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
+        int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollTo(0, j * this.getViewportHeight());
+            for (int i = 0; i < horizontalIterations; i++) {
+                this.scrollTo(i * this.getViewportWidth(), this.getViewportHeight() * j);
+                wait(50);
+                g.drawImage(takeScreenshot(), this.getCurrentScrollX(), this.getCurrentScrollY(), null);
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeScreenshotScrollHorizontally() {
+        BufferedImage combinedImage = new BufferedImage(this.getDocWidth(), this.getViewportHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
+        for (int i = 0; i < horizontalIterations; i++) {
+            this.scrollTo(i * this.getViewportWidth(), 0);
+            g.drawImage(takeScreenshot(), this.getCurrentScrollX(), 0, null);
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeScreenshotScrollVertically() {
+        BufferedImage combinedImage = new BufferedImage(this.getViewportWidth(), this.getDocHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollTo(0, j * this.getViewportHeight());
+            g.drawImage(takeScreenshot(), 0, this.getCurrentScrollY(), null);
+
+        }
+        g.dispose();
+        return combinedImage;
     }
 
     public WebDriver getUnderlyingDriver() {

@@ -3,7 +3,6 @@ package com.assertthat.selenium_screenshotter.core;
 import com.assertthat.selenium_screenshotter.utils.file.FileUtil;
 import com.assertthat.selenium_screenshotter.utils.image.ImageProcessor;
 import com.assertthat.selenium_screenshotter.utils.web.Browser;
-import com.assertthat.selenium_screenshotter.utils.web.Screenshotter;
 import com.assertthat.selenium_screenshotter.utils.web.ScrollStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -23,67 +22,12 @@ public abstract class Screenshot<T extends Screenshot<T>> {
 
     private static final String extension = "PNG";
     protected BufferedImage image;
+    protected BufferedImage thumbnailImage;
     protected WebDriver driver;
     private String fileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss_SSS"))
             + "." + extension.toLowerCase();
     private Path location = Paths.get("./screenshots/");
     private String title;
-
-    /**
-     * Make screenshot of the viewport only.
-     * To be used when screenshotting the page
-     * and don't need to scroll while making screenshots (FF, IE).
-     *
-     * @param driver WebDriver instance
-     * @return PageScreenshot instance
-     */
-    public static PageScreenshot page(WebDriver driver) {
-        Browser browser = new Browser(driver);
-        PageScreenshot pageScreenshot = new PageScreenshot(driver);
-        pageScreenshot.setImage(Screenshotter.takeScreenshot(browser));
-        return pageScreenshot;
-    }
-
-    /**
-     * To be used when screenshotting the page
-     * and need to scroll while making screenshots, either vertically or
-     * horizontally or both directions (Chrome).
-     *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @return PageScreenshot instance
-     */
-    public static PageScreenshot page(WebDriver driver, ScrollStrategy scroll) {
-        Browser browser = new Browser(driver);
-        PageScreenshot pageScreenshot = new PageScreenshot(driver);
-        switch (scroll) {
-            case HORIZONTALLY:
-                pageScreenshot.setImage(Screenshotter.takeScreenshotScrollHorizontally(browser));
-                break;
-            case VERTICALLY:
-                pageScreenshot.setImage(Screenshotter.takeScreenshotScrollVertically(browser));
-                break;
-            case BOTH_DIRECTIONS:
-                pageScreenshot.setImage(Screenshotter.takeScreenshotEntirePage(browser));
-        }
-        return pageScreenshot;
-    }
-
-    /**
-     * To be used when need to screenshot particular element.
-     *
-     * @param driver  WebDriver instance
-     * @param element WebElement instance to be screenshotted
-     * @return ElementScreenshot instance
-     */
-    public static ElementScreenshot element(WebDriver driver, WebElement element) {
-        Browser browser = new Browser(driver);
-        ElementScreenshot elementScreenshot = new ElementScreenshot(driver, element);
-        browser.scrollToElement(element);
-        elementScreenshot.setImage(Screenshotter.takeScreenshot(browser));
-        elementScreenshot.setImage(ImageProcessor.getElement(elementScreenshot.getImage(), browser.getBoundingClientRect(element)));
-        return elementScreenshot;
-    }
 
     protected abstract T self();
 
@@ -106,6 +50,36 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      */
     public T withTitle(String title) {
         this.title = title;
+        return self();
+    }
+
+
+    /**
+     * Generate a thumbnail of the original screenshot.
+     * Will save different thumbnails depends on when it was called in the chain.
+     *
+     * @param path to save thumbnail image to
+     * @param name of the resulting image
+     * @param scale to apply
+     * @return instance of type Screenshot
+     */
+    public T withThumbnail(String path, String name, double scale) {
+        File thumbnailFile = new File(path.toString(), name);
+        thumbnailFile.mkdirs();
+        thumbnailImage=ImageProcessor.scale(image,0.5);
+        FileUtil.writeImage(thumbnailImage, extension, thumbnailFile);
+        return self();
+    }
+
+    /**
+     * Generate a thumbnail of the original screenshot.
+     * Will save different thumbnails depends on when it was called in the chain.
+     *
+     * @param scale to apply
+     * @return instance of type Screenshot
+     */
+    public T withThumbnail(double scale) {
+        withThumbnail(Paths.get(location.toString(),"./thumbnails").toString(),"thumb_"+fileName,scale);
         return self();
     }
 
@@ -136,6 +110,7 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      */
     public void save() {
         File screenshotFile = new File(location.toString(), fileName);
+        screenshotFile.mkdirs();
         if (title != null && !title.isEmpty()) {
             image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
@@ -146,30 +121,16 @@ public abstract class Screenshot<T extends Screenshot<T>> {
      * Final method to be called in the chain.
      * Actually saves processed image to the specified path.
      */
-    public void save(String location) {
-        File screenshotFile = new File(location, fileName);
-        if (title != null && !title.isEmpty()) {
-            image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
-        }
-        FileUtil.writeImage(image, extension, screenshotFile);
+    public void save(String path) {
+        this.location = Paths.get(path);
+        save();
     }
 
     /**
-     * Final method to be called in the chain.
-     * Actually saves processed image to the specified path.
-     */
-    public void save(Path location) {
-        File screenshotFile = new File(location.toString(), fileName);
-        if (title != null && !title.isEmpty()) {
-            image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
-        }
-        FileUtil.writeImage(image, extension, screenshotFile);
-    }
-
-    /**
-     * @param o
-     * @param deviation
-     * @return
+     * @param o Object to compare with
+     * @param deviation allowed deviation while comparing.
+     * @return true if the the percentage of differences
+     * between current image and provided one is less than or equal to <b>deviation</b>
      */
     public boolean equals(Object o, double deviation) {
         if (this == o) return true;
