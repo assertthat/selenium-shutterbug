@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.core;
+package com.assertthat.selenium_shutterbug.core;
 
-import com.assertthat.shutterbug.utils.file.FileUtil;
-import com.assertthat.shutterbug.utils.image.ImageProcessor;
+import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
+import com.assertthat.selenium_shutterbug.utils.image.ImageProcessor;
 import org.openqa.selenium.WebDriver;
 
 import java.awt.*;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.utils.image;
+package com.assertthat.selenium_shutterbug.utils.image;
 
-import com.assertthat.shutterbug.utils.web.Coordinates;
+import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;

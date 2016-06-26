@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.core;
+package com.assertthat.selenium_shutterbug.core;
 
-import com.assertthat.shutterbug.utils.image.ImageProcessor;
-import com.assertthat.shutterbug.utils.web.Browser;
-import com.assertthat.shutterbug.utils.web.ScrollStrategy;
+import com.assertthat.selenium_shutterbug.utils.image.ImageProcessor;
+import com.assertthat.selenium_shutterbug.utils.web.Browser;
+import com.assertthat.selenium_shutterbug.utils.web.ScrollStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 

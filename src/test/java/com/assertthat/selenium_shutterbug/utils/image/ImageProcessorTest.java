@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.utils.image;
+package com.assertthat.selenium_shutterbug.utils.image;
 
 import org.junit.Test;
 

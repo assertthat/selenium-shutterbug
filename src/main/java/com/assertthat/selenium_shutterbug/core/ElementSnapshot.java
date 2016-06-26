@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.utils.web;
+package com.assertthat.selenium_shutterbug.core;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
-public enum ScrollStrategy {
-    HORIZONTALLY, VERTICALLY, BOTH_DIRECTIONS
+public class ElementSnapshot extends Snapshot {
+
+    ElementSnapshot(WebDriver driver, WebElement element) {
+        this.driver = driver;
+    }
+
+    @Override
+    protected ElementSnapshot self() {
+        return this;
+    }
 }

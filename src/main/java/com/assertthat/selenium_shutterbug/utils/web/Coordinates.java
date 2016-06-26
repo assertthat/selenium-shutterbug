@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.utils.web;
+package com.assertthat.selenium_shutterbug.utils.web;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;

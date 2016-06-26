@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.assertthat.shutterbug.utils.file;
+package com.assertthat.selenium_shutterbug.utils.file;
 
 
-import com.assertthat.shutterbug.utils.web.UnableTakeScreenshotException;
+import com.assertthat.selenium_shutterbug.utils.web.UnableTakeScreenshotException;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
