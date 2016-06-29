@@ -1,9 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 group 'com.assertthat'
+archivesBaseName = "selenium-shutterbug"
 version '0.1'
 
-apply plugin: 'java'
-
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 repositories {
     mavenCentral()
@@ -12,4 +16,60 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.0'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            pom.project {
+                name 'Selenium Shutterbug'
+                packaging 'jar'
+
+                description 'Utility library to create customized screenshots using Selenium'
+                url 'https://github.com/glib-briia/selenium-shutterbug'
+
+                scm {
+                    connection 'scm:git:https://github.com/assertthat/selenium-shutterbug.git'
+                    developerConnection 'scm:git:https://github.com/assertthat/selenium-shutterbug.git'
+                    url 'https://github.com/assertthat/selenium-shutterbug/'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'https://github.com/assertthat/selenium-shutterbug/blob/master/LICENSE'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'glib-briia'
+                        name 'Glib Briia'
+                        email 'glib.brii@assertthat.com'
+                    }
+                }
+            }
+        }
+    }
 }
