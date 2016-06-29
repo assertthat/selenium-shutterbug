@@ -32,10 +32,6 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    sign configurations.archives
-}
-
 uploadArchives {
     repositories {
         mavenDeployer {
