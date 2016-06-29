@@ -73,3 +73,15 @@ uploadArchives {
         }
     }
 }
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat = 'full'
+    }
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configuration.archives
+}
