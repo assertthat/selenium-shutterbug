@@ -83,5 +83,5 @@ test {
 
 signing {
     required { gradle.taskGraph.hasTask("uploadArchives") }
-    sign configuration.archives
+    sign configurations.archives
 }
