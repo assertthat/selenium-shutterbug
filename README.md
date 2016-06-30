@@ -4,7 +4,7 @@
 
 ## Synopsis
 
-Selenium Shutterbug is a utility library make screenshots using [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver/ "SeleniumHQ WebDriver page") and further customize, compare and process them with the help of  [Java AWT](https://en.wikipedia.org/wiki/Abstract_Window_Toolkit "AWT wiki").
+Selenium Shutterbug is a utility library for making screenshots using [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver/ "SeleniumHQ WebDriver page") and further customizing, comparing and procesings them with the help of  [Java AWT](https://en.wikipedia.org/wiki/Abstract_Window_Toolkit "AWT wiki").
 
 ## Code Example
 
@@ -12,7 +12,7 @@ Screenshot of the page, saving to default location (./screenshots/):
 ````
 Shutterbug.shootPage(driver).save();
 ```
-Screenhot of the page with scrolling (for chrome to make screenshot of the whole page but not viewport only):
+Screenhot of the page with scrolling (for Chrome to make screenshot of the whole page but not viewport only):
 ```
 Shutterbug.shootPage(driver, ScrollStrategy.BOTH_DIRECTIONS).save("C:\\testing\\screenshots\\");
 ```
@@ -33,11 +33,17 @@ Shutterbug.shootPage(driver, ScrollStrategy.BOTH_DIRECTIONS)
                 .withThumbnail(0.4).save("C:\\testing\\screenshots\\");
 ```
 
-And much more...
+Check if taken screenshot equals to another image with allowed deviation:
+
+```
+Shutterbug.shootPage(driver).equals(otherImage,0.1);
+```
+
+And even more...
 
 ## Motivation
 
-The idea behing the project is to make testers life easier by enabling them to create descriptive screenshots which, in some cases, could be directly attached to the bug reports or serve as a source of information about system state at a specific time. 
+The idea behing the project is to make testers life easier by enabling them to create descriptive screenshots which, in some cases, could be directly attached to the bug reports or serve as a source of information about system state at a specific moment of time. 
 
 ## Installation
 
