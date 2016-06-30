@@ -4,7 +4,7 @@
 
 ## Synopsis
 
-Selenium Shutterbug is a utility library for making screenshots using [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver/ "SeleniumHQ WebDriver page") and further customizing, comparing and procesings them with the help of  [Java AWT](https://en.wikipedia.org/wiki/Abstract_Window_Toolkit "AWT wiki").
+Selenium Shutterbug is a utility library for making screenshots using [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver/ "SeleniumHQ WebDriver page") and further customizing, comparing and processing them with the help of  [Java AWT](https://en.wikipedia.org/wiki/Abstract_Window_Toolkit "AWT wiki").
 
 ## Code Example
 
@@ -16,7 +16,7 @@ Screenhot of the page with scrolling (for Chrome to make screenshot of the whole
 ```
 Shutterbug.shootPage(driver, ScrollStrategy.BOTH_DIRECTIONS).save("C:\\testing\\screenshots\\");
 ```
-Screenshotof the single element:
+Screenshot of the single element:
 ```
 Shutterbug.shootElement(driver,element).save("C:\\testing\\screenshots\\");
 ```
@@ -43,7 +43,7 @@ And even more...
 
 ## Motivation
 
-The idea behing the project is to make testers life easier by enabling them to create descriptive screenshots which, in some cases, could be directly attached to the bug reports or serve as a source of information about system state at a specific moment of time. 
+The idea behind the project is to make testers life easier by enabling them to create descriptive screenshots which, in some cases, could be directly attached to the bug reports or serve as a source of information about system state at a specific moment of time. 
 
 ## Installation
 
