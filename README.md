@@ -55,7 +55,7 @@ The project is available in [Maven Central](http://search.maven.org/#search%7Cga
 #####Using Gradle
 
 ```
-compile 'com.assertthat:selenium-shutterbug:0.1'
+compile 'com.assertthat:selenium-shutterbug:x.x'
 ```
 
 ## License
