@@ -10,7 +10,7 @@ Selenium Shutterbug is a utility library make screenshots using [Selenium WebDri
 
 Screenshot of the page, saving to default location (./screenshots/):
 ````
-Shutterbug.shootPage(driver).save();;
+Shutterbug.shootPage(driver).save();
 ```
 Screenhot of the page with scrolling (for chrome to make screenshot of the whole page but not viewport only):
 ```
