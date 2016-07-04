@@ -23,14 +23,16 @@ Shutterbug.shootElement(driver,element).save("C:\\testing\\screenshots\\");
 
 Highlighting, adding titles, text, etc:
 ```
-Shutterbug.shootPage(driver, ScrollStrategy.BOTH_DIRECTIONS)
-                .highlight(element)
-                .blur()
-                .highlightWithText(otherElement, "This is element I was searching for")
-                .monochrome()
-                .withTitle("Home page screensho")
+        Shutterbug.shootPage(driver)
+                .blur(searchBox)
+                .highlight(searchBtn)
+                .monochrome(googleLogo)
+                .highlightWithText(googleLogo, Color.blue, 3, "Monochromed logo",Color.blue, new Font("SansSerif", Font.BOLD, 20))
+                .highlightWithText(searchBox, "Blurred secret words")
+                .withTitle("Google home page - " + new Date())
                 .withName("home_page")
-                .withThumbnail(0.4).save("C:\\testing\\screenshots\\");
+                .withThumbnail(0.7)
+                .save("C:\\testing\\screenshots\\");
 ```
 
 Check if taken screenshot equals to another image with allowed deviation:
