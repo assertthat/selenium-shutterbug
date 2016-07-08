@@ -12,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -67,10 +68,25 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public T withThumbnail(String path, String name, double scale) {
         File thumbnailFile = new File(path.toString(), name);
-        thumbnailFile.mkdirs();
+        if(Files.exists(Paths.get(path))) {
+            thumbnailFile.mkdirs();
+        }
         thumbnailImage=ImageProcessor.scale(image,scale);
         FileUtil.writeImage(thumbnailImage, extension, thumbnailFile);
         return self();
+    }
+
+    /**
+     * Generate a thumbnail of the original screenshot.
+     * Will save different thumbnails depends on when it was called in the chain.
+     *
+     * @param path to save thumbnail image to
+     * @param name of the resulting image
+     * @param scale to apply
+     * @return instance of type Snapshot
+     */
+    public T withThumbnail(Path path, String name, double scale) {
+       return withThumbnail(path.toString(),name,scale);
     }
 
     /**
@@ -81,8 +97,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return instance of type Snapshot
      */
     public T withThumbnail(double scale) {
-        withThumbnail(Paths.get(location.toString(),"./thumbnails").toString(),"thumb_"+fileName,scale);
-        return self();
+        return withThumbnail(Paths.get(location.toString(),"./thumbnails").toString(),"thumb_"+fileName,scale);
     }
 
     /**
@@ -112,7 +127,9 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public void save() {
         File screenshotFile = new File(location.toString(), fileName);
-        screenshotFile.mkdirs();
+        if(Files.exists(location)) {
+            screenshotFile.mkdirs();
+        }
         if (title != null && !title.isEmpty()) {
             image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
