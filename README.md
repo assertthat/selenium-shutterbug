@@ -65,6 +65,9 @@ The project is available in [Maven Central](http://search.maven.org/#search%7Cga
 ```
 compile 'com.assertthat:selenium-shutterbug:x.x'
 ```
+## Contributing
+
+For details please read [CONTRIBUTING](https://github.com/assertthat/selenium-shutterbug/blob/master/CONTRIBUTING.md "CONTRIBUTING")
 
 ## License
 
