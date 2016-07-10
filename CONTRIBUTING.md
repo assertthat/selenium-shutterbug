@@ -8,7 +8,7 @@ Fork the project [on Github](https://github.com/assertthat/selenium-shutterbug)
 and check out your copy locally.
 
 ```text
-% git https://github.com/assertthat/selenium-shutterbug.git
+% git clone https://github.com/assertthat/selenium-shutterbug.git
 % cd selenium-shutterbug
 % git remote add upstream git://github.com/assertthat/selenium-shutterbug.git
 ```
