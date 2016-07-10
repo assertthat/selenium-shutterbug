@@ -34,7 +34,7 @@ public class PageSnapshot extends Snapshot {
         try {
             highlight(element, Color.red, 3);
         } catch (RasterFormatException rfe) {
-            throw new ElementOutsideViewportException("Try to apply ScrollStrategy", rfe);
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }
@@ -52,7 +52,7 @@ public class PageSnapshot extends Snapshot {
         try {
             image = ImageProcessor.highlight(image, new Coordinates(element), color, lineWidth);
         } catch (RasterFormatException rfe) {
-            throw new ElementOutsideViewportException("Try to apply ScrollStrategy", rfe);
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }
@@ -71,7 +71,7 @@ public class PageSnapshot extends Snapshot {
         try {
             highlightWithText(element, Color.red, 3, text, Color.red, new Font("Serif", Font.BOLD, 20));
         } catch (RasterFormatException rfe) {
-            throw new ElementOutsideViewportException("Try to apply ScrollStrategy", rfe);
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }
@@ -94,7 +94,7 @@ public class PageSnapshot extends Snapshot {
            Coordinates coords = new Coordinates(element);
            image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
        } catch (RasterFormatException rfe) {
-           throw new ElementOutsideViewportException("Try to apply ScrollStrategy", rfe);
+           throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
        }
         return this;
     }
@@ -119,7 +119,7 @@ public class PageSnapshot extends Snapshot {
         try {
             image = ImageProcessor.blurArea(image, new Coordinates(element));
         }catch(RasterFormatException rfe) {
-            throw new ElementOutsideViewportException("Try to apply ScrollStrategy", rfe);
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }
@@ -135,7 +135,7 @@ public class PageSnapshot extends Snapshot {
         try {
             image = ImageProcessor.monochromeArea(image, new Coordinates(element));
         } catch (RasterFormatException rfe) {
-            throw new ElementOutsideViewportException("Try to apply ScrollStrategy", rfe);
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }
@@ -150,7 +150,7 @@ public class PageSnapshot extends Snapshot {
         try{
             image = ImageProcessor.blurExceptArea(image, new Coordinates(element));
         }catch(RasterFormatException rfe){
-            throw new ElementOutsideViewportException("Try to apply ScrollStrategy",rfe);
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE,rfe);
         }
         return this;
     }

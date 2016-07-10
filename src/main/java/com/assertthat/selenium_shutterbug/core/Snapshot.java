@@ -23,12 +23,13 @@ import java.util.Date;
  */
 public abstract class Snapshot<T extends Snapshot> {
 
-    private static final String extension = "PNG";
+    private static final String EXTENSION = "PNG";
+    protected static final String ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE = "Use ScrollStrategy.HORIZONTALLY,  ScrollStrategy.VERTICALLY or ScrollStrategy.BOTH_DIRECTIONS to shoot the element outside the viewport";
     protected BufferedImage image;
     protected BufferedImage thumbnailImage;
     protected WebDriver driver;
     private String fileName = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date())
-            + "." + extension.toLowerCase();
+            + "." + EXTENSION.toLowerCase();
     private Path location = Paths.get("./screenshots/");
     private String title;
 
@@ -41,7 +42,7 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public T withName(String name) {
         if (name != null) {
-            fileName = name + "." + extension.toLowerCase();
+            fileName = name + "." + EXTENSION.toLowerCase();
         }
         return self();
     }
@@ -72,7 +73,7 @@ public abstract class Snapshot<T extends Snapshot> {
             thumbnailFile.mkdirs();
         }
         thumbnailImage=ImageProcessor.scale(image,scale);
-        FileUtil.writeImage(thumbnailImage, extension, thumbnailFile);
+        FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
     }
 
@@ -133,7 +134,7 @@ public abstract class Snapshot<T extends Snapshot> {
         if (title != null && !title.isEmpty()) {
             image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
-        FileUtil.writeImage(image, extension, screenshotFile);
+        FileUtil.writeImage(image, EXTENSION, screenshotFile);
     }
 
     /**

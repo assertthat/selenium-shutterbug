@@ -67,8 +67,7 @@ public class Shutterbug {
         Browser browser = new Browser(driver);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver);
         browser.scrollToElement(element);
-        elementSnapshot.setImage(browser.takeScreenshot());
-        elementSnapshot.setImage(ImageProcessor.getElement(elementSnapshot.getImage(), browser.getBoundingClientRect(element)));
+        elementSnapshot.setImage(browser.takeScreenshot(),browser.getBoundingClientRect(element));
         return elementSnapshot;
     }
 }
