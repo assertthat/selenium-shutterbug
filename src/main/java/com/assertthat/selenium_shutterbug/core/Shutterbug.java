@@ -65,10 +65,10 @@ public class Shutterbug {
      */
     public static ElementSnapshot shootElement(WebDriver driver, WebElement element) {
         Browser browser = new Browser(driver);
-        ElementSnapshot elementScreenshot = new ElementSnapshot(driver, element);
+        ElementSnapshot elementSnapshot = new ElementSnapshot(driver);
         browser.scrollToElement(element);
-        elementScreenshot.setImage(browser.takeScreenshot());
-        elementScreenshot.setImage(ImageProcessor.getElement(elementScreenshot.getImage(), browser.getBoundingClientRect(element)));
-        return elementScreenshot;
+        elementSnapshot.setImage(browser.takeScreenshot());
+        elementSnapshot.setImage(ImageProcessor.getElement(elementSnapshot.getImage(), browser.getBoundingClientRect(element)));
+        return elementSnapshot;
     }
 }

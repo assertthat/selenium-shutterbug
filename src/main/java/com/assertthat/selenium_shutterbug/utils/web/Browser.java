@@ -66,12 +66,17 @@ public class Browser {
         Graphics2D g = combinedImage.createGraphics();
         int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
+        outerloop:
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * this.getViewportHeight());
             for (int i = 0; i < horizontalIterations; i++) {
                 this.scrollTo(i * this.getViewportWidth(), this.getViewportHeight() * j);
                 wait(50);
-                g.drawImage(takeScreenshot(), this.getCurrentScrollX(), this.getCurrentScrollY(), null);
+                Image image = takeScreenshot();
+                g.drawImage(image, this.getCurrentScrollX(), this.getCurrentScrollY(), null);
+                if(this.getDocWidth() == image.getWidth(null) && this.getDocHeight() == image.getHeight(null)){
+                    break outerloop;
+                }
             }
         }
         g.dispose();
@@ -84,7 +89,11 @@ public class Browser {
         int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
         for (int i = 0; i < horizontalIterations; i++) {
             this.scrollTo(i * this.getViewportWidth(), 0);
-            g.drawImage(takeScreenshot(), this.getCurrentScrollX(), 0, null);
+            Image image = takeScreenshot();
+            g.drawImage(image, this.getCurrentScrollX(), 0, null);
+            if(this.getDocWidth() == image.getWidth(null)){
+                break;
+            }
         }
         g.dispose();
         return combinedImage;
@@ -96,8 +105,11 @@ public class Browser {
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * this.getViewportHeight());
-            g.drawImage(takeScreenshot(), 0, this.getCurrentScrollY(), null);
-
+            Image image = takeScreenshot();
+            g.drawImage(image, 0, this.getCurrentScrollY(), null);
+            if(this.getDocHeight() == image.getHeight(null)){
+                break;
+            }
         }
         g.dispose();
         return combinedImage;

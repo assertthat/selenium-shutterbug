@@ -68,7 +68,7 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public T withThumbnail(String path, String name, double scale) {
         File thumbnailFile = new File(path.toString(), name);
-        if(Files.exists(Paths.get(path))) {
+        if(!Files.exists(Paths.get(path))) {
             thumbnailFile.mkdirs();
         }
         thumbnailImage=ImageProcessor.scale(image,scale);
@@ -127,7 +127,7 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public void save() {
         File screenshotFile = new File(location.toString(), fileName);
-        if(Files.exists(location)) {
+        if(!Files.exists(location)) {
             screenshotFile.mkdirs();
         }
         if (title != null && !title.isEmpty()) {

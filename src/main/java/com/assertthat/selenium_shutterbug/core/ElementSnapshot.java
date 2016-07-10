@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
  */
 public class ElementSnapshot extends Snapshot {
 
-    ElementSnapshot(WebDriver driver, WebElement element) {
+    ElementSnapshot(WebDriver driver) {
         this.driver = driver;
     }
 
