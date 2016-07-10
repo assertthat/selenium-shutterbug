@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 group 'com.assertthat'
 archivesBaseName = "selenium-shutterbug"
-version '0.1'
+version '0.2'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
