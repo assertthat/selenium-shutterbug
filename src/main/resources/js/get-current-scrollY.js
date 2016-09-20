@@ -1,1 +1,1 @@
-return window.scrollY;
+return Math.max(document.documentElement.scrollTop, document.body.scrollTop);
