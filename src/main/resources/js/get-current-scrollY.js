@@ -1,1 +1,1 @@
-Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+return Math.max(document.documentElement.scrollTop, document.body.scrollTop);
