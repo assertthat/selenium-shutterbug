@@ -39,6 +39,7 @@ public class Browser {
     private int viewportHeight = -1;
     private int currentScrollX;
     private int currentScrollY;
+    private int scrollTimeout;
 
     public Browser(WebDriver driver) {
         this.driver = driver;
@@ -50,6 +51,10 @@ public class Browser {
         } catch (InterruptedException e) {
             throw new UnableTakeSnapshotException(e);
         }
+    }
+
+    public void setScrollTimeout(int scrollTimeout){
+        this.scrollTimeout = scrollTimeout;
     }
 
     public BufferedImage takeScreenshot() {
@@ -66,16 +71,16 @@ public class Browser {
         Graphics2D g = combinedImage.createGraphics();
         int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
-        outerloop:
+        outer_loop:
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * this.getViewportHeight());
             for (int i = 0; i < horizontalIterations; i++) {
                 this.scrollTo(i * this.getViewportWidth(), this.getViewportHeight() * j);
-                wait(50);
+                wait(scrollTimeout);
                 Image image = takeScreenshot();
                 g.drawImage(image, this.getCurrentScrollX(), this.getCurrentScrollY(), null);
                 if(this.getDocWidth() == image.getWidth(null) && this.getDocHeight() == image.getHeight(null)){
-                    break outerloop;
+                    break outer_loop;
                 }
             }
         }
@@ -89,6 +94,7 @@ public class Browser {
         int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
         for (int i = 0; i < horizontalIterations; i++) {
             this.scrollTo(i * this.getViewportWidth(), 0);
+            wait(scrollTimeout);
             Image image = takeScreenshot();
             g.drawImage(image, this.getCurrentScrollX(), 0, null);
             if(this.getDocWidth() == image.getWidth(null)){
@@ -105,6 +111,7 @@ public class Browser {
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * this.getViewportHeight());
+            wait(scrollTimeout);
             Image image = takeScreenshot();
             g.drawImage(image, 0, this.getCurrentScrollY(), null);
             if(this.getDocHeight() == image.getHeight(null)){

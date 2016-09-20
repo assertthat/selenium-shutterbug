@@ -5,7 +5,6 @@
 
 package com.assertthat.selenium_shutterbug.core;
 
-import com.assertthat.selenium_shutterbug.utils.image.ImageProcessor;
 import com.assertthat.selenium_shutterbug.utils.web.Browser;
 import com.assertthat.selenium_shutterbug.utils.web.ScrollStrategy;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +14,8 @@ import org.openqa.selenium.WebElement;
  * Created by Glib_Briia on 26/06/2016.
  */
 public class Shutterbug {
+
+    private static final int DEFAULT_SCROLL_TIMEOUT = 100;
 
     /**
      * Make screenshot of the viewport only.
@@ -41,7 +42,22 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll) {
+        return shootPage(driver, scroll, DEFAULT_SCROLL_TIMEOUT);
+    }
+
+    /**
+     * To be used when screenshotting the page
+     * and need to scroll while making screenshots, either vertically or
+     * horizontally or both directions (Chrome).
+     *
+     * @param driver WebDriver instance
+     * @param scroll ScrollStrategy How you need to scroll
+     * @param  scrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @return PageSnapshot instance
+     */
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int scrollTimeout) {
         Browser browser = new Browser(driver);
+        browser.setScrollTimeout(scrollTimeout);
         PageSnapshot pageScreenshot = new PageSnapshot(driver);
         switch (scroll) {
             case HORIZONTALLY:

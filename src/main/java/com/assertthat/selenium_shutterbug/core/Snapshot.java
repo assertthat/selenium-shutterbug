@@ -24,7 +24,7 @@ import java.util.Date;
 public abstract class Snapshot<T extends Snapshot> {
 
     private static final String EXTENSION = "PNG";
-    protected static final String ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE = "Use ScrollStrategy.HORIZONTALLY,  ScrollStrategy.VERTICALLY or ScrollStrategy.BOTH_DIRECTIONS to shoot the element outside the viewport";
+    protected static final String ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE = "Requested element is outside the viewport";
     protected BufferedImage image;
     protected BufferedImage thumbnailImage;
     protected WebDriver driver;
