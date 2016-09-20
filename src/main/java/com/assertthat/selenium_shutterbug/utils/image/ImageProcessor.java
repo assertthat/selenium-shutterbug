@@ -9,7 +9,6 @@ import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
-import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
 /**
@@ -134,12 +133,11 @@ public class ImageProcessor {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
         BufferedImage scaledImage = getCompatibleImage(w, h);
-        Graphics2D g2d = scaledImage.createGraphics();
-        double xScale = (double) w / source.getWidth();
-        double yScale = (double) h / source.getHeight();
-        AffineTransform at = AffineTransform.getScaleInstance(xScale, yScale);
-        g2d.drawRenderedImage(source, at);
-        g2d.dispose();
+        Graphics2D resultGraphics = scaledImage.createGraphics();
+        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        resultGraphics.drawImage(source, 0, 0, w, h, null);
+        resultGraphics.dispose();
         return scaledImage;
     }
 
