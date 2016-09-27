@@ -18,12 +18,14 @@ package com.assertthat.selenium_shutterbug.utils.image;
 
 import org.junit.Test;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by Glib_Briia on 26/06/2016.
+ * Created by Glib_Briia, Inha Briia on 26/06/2016.
  */
 public class ImageProcessorTest {
 
@@ -43,4 +45,29 @@ public class ImageProcessorTest {
                 , new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB),0.0);
         assertTrue("Images are not equal when size match", imagesAreEqual);
     }
+
+    @Test
+    public void testImagesAreEquals() throws IOException {
+        BufferedImage image1 = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
+        BufferedImage image2 = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
+        assertTrue("Images are not equal",ImageProcessor.imagesAreEquals(image1, image2, 0.0));
+    }
+
+    @Test
+    public void testBlur() throws IOException {
+        BufferedImage clearImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
+        BufferedImage blurredExpectedImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("blurredImage.png"));
+        BufferedImage blurredActualImage = ImageProcessor.blur(clearImage);
+        assertTrue("Images are not equal after blur",ImageProcessor.imagesAreEquals(blurredActualImage, blurredExpectedImage, 0.0));
+    }
+
+    @Test
+    public void testImagesAreEqualsWithDeviation() throws IOException {
+        double deviation = 0.2;
+        BufferedImage image1 = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
+        BufferedImage image2 = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImageDeviation.png"));
+        assertTrue("Images are not equal with deviation: " + deviation,ImageProcessor.imagesAreEquals(image1, image2, deviation));
+    }
+
+
 }
