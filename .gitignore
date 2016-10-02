@@ -7,3 +7,4 @@ bin
 *.iml
 .idea
 screenshots
+*main.java

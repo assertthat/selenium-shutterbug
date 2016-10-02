@@ -16,9 +16,14 @@
 
 package com.assertthat.selenium_shutterbug.utils.image;
 
+import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 import org.junit.Test;
+import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -67,6 +72,25 @@ public class ImageProcessorTest {
         BufferedImage image1 = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
         BufferedImage image2 = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImageDeviation.png"));
         assertTrue("Images are not equal with deviation: " + deviation,ImageProcessor.imagesAreEquals(image1, image2, deviation));
+    }
+
+    @Test
+    public void testHighlight() throws IOException {
+        Point point = new Point(9,33);
+        Dimension size = new Dimension(141,17);
+        Coordinates coords = new Coordinates(point, size);
+        BufferedImage clearImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
+        BufferedImage highlightedExpectedImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("highlightedImage.png"));
+        BufferedImage highlightedActualImage = ImageProcessor.highlight(clearImage, coords, Color.red, 3);
+        assertTrue("Images are not equal after highlighting",ImageProcessor.imagesAreEquals(highlightedExpectedImage, highlightedActualImage, 0.0));
+    }
+
+    @Test
+    public void testAddText() throws IOException {
+        BufferedImage clearImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
+        BufferedImage addedTextExpectedImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("addedTextImage.png"));
+        BufferedImage addedTextActualImage = ImageProcessor.addText(clearImage, 60, 70, "ABC", Color.red, new Font("SansSerif", Font.BOLD, 20));
+        assertTrue("Images are not equal after adding text",ImageProcessor.imagesAreEquals(addedTextExpectedImage, addedTextActualImage, 0.0));
     }
 
 
