@@ -140,6 +140,7 @@ public abstract class Snapshot<T extends Snapshot> {
     /**
      * Final method to be called in the chain.
      * Actually saves processed image to the specified path.
+	 * @param path to save image to 
      */
     public void save(String path) {
         this.location = Paths.get(path);
@@ -197,7 +198,7 @@ public abstract class Snapshot<T extends Snapshot> {
     }
 
     /**
-     * @return
+     * @return image hash code
      */
     @Override
     public int hashCode() {
