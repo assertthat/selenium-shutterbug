@@ -17,6 +17,7 @@
 package com.assertthat.selenium_shutterbug.utils.image;
 
 import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -85,6 +86,7 @@ public class ImageProcessorTest {
         assertTrue("Images are not equal after highlighting",ImageProcessor.imagesAreEquals(highlightedExpectedImage, highlightedActualImage, 0.0));
     }
 
+    @Ignore
     @Test
     public void testAddText() throws IOException {
         BufferedImage clearImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
