@@ -67,19 +67,30 @@ public class Browser {
     }
 
     public BufferedImage takeScreenshotEntirePage() {
-        BufferedImage combinedImage = new BufferedImage(this.getDocWidth(), this.getDocHeight(), BufferedImage.TYPE_INT_ARGB);
+        final int _docWidth = this.getDocWidth();
+		final int _docHeight = this.getDocHeight();
+		BufferedImage combinedImage = new BufferedImage(_docWidth, _docHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = combinedImage.createGraphics();
-        int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
-        int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
+        int _viewportWidth = this.getViewportWidth();
+        int _viewportHeight = this.getViewportHeight();
+        final int scrollBarMaxWidth = 40; // this is probably too high, but better to be safe than sorry
+        
+		if (_viewportWidth < _docWidth || (_viewportHeight < _docHeight && _viewportWidth - scrollBarMaxWidth < _docWidth))
+        	_viewportHeight-=scrollBarMaxWidth; // some space for a scrollbar
+        if (_viewportHeight < _docHeight)
+        	_viewportWidth-=scrollBarMaxWidth; // some space for a scrollbar
+        
+		int horizontalIterations = (int) Math.ceil(((double) _docWidth) / _viewportWidth);
+		int verticalIterations = (int) Math.ceil(((double) _docHeight) / _viewportHeight);
         outer_loop:
         for (int j = 0; j < verticalIterations; j++) {
-            this.scrollTo(0, j * this.getViewportHeight());
+            this.scrollTo(0, j * _viewportHeight);
             for (int i = 0; i < horizontalIterations; i++) {
-                this.scrollTo(i * this.getViewportWidth(), this.getViewportHeight() * j);
+                this.scrollTo(i * _viewportWidth, _viewportHeight * j);
                 wait(scrollTimeout);
                 Image image = takeScreenshot();
                 g.drawImage(image, this.getCurrentScrollX(), this.getCurrentScrollY(), null);
-                if(this.getDocWidth() == image.getWidth(null) && this.getDocHeight() == image.getHeight(null)){
+                if(_docWidth == image.getWidth(null) && _docHeight == image.getHeight(null)){
                     break outer_loop;
                 }
             }
