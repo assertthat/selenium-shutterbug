@@ -1,1 +1,1 @@
-return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
