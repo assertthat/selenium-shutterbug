@@ -1,1 +1,1 @@
-return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
