@@ -1,1 +1,1 @@
-return Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+return Math.round(Math.max(document.documentElement.scrollTop, document.body.scrollTop));
