@@ -1,4 +1,4 @@
 language: java
 script: ./gradlew test
 
-jdk: oraclejdk7
+jdk: oraclejdk8
