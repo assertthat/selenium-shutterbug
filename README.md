@@ -1,7 +1,7 @@
 # selenium-shutterbug
 
 [![Build Status](https://travis-ci.org/assertthat/selenium-shutterbug.svg?branch=master)](https://travis-ci.org/assertthat/selenium-shutterbug)
-[![Dependency Status](https://www.versioneye.com/user/projects/581e02854304530ab1e52873/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/578229065bb13900493de8d9)
+[![Dependency Status](https://www.versioneye.com/user/projects/581e02854304530ab1e52873/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/581e02854304530ab1e52873)
 
 ## Synopsis
 
