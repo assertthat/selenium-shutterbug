@@ -9,19 +9,10 @@ Selenium Shutterbug is a utility library written in Java for making screenshots 
 
 ## Code Example
 
-Screenshot of the page, saving to default location (./screenshots/):
-````
-Shutterbug.shootPage(driver).save();
-```
 Screenhot of the page with scrolling (for Chrome to make screenshot of the whole page but not viewport only):
 ```
 Shutterbug.shootPage(driver, ScrollStrategy.BOTH_DIRECTIONS).save("C:\\testing\\screenshots\\");
 ```
-Screenshot of the single element:
-```
-Shutterbug.shootElement(driver,element).save("C:\\testing\\screenshots\\");
-```
-
 Highlighting, adding titles, text, etc:
 ```
         Shutterbug.shootPage(driver)
@@ -35,14 +26,7 @@ Highlighting, adding titles, text, etc:
                 .withThumbnail(0.7)
                 .save("C:\\testing\\screenshots\\");
 ```
-
-Check if taken screenshot equals to another image with allowed deviation:
-
-```
-Shutterbug.shootPage(driver).equals(otherImage,0.1);
-```
-
-And even more...
+More examples [here](https://github.com/assertthat/selenium-shutterbug/wiki) 
 
 ## Motivation
 
