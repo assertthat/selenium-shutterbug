@@ -5,11 +5,13 @@
 
 package com.assertthat.selenium_shutterbug.utils.image;
 
+import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
 import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
+import java.io.File;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
