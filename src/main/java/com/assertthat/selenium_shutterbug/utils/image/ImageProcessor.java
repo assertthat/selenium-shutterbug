@@ -129,6 +129,62 @@ public class ImageProcessor {
         return p == 0 || p <= deviation;
     }
 
+    /**
+     * Extends the functionality of imagesAreEquals, but creates a third BufferedImage and applies pixel manipulation to it.
+     * @param image1 The first image to compare
+     * @param image2 The second image to compare
+     * @param pathFileName The output path filename for the third image, if null then is ignored
+     * @param imgExtension The file extension for the output image
+     * @param deviation The upper limit of the pixel deviation for the test
+     * @return If the test passes
+     */
+    public static boolean imagesAreEquals(BufferedImage image1, BufferedImage image2, String pathFileName, String imgExtension, double deviation) {
+        BufferedImage output = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+        int width1 = image1.getWidth(null);
+        int width2 = image2.getWidth(null);
+        int height1 = image1.getHeight(null);
+        int height2 = image2.getHeight(null);
+        if ((width1 != width2) || (height1 != height2)) {
+            throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + width1 + "x" + height1 + "; image2 - " + width2 + "x" + height2);
+        }
+        long diff = 0;
+        long recordedDiff = 0; // Records the difference so it can be compared, saves having to do three if statements
+        for (int y = 0; y < height1; y++) {
+            for (int x = 0; x < width1; x++) {
+                recordedDiff = diff;
+
+                // Grab RGB values of both images, then bit shift and bitwise AND to break them down into R, G and B
+                int rgb1 = image1.getRGB(x, y);
+                int rgb2 = image2.getRGB(x, y);
+                int r1 = (rgb1 >> 16) & 0xff;
+                int g1 = (rgb1 >> 8) & 0xff;
+                int b1 = (rgb1) & 0xff;
+                int r2 = (rgb2 >> 16) & 0xff;
+                int g2 = (rgb2 >> 8) & 0xff;
+                int b2 = (rgb2) & 0xff;
+                diff += Math.abs(r1 - r2);
+                diff += Math.abs(g1 - g2);
+                diff += Math.abs(b1 - b2);
+
+                // If difference > recorded difference, change pixel to red. If zero, set to image 1's original pixel
+                if(diff > recordedDiff)
+                    output.setRGB(x,y,new Color(255,0,0).getRGB() & rgb1); // Dark red = original position, Light red is moved to
+                else
+                    output.setRGB(x,y,rgb1);
+            }
+        }
+        int colourSpaceBytes = 3; // RGB is 24 bit, or 3 bytes
+        double totalPixels = width1 * height1 * colourSpaceBytes;
+        double pixelError = diff / totalPixels / 255.0;
+        //System.out.format("Pixel error: "+"%.5f",pixelError*100);
+        //System.out.println("%"); // Format don't like that syntax!
+
+        // Write the image as png, with the filename based on the path provided
+        FileUtil.writeImage(output,imgExtension,new File(pathFileName));
+        return pixelError == 0 || pixelError <= deviation;
+    }
+
     public static BufferedImage scale(BufferedImage source, double ratio) {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
