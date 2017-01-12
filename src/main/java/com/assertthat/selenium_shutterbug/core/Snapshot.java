@@ -148,18 +148,14 @@ public abstract class Snapshot<T extends Snapshot> {
     }
 
     /**
-     * @param o Object to compare with
+     * @param other Snapshot to compare with
      * @param deviation allowed deviation while comparing.
      * @return true if the the percentage of differences
      * between current image and provided one is less than or equal to <b>deviation</b>
      */
-    public boolean equals(Object o, double deviation) {
-        if (this == o) return true;
-        if (!(o instanceof Snapshot)) return false;
-
-        Snapshot that = (Snapshot) o;
-
-        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), that.getImage(), deviation) : that.getImage() == null;
+    public boolean equals(Snapshot other, double deviation) {
+        if (this == other) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), other.getImage(), deviation) : other.getImage() == null;
     }
 
     /**
