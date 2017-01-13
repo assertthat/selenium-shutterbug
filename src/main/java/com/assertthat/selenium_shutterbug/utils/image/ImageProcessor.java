@@ -20,6 +20,7 @@ public class ImageProcessor {
 
     private static final int ARCH_SIZE = 10;
     private static float[] matrix = new float[49];
+    private static double pixelError = Double.MAX_VALUE;
 
     static {
         for (int i = 0; i < 49; i++)
@@ -132,15 +133,14 @@ public class ImageProcessor {
     }
 
     /**
-     * Extends the functionality of imagesAreEquals, but creates a third BufferedImage and applies pixel manipulation to it.
+     * Extends the functionality of imagesAreEqualsWithDiff, but creates a third BufferedImage and applies pixel manipulation to it.
      * @param image1 The first image to compare
      * @param image2 The second image to compare
      * @param pathFileName The output path filename for the third image, if null then is ignored
-     * @param imgExtension The file extension for the output image
      * @param deviation The upper limit of the pixel deviation for the test
      * @return If the test passes
      */
-    public static boolean imagesAreEquals(BufferedImage image1, BufferedImage image2, String pathFileName, String imgExtension, double deviation) {
+    public static boolean imagesAreEqualsWithDiff(BufferedImage image1, BufferedImage image2, String pathFileName, double deviation) {
         BufferedImage output = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         int width1 = image1.getWidth(null);
@@ -178,13 +178,20 @@ public class ImageProcessor {
         }
         int colourSpaceBytes = 3; // RGB is 24 bit, or 3 bytes
         double totalPixels = width1 * height1 * colourSpaceBytes;
-        double pixelError = diff / totalPixels / 255.0;
-        //System.out.format("Pixel error: "+"%.5f",pixelError*100);
-        //System.out.println("%"); // Format don't like that syntax!
+        pixelError = diff / totalPixels / 255.0;
 
         // Write the image as png, with the filename based on the path provided
-        FileUtil.writeImage(output,imgExtension,new File(pathFileName));
+        if(pixelError > 0)
+            FileUtil.writeImage(output,"png",new File(pathFileName));
         return pixelError == 0 || pixelError <= deviation;
+    }
+
+    /**
+     * Gives back the pixel error set by imagesAreEqualsWithDiff. 'getPixelError' should be called after 'imagesAreEqualsWithDiff.'
+     * @return pixelError The pixel error
+     */
+    public static double getPixelError(){
+        return pixelError;
     }
 
     public static BufferedImage scale(BufferedImage source, double ratio) {
