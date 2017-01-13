@@ -26,7 +26,7 @@ Highlighting, adding titles, text, etc:
                 .withThumbnail(0.7)
                 .save("C:\\testing\\screenshots\\");
 ```
-More examples [here](https://github.com/assertthat/selenium-shutterbug/wiki) 
+More examples [here](https://github.com/assertthat/selenium-shutterbug/wiki/Examples-of-usage) 
 
 ## Motivation
 
