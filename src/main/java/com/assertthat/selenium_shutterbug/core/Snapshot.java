@@ -98,7 +98,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return instance of type Snapshot
      */
     public T withThumbnail(double scale) {
-        return withThumbnail(Paths.get(location.toString(),"./thumbnails").toString(),"thumb_"+fileName,scale);
+        return withThumbnail(Paths.get(location.toString(), "./thumbnails").toString(), "thumb_" + fileName, scale);
     }
 
     /**
@@ -200,7 +200,7 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public boolean equalsWithDiff(BufferedImage image, String resultingImagePath) {
         if (this.getImage() == image) return true;
-        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image,resultingImagePath, 0) : image == null;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image, resultingImagePath, 0) : image == null;
     }
 
     /**
@@ -211,7 +211,28 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public boolean equalsWithDiff(BufferedImage image, String resultingImagePath, double deviation) {
         if (this.getImage() == image) return true;
-        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image,resultingImagePath, deviation) : image == null;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image, resultingImagePath, deviation) : image == null;
+    }
+
+    /**
+     * @param image Snapshot to compare with.
+     * @param resultingImagePath path to save to resulting images with diff
+     * @return true if the the provided image and current image are strictly equal.
+     */
+    public boolean equalsWithDiff(Snapshot image, String resultingImagePath) {
+        if (this == image) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image.getImage(),resultingImagePath, 0) : image == null;
+    }
+
+    /**
+     * @param image Snapshot to compare with.
+     * @param resultingImagePath path to save to resulting images with diff
+     * @param deviation allowed deviation while comparing
+     * @return true if the the provided image and current image are strictly equal.
+     */
+    public boolean equalsWithDiff(Snapshot image, String resultingImagePath, double deviation) {
+        if (this == image) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image.getImage(),resultingImagePath, deviation) : image == null;
     }
 
     /**
