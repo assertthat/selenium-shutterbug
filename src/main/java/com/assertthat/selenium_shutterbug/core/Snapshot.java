@@ -194,6 +194,27 @@ public abstract class Snapshot<T extends Snapshot> {
     }
 
     /**
+     * @param image BufferedImage to compare with.
+     * @param resultingImagePath path to save to resulting images with diff
+     * @return true if the the provided image and current image are strictly equal.
+     */
+    public boolean equalsWithDiff(BufferedImage image, String resultingImagePath) {
+        if (this.getImage() == image) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image,resultingImagePath, 0) : image == null;
+    }
+
+    /**
+     * @param image BufferedImage to compare with.
+     * @param resultingImagePath path to save to resulting images with diff
+     * @param deviation allowed deviation while comparing
+     * @return true if the the provided image and current image are strictly equal.
+     */
+    public boolean equalsWithDiff(BufferedImage image, String resultingImagePath, double deviation) {
+        if (this.getImage() == image) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image,resultingImagePath, deviation) : image == null;
+    }
+
+    /**
      * @return image hash code
      */
     @Override
