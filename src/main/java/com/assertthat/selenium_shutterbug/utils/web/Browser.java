@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static java.lang.Math.toIntExact;
+
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
@@ -31,6 +33,7 @@ public class Browser {
     public static final String SCROLL_INTO_VIEW_JS = "js/scroll-element-into-view.js";
     public static final String CURRENT_SCROLL_Y_JS = "js/get-current-scrollY.js";
     public static final String CURRENT_SCROLL_X_JS = "js/get-current-scrollX.js";
+    public static final String DEVICE_PIXEL_RATIO = "js/get-device-pixel-ratio.js";
 
     private WebDriver driver;
     private int docHeight = -1;
@@ -40,9 +43,11 @@ public class Browser {
     private int currentScrollX;
     private int currentScrollY;
     private int scrollTimeout;
+    private Long devicePixelRatio;
 
-    public Browser(WebDriver driver) {
+    public Browser(WebDriver driver, boolean useDevicePixelRatio) {
         this.driver = driver;
+        devicePixelRatio = useDevicePixelRatio?((Long)executeJsScript(DEVICE_PIXEL_RATIO)):1;
     }
 
     public static void wait(int milis) {
@@ -138,27 +143,27 @@ public class Browser {
     }
 
     public int getCurrentScrollX() {
-        return ((Long) executeJsScript(Browser.CURRENT_SCROLL_X_JS)).intValue();
+        return (int)(((Long) executeJsScript(Browser.CURRENT_SCROLL_X_JS))*devicePixelRatio);
     }
 
     public int getCurrentScrollY() {
-        return ((Long) executeJsScript(Browser.CURRENT_SCROLL_Y_JS)).intValue();
+        return (int)(((Long) executeJsScript(Browser.CURRENT_SCROLL_Y_JS))*devicePixelRatio);
     }
 
     public int getDocWidth() {
-        return docWidth != -1 ? docWidth : ((Long) executeJsScript(MAX_DOC_WIDTH_JS)).intValue();
+        return docWidth != -1 ? docWidth : (int)(((Long) executeJsScript(MAX_DOC_WIDTH_JS))*devicePixelRatio);
     }
 
     public int getDocHeight() {
-        return docHeight != -1 ? docHeight : ((Long) executeJsScript(MAX_DOC_HEIGHT_JS)).intValue();
+        return docHeight != -1 ? docHeight : (int)(((Long) executeJsScript(MAX_DOC_HEIGHT_JS))*devicePixelRatio);
     }
 
     public int getViewportWidth() {
-        return viewportWidth != -1 ? viewportWidth : ((Long) executeJsScript(VIEWPORT_WIDTH_JS)).intValue();
+        return viewportWidth != -1 ? viewportWidth : (int)(((Long) executeJsScript(VIEWPORT_WIDTH_JS))*devicePixelRatio);
     }
 
     public int getViewportHeight() {
-        return viewportHeight != -1 ? viewportHeight : ((Long) executeJsScript(VIEWPORT_HEIGHT_JS)).intValue();
+        return viewportHeight != -1 ? viewportHeight : (int)(((Long) executeJsScript(VIEWPORT_HEIGHT_JS)).intValue()*devicePixelRatio);
     }
 
     public Coordinates getBoundingClientRect(WebElement element) {
@@ -174,7 +179,7 @@ public class Browser {
     }
 
     public void scrollTo(int x, int y) {
-        executeJsScript(SCROLL_TO_JS, x, y);
+        executeJsScript(SCROLL_TO_JS, x/devicePixelRatio, y/devicePixelRatio);
     }
 
     public Object executeJsScript(String filePath, Object... arg) {
