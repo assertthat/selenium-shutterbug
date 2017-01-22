@@ -195,7 +195,7 @@ public abstract class Snapshot<T extends Snapshot> {
 
     /**
      * @param image BufferedImage to compare with.
-     * @param resultingImagePath path to save to resulting images with diff
+     * @param resultingImagePath path with name to save to resulting images with diff
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(BufferedImage image, String resultingImagePath) {
@@ -205,7 +205,7 @@ public abstract class Snapshot<T extends Snapshot> {
 
     /**
      * @param image BufferedImage to compare with.
-     * @param resultingImagePath path to save to resulting images with diff
+     * @param resultingImagePath path with name to save to resulting images with diff
      * @param deviation allowed deviation while comparing
      * @return true if the the provided image and current image are strictly equal.
      */
@@ -216,7 +216,7 @@ public abstract class Snapshot<T extends Snapshot> {
 
     /**
      * @param image Snapshot to compare with.
-     * @param resultingImagePath path to save to resulting images with diff
+     * @param resultingImagePath path with name to save to resulting images with diff
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(Snapshot image, String resultingImagePath) {
@@ -226,7 +226,7 @@ public abstract class Snapshot<T extends Snapshot> {
 
     /**
      * @param image Snapshot to compare with.
-     * @param resultingImagePath path to save to resulting images with diff
+     * @param resultingImagePath path with name to save to resulting images with diff
      * @param deviation allowed deviation while comparing
      * @return true if the the provided image and current image are strictly equal.
      */

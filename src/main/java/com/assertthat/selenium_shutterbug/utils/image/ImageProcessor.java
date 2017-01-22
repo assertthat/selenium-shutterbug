@@ -182,7 +182,7 @@ public class ImageProcessor {
 
         // Write the image as png, with the filename based on the path provided
         if(pixelError > 0)
-            FileUtil.writeImage(output,"png",new File(pathFileName));
+            FileUtil.writeImage(output,"png",new File(pathFileName+".png"));
         return pixelError == 0 || pixelError <= deviation;
     }
 
