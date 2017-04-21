@@ -36,7 +36,7 @@ The idea behind the project is to make testers life easier by enabling them to c
 
 The project is available in [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22selenium-shutterbug%22 "Maven Central project location")
 
-#####Maven dependency
+##### Maven dependency
 
 ```xml
 <dependency>
@@ -45,7 +45,7 @@ The project is available in [Maven Central](http://search.maven.org/#search%7Cga
     <version>x.x</version>
 </dependency>
 ```
-#####Using Gradle
+##### Using Gradle
 
 ```
 compile 'com.assertthat:selenium-shutterbug:x.x'
