@@ -40,14 +40,15 @@ public class Browser {
     private int docWidth = -1;
     private int viewportWidth = -1;
     private int viewportHeight = -1;
-    private int currentScrollX;
-    private int currentScrollY;
     private int scrollTimeout;
-    private Long devicePixelRatio;
+    private Double devicePixelRatio = 1.0;
 
     public Browser(WebDriver driver, boolean useDevicePixelRatio) {
         this.driver = driver;
-        devicePixelRatio = useDevicePixelRatio?((Long)executeJsScript(DEVICE_PIXEL_RATIO)):1;
+        if(useDevicePixelRatio) {
+            Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
+            this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
+        }
     }
 
     public static void wait(int milis) {
