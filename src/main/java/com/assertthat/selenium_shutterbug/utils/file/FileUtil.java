@@ -21,7 +21,14 @@ public class FileUtil {
 
     public static String getJsScript(String filePath) {
         try {
-            return IOUtils.toString(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath));
+            InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+            if (is == null) {
+                // This is needed to load the files in an OSGI enviroment when enclosed in a bundle
+                is = FileUtil.class.getClassLoader().getResourceAsStream(filePath);
+            }
+            // if the input stream is still null, this will avoid a non descriptive null pointer exception
+            if (is == null) new UnableTakeSnapshotException("Unable to load JS script, unable to locate resource stream.");
+            return IOUtils.toString(is);
         } catch (IOException e) {
             throw new UnableTakeSnapshotException("Unable to load JS script", e);
         }
