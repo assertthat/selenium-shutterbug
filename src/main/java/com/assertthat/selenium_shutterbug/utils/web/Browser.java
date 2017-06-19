@@ -69,7 +69,13 @@ public class Browser {
             return ImageIO.read(srcFile);
         } catch (IOException e) {
             throw new UnableTakeSnapshotException(e);
-        }
+        } finally {
+	    // add this to clean up leaving this file in the temporary directory forever...
+	    if (srcFile.exists()) {
+	       srcFile.delete();
+	    }
+	}
+	
     }
 
     public BufferedImage takeScreenshotEntirePage() {
