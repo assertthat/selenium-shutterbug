@@ -16,6 +16,7 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.+'
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
 }
 
 task javadocJar(type: Jar) {
