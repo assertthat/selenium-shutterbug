@@ -155,6 +155,23 @@ public class PageSnapshot extends Snapshot {
         return this;
     }
 
+    /**
+     * Crop the image around specified element with offset.
+     *
+     * @param element WebElement to crop around
+     * @param offsetX  offsetX around element in px
+     * @param offsetY offsetY around element in px
+     * @return instance of type PageSnapshot
+     */
+    public PageSnapshot cropAround(WebElement element, int offsetX, int offsetY) {
+        try{
+            image = ImageProcessor.cropAround(image, new Coordinates(element), offsetX, offsetY);
+        }catch(RasterFormatException rfe){
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE,rfe);
+        }
+        return this;
+    }
+
     @Override
     protected PageSnapshot self() {
         return this;

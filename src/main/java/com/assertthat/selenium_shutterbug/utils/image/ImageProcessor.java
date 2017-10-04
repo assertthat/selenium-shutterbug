@@ -87,6 +87,11 @@ public class ImageProcessor {
         return combined;
     }
 
+    public static BufferedImage cropAround(BufferedImage sourceImage, Coordinates coords, int offsetX, int offsetY) {
+        BufferedImage subImage = sourceImage.getSubimage(coords.getX()-offsetX, coords.getY()-offsetY, coords.getWidth()+offsetX*2, coords.getHeight()+offsetY*2);
+        return subImage;
+    }
+
     public static BufferedImage addTitle(BufferedImage sourceImage, String title, Color color, Font textFont) {
         int textOffset = 5;
         BufferedImage combined = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight() + textFont.getSize(), BufferedImage.TYPE_INT_ARGB);
@@ -184,14 +189,6 @@ public class ImageProcessor {
         if(pixelError > 0)
             FileUtil.writeImage(output,"png",new File(pathFileName+".png"));
         return pixelError == 0 || pixelError <= deviation;
-    }
-
-    /**
-     * Gives back the pixel error set by imagesAreEqualsWithDiff. 'getPixelError' should be called after 'imagesAreEqualsWithDiff.'
-     * @return pixelError The pixel error
-     */
-    public static double getPixelError(){
-        return pixelError;
     }
 
     public static BufferedImage scale(BufferedImage source, double ratio) {
