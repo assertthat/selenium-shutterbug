@@ -110,6 +110,10 @@ public class Browser {
         g.dispose();
         return combinedImage;
     }
+    public BufferedImage takeScreenshotEntirePage(boolean wholePage) {
+        driver.manage().window().setSize(new Dimension(this.getDocWidth(), this.getDocHeight()));
+        return takeScreenshotEntirePage();
+    }
 
     public BufferedImage takeScreenshotScrollHorizontally() {
         BufferedImage combinedImage = new BufferedImage(this.getDocWidth(), this.getViewportHeight(), BufferedImage.TYPE_INT_ARGB);

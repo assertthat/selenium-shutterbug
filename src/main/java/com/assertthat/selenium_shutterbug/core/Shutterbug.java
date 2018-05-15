@@ -96,6 +96,8 @@ public class Shutterbug {
                 break;
             case BOTH_DIRECTIONS:
                 pageScreenshot.setImage(browser.takeScreenshotEntirePage());
+            case WITHOUT_STICKY_HEADER:
+                pageScreenshot.setImage(browser.takeScreenshotEntirePage(true));
         }
         return pageScreenshot;
     }
