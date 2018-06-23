@@ -6,18 +6,21 @@
 package com.assertthat.selenium_shutterbug.utils.web;
 
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
+import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-
-import static java.lang.Math.toIntExact;
+import java.util.Map;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
@@ -34,6 +37,7 @@ public class Browser {
     public static final String CURRENT_SCROLL_Y_JS = "js/get-current-scrollY.js";
     public static final String CURRENT_SCROLL_X_JS = "js/get-current-scrollX.js";
     public static final String DEVICE_PIXEL_RATIO = "js/get-device-pixel-ratio.js";
+    public static final String ALL_METRICS = "js/all-metrics.js";
 
     private WebDriver driver;
     private int docHeight = -1;
@@ -75,7 +79,7 @@ public class Browser {
 	       srcFile.delete();
 	    }
 	}
-	
+
     }
 
     public BufferedImage takeScreenshotEntirePage() {
@@ -86,12 +90,12 @@ public class Browser {
         int _viewportWidth = this.getViewportWidth();
         int _viewportHeight = this.getViewportHeight();
         final int scrollBarMaxWidth = 40; // this is probably too high, but better to be safe than sorry
-        
+
 		if (_viewportWidth < _docWidth || (_viewportHeight < _docHeight && _viewportWidth - scrollBarMaxWidth < _docWidth))
         	_viewportHeight-=scrollBarMaxWidth; // some space for a scrollbar
         if (_viewportHeight < _docHeight)
         	_viewportWidth-=scrollBarMaxWidth; // some space for a scrollbar
-        
+
 		int horizontalIterations = (int) Math.ceil(((double) _docWidth) / _viewportWidth);
 		int verticalIterations = (int) Math.ceil(((double) _docHeight) / _viewportHeight);
         outer_loop:
@@ -110,9 +114,32 @@ public class Browser {
         g.dispose();
         return combinedImage;
     }
-    public BufferedImage takeScreenshotEntirePage(boolean wholePage) {
-        driver.manage().window().setSize(new Dimension(this.getDocWidth(), this.getDocHeight()));
-        return takeScreenshotEntirePage();
+
+    public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
+        DriverCommandExecutor driver = null;
+        try {
+            driver = new DriverCommandExecutor((ChromeDriver) this.driver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollTo(0, j * this.getViewportHeight());
+            wait(scrollTimeout);
+        }
+        Object metrics = driver.evaluate(FileUtil.getJsScript(ALL_METRICS));
+        driver.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
+        Object result = driver.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
+        driver.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
+        String base64EncodedPng = (String) ((Map<String, ?>) result).get("data");
+        InputStream in = new ByteArrayInputStream(OutputType.BYTES.convertFromBase64Png(base64EncodedPng));
+        BufferedImage bImageFromConvert;
+        try {
+            bImageFromConvert = ImageIO.read(in);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while converting results from bytes to BufferedImage");
+        }
+        return bImageFromConvert;
     }
 
     public BufferedImage takeScreenshotScrollHorizontally() {
