@@ -46,7 +46,6 @@ public class ImageProcessor {
         Graphics2D g = sourceImage.createGraphics();
         g.setPaint(color);
         g.setFont(font);
-        FontMetrics fm = g.getFontMetrics();
         g.drawString(text, x, y);
         g.dispose();
         return sourceImage;

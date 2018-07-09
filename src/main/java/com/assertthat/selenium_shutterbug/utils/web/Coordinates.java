@@ -19,20 +19,20 @@ public class Coordinates {
     private int x;
     private int y;
 
-    public Coordinates(WebElement element) {
+    public Coordinates(WebElement element, Double devicePixelRatio) {
         Point point = element.getLocation();
         Dimension size = element.getSize();
-        this.width = size.getWidth();
-        this.height = size.getHeight();
-        this.x = point.getX();
-        this.y = point.getY();
+        this.width = (int)(size.getWidth()*devicePixelRatio);
+        this.height = (int)(size.getHeight()*devicePixelRatio);
+        this.x = (int)(point.getX()*devicePixelRatio);
+        this.y = (int)(point.getY()*devicePixelRatio);
     }
 
-    public Coordinates(Point point, Dimension size) {
-        this.width = size.getWidth();
-        this.height = size.getHeight();
-        this.x = point.getX();
-        this.y = point.getY();
+    public Coordinates(Point point, Dimension size, Double devicePixelRatio) {
+        this.width = (int)(size.getWidth()*devicePixelRatio);
+        this.height = (int)(size.getHeight()*devicePixelRatio);
+        this.x = (int)(point.getX()*devicePixelRatio);
+        this.y = (int)(point.getY()*devicePixelRatio);
     }
 
 

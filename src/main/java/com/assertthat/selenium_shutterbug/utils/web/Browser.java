@@ -51,6 +51,10 @@ public class Browser {
         }
     }
 
+    public Double getDevicePixelRatio() {
+        return devicePixelRatio;
+    }
+
     public static void wait(int milis) {
         try {
             Thread.sleep(milis);
@@ -178,7 +182,7 @@ public class Browser {
         ArrayList<String> list = (ArrayList<String>) executeJsScript(RELATIVE_COORDS_JS, element);
         Point start = new Point(Integer.parseInt(list.get(0)), Integer.parseInt(list.get(1)));
         Dimension size = new Dimension(Integer.parseInt(list.get(2)), Integer.parseInt(list.get(3)));
-        return new Coordinates(start, size);
+        return new Coordinates(start, size, devicePixelRatio);
     }
 
     public void scrollToElement(WebElement element) {

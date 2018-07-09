@@ -19,8 +19,9 @@ import java.awt.image.RasterFormatException;
  */
 public class PageSnapshot extends Snapshot {
 
-    PageSnapshot(WebDriver driver) {
+    PageSnapshot(WebDriver driver, Double devicePixelRatio) {
         this.driver = driver;
+        this.devicePixelRatio = devicePixelRatio;
     }
 
     /**
@@ -50,7 +51,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot highlight(WebElement element, Color color, int lineWidth) {
         try {
-            image = ImageProcessor.highlight(image, new Coordinates(element), color, lineWidth);
+            image = ImageProcessor.highlight(image, new Coordinates(element, devicePixelRatio), color, lineWidth);
         } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
@@ -91,7 +92,7 @@ public class PageSnapshot extends Snapshot {
     public PageSnapshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
        try {
            highlight(element, elementColor, 0);
-           Coordinates coords = new Coordinates(element);
+           Coordinates coords = new Coordinates(element, devicePixelRatio);
            image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
        } catch (RasterFormatException rfe) {
            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
@@ -117,7 +118,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot blur(WebElement element) {
         try {
-            image = ImageProcessor.blurArea(image, new Coordinates(element));
+            image = ImageProcessor.blurArea(image, new Coordinates(element, devicePixelRatio));
         }catch(RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
@@ -133,7 +134,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot monochrome(WebElement element) {
         try {
-            image = ImageProcessor.monochromeArea(image, new Coordinates(element));
+            image = ImageProcessor.monochromeArea(image, new Coordinates(element,devicePixelRatio));
         } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
@@ -148,7 +149,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot blurExcept(WebElement element) {
         try{
-            image = ImageProcessor.blurExceptArea(image, new Coordinates(element));
+            image = ImageProcessor.blurExceptArea(image, new Coordinates(element,devicePixelRatio));
         }catch(RasterFormatException rfe){
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE,rfe);
         }
@@ -165,7 +166,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot cropAround(WebElement element, int offsetX, int offsetY) {
         try{
-            image = ImageProcessor.cropAround(image, new Coordinates(element), offsetX, offsetY);
+            image = ImageProcessor.cropAround(image, new Coordinates(element,devicePixelRatio), offsetX, offsetY);
         }catch(RasterFormatException rfe){
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE,rfe);
         }

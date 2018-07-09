@@ -40,7 +40,7 @@ public class Shutterbug {
      */
     public static PageSnapshot shootPage(WebDriver driver, boolean useDevicePixelRatio) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
-        PageSnapshot pageScreenshot = new PageSnapshot(driver);
+        PageSnapshot pageScreenshot = new PageSnapshot(driver,browser.getDevicePixelRatio());
         pageScreenshot.setImage(browser.takeScreenshot());
         return pageScreenshot;
     }
@@ -86,7 +86,7 @@ public class Shutterbug {
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int scrollTimeout, boolean useDevicePixelRatio) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         browser.setScrollTimeout(scrollTimeout);
-        PageSnapshot pageScreenshot = new PageSnapshot(driver);
+        PageSnapshot pageScreenshot = new PageSnapshot(driver, browser.getDevicePixelRatio());
         switch (scroll) {
             case HORIZONTALLY:
                 pageScreenshot.setImage(browser.takeScreenshotScrollHorizontally());
@@ -120,8 +120,8 @@ public class Shutterbug {
      * @return ElementSnapshot instance
      */
     public static ElementSnapshot shootElement(WebDriver driver, WebElement element, boolean useDevicePixelRatio) {
-        Browser browser = new Browser(driver,useDevicePixelRatio);
-        ElementSnapshot elementSnapshot = new ElementSnapshot(driver);
+        Browser browser = new Browser(driver, useDevicePixelRatio);
+        ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElement(element);
         elementSnapshot.setImage(browser.takeScreenshot(),browser.getBoundingClientRect(element));
         return elementSnapshot;
