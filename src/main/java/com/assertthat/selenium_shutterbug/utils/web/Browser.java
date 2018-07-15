@@ -11,6 +11,11 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.CommandInfo;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.Response;
+import org.openqa.selenium.remote.http.HttpMethod;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -19,6 +24,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -53,6 +60,14 @@ public class Browser {
             Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
             this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
         }
+    }
+
+    public Browser(ChromeDriver driver) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        this.driver = driver;
+        CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
+        Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
+        defineCommand.setAccessible(true);
+        defineCommand.invoke(driver.getCommandExecutor(), "sendCommand", cmd);
     }
 
     public static void wait(int milis) {
@@ -116,12 +131,16 @@ public class Browser {
     }
 
     public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
-        DriverCommandExecutor driver = null;
+        if(!(this.driver instanceof ChromeDriver))
+            throw new UnsupportedOperationException("You must use Chrome driver for this operation");
+
+        Browser driver;
         try {
-            driver = new DriverCommandExecutor((ChromeDriver) this.driver);
-        } catch (Exception e) {
-            e.printStackTrace();
+            driver = new Browser((ChromeDriver) this.driver);
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
+
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * this.getViewportHeight());
@@ -130,7 +149,6 @@ public class Browser {
         Object metrics = driver.evaluate(FileUtil.getJsScript(ALL_METRICS));
         driver.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
         Object result = driver.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
-        driver.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
         String base64EncodedPng = (String) ((Map<String, ?>) result).get("data");
         InputStream in = new ByteArrayInputStream(OutputType.BYTES.convertFromBase64Png(base64EncodedPng));
         BufferedImage bImageFromConvert;
@@ -224,5 +242,22 @@ public class Browser {
         String script = FileUtil.getJsScript(filePath);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         return js.executeScript(script, arg);
+    }
+
+    public Object sendCommand(String cmd, Object params) {
+        try {
+            Method execute = RemoteWebDriver.class.getDeclaredMethod("execute", String.class, Map.class);
+            execute.setAccessible(true);
+            Response res = (Response) execute.invoke(driver, "sendCommand", ImmutableMap.of("cmd", cmd, "params", params));
+            return res.getValue();
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Object evaluate(String script) {
+        Object response = sendCommand("Runtime.evaluate", ImmutableMap.of("returnByValue", true, "expression", script));
+        Object result = ((Map<String, ?>) response).get("result");
+        return ((Map<String, ?>) result).get("value");
     }
 }
