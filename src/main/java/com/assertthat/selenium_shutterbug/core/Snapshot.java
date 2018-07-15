@@ -28,6 +28,7 @@ public abstract class Snapshot<T extends Snapshot> {
     protected BufferedImage image;
     protected BufferedImage thumbnailImage;
     protected WebDriver driver;
+    protected Double devicePixelRatio = 1D;
     private String fileName = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date())
             + "." + EXTENSION.toLowerCase();
     private Path location = Paths.get("./screenshots/");

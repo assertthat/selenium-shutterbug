@@ -61,13 +61,16 @@ public class Browser {
             this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
         }
     }
-
     public Browser(ChromeDriver driver) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         this.driver = driver;
         CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
         Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
         defineCommand.setAccessible(true);
         defineCommand.invoke(driver.getCommandExecutor(), "sendCommand", cmd);
+    }
+  
+    public Double getDevicePixelRatio() {
+        return devicePixelRatio;
     }
 
     public static void wait(int milis) {
@@ -227,7 +230,7 @@ public class Browser {
         ArrayList<String> list = (ArrayList<String>) executeJsScript(RELATIVE_COORDS_JS, element);
         Point start = new Point(Integer.parseInt(list.get(0)), Integer.parseInt(list.get(1)));
         Dimension size = new Dimension(Integer.parseInt(list.get(2)), Integer.parseInt(list.get(3)));
-        return new Coordinates(start, size);
+        return new Coordinates(start, size, devicePixelRatio);
     }
 
     public void scrollToElement(WebElement element) {

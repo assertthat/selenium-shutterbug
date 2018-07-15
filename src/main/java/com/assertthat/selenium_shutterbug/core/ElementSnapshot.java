@@ -19,8 +19,9 @@ import java.awt.image.RasterFormatException;
  */
 public class ElementSnapshot extends Snapshot {
 
-    ElementSnapshot(WebDriver driver) {
+    ElementSnapshot(WebDriver driver, Double devicePixelRatio) {
         this.driver = driver;
+        this.devicePixelRatio = devicePixelRatio;
     }
 
     protected void setImage(BufferedImage image, Coordinates coords) {
