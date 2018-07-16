@@ -96,6 +96,10 @@ public class Shutterbug {
                 break;
             case BOTH_DIRECTIONS:
                 pageScreenshot.setImage(browser.takeScreenshotEntirePage());
+                break;
+            case WHOLE_PAGE_CHROME:
+                pageScreenshot.setImage(browser.takeScreenshotEntirePageUsingChromeCommand());
+                break;
         }
         return pageScreenshot;
     }
