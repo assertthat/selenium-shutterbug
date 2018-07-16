@@ -79,6 +79,20 @@ public class Shutterbug {
      *
      * @param driver WebDriver instance
      * @param scroll ScrollStrategy How you need to scroll
+     * @param  useDevicePixelRatio whether or not take into account device pixel ratio
+     * @return PageSnapshot instance
+     */
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, boolean useDevicePixelRatio) {
+        return shootPage(driver,scroll,0,useDevicePixelRatio);
+    }
+
+    /**
+     * To be used when screen shooting the page
+     * and need to scroll while making screen shots, either vertically or
+     * horizontally or both directions (Chrome).
+     *
+     * @param driver WebDriver instance
+     * @param scroll ScrollStrategy How you need to scroll
      * @param  scrollTimeout Timeout to wait after scrolling and before taking screen shot
      * @param useDevicePixelRatio whether or not take into account device pixel ratio
      * @return PageSnapshot instance
