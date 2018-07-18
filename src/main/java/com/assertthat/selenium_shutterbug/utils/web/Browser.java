@@ -16,6 +16,7 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.http.HttpMethod;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -134,12 +135,10 @@ public class Browser {
     }
 
     public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
-        if(!(this.driver instanceof ChromeDriver))
-            throw new UnsupportedOperationException("You must use Chrome driver for this operation");
-
+        ChromeDriver chromeDriver = getChromeDriverAfterValidation(this.driver);
         Browser driver;
         try {
-            driver = new Browser((ChromeDriver) this.driver);
+            driver = new Browser(chromeDriver);
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -161,6 +160,22 @@ public class Browser {
             throw new RuntimeException("Error while converting results from bytes to BufferedImage");
         }
         return bImageFromConvert;
+    }
+
+    private ChromeDriver getChromeDriverAfterValidation(WebDriver driver) {
+        ChromeDriver chromeDriver;
+
+        if (driver instanceof EventFiringWebDriver) {
+            driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();
+        }
+
+        if (driver instanceof ChromeDriver) {
+            chromeDriver = (ChromeDriver) driver;
+        } else if (driver instanceof RemoteWebDriver) {
+            chromeDriver = new ChromeDriver();
+            //TODO
+        } else throw new UnsupportedOperationException("You must use Chrome driver for this operation");
+        return chromeDriver;
     }
 
     public BufferedImage takeScreenshotScrollHorizontally() {
