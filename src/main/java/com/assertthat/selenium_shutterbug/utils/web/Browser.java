@@ -62,7 +62,7 @@ public class Browser {
             this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
         }
     }
-    public Browser(ChromeDriver driver) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+    public Browser(RemoteWebDriver driver) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         this.driver = driver;
         CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
         Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
@@ -135,10 +135,10 @@ public class Browser {
     }
 
     public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
-        ChromeDriver chromeDriver = getChromeDriverAfterValidation(this.driver);
+        RemoteWebDriver remoteWebDriver = getDriverAfterValidation(this.driver);
         Browser driver;
         try {
-            driver = new Browser(chromeDriver);
+            driver = new Browser(remoteWebDriver);
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -162,20 +162,19 @@ public class Browser {
         return bImageFromConvert;
     }
 
-    private ChromeDriver getChromeDriverAfterValidation(WebDriver driver) {
-        ChromeDriver chromeDriver;
-
+    private RemoteWebDriver getDriverAfterValidation(WebDriver driver) {
         if (driver instanceof EventFiringWebDriver) {
             driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();
         }
 
         if (driver instanceof ChromeDriver) {
-            chromeDriver = (ChromeDriver) driver;
+            return (ChromeDriver) driver;
         } else if (driver instanceof RemoteWebDriver) {
-            chromeDriver = new ChromeDriver();
-            //TODO
-        } else throw new UnsupportedOperationException("You must use Chrome driver for this operation");
-        return chromeDriver;
+            if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome")) {
+                return (RemoteWebDriver) driver;
+            }
+        }
+        throw new UnsupportedOperationException("ScrollStrategy.WHOLE_PAGE_CHROME is only applicable for Chrome driver");
     }
 
     public BufferedImage takeScreenshotScrollHorizontally() {
