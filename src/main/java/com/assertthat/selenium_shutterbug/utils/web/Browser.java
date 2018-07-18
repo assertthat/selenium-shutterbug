@@ -62,14 +62,7 @@ public class Browser {
             this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
         }
     }
-    public Browser(RemoteWebDriver driver) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        this.driver = driver;
-        CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
-        Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
-        defineCommand.setAccessible(true);
-        defineCommand.invoke(driver.getCommandExecutor(), "sendCommand", cmd);
-    }
-  
+
     public Double getDevicePixelRatio() {
         return devicePixelRatio;
     }
@@ -135,10 +128,13 @@ public class Browser {
     }
 
     public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
-        RemoteWebDriver remoteWebDriver = getDriverAfterValidation(this.driver);
-        Browser driver;
+        this.driver = getDriverAfterValidation(this.driver);
+
         try {
-            driver = new Browser(remoteWebDriver);
+            CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
+            Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
+            defineCommand.setAccessible(true);
+            defineCommand.invoke(((RemoteWebDriver) this.driver).getCommandExecutor(), "sendCommand", cmd);
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -148,9 +144,9 @@ public class Browser {
             this.scrollTo(0, j * this.getViewportHeight());
             wait(scrollTimeout);
         }
-        Object metrics = driver.evaluate(FileUtil.getJsScript(ALL_METRICS));
-        driver.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
-        Object result = driver.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
+        Object metrics = this.evaluate(FileUtil.getJsScript(ALL_METRICS));
+        this.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
+        Object result = this.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
         String base64EncodedPng = (String) ((Map<String, ?>) result).get("data");
         InputStream in = new ByteArrayInputStream(OutputType.BYTES.convertFromBase64Png(base64EncodedPng));
         BufferedImage bImageFromConvert;
