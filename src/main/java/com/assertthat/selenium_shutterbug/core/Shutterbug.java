@@ -98,27 +98,16 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int scrollTimeout, boolean useDevicePixelRatio) {
-        Browser browser;
-        if(scroll.equals(ScrollStrategy.WHOLE_PAGE_CHROME)){
-            //should use devicePixelRatio by default as chrome command executor makes screenshot account for that
-            browser = new Browser(driver, true);
-        }else {
-            browser = new Browser(driver, useDevicePixelRatio);
-        }
+        Browser browser = new Browser(driver, useDevicePixelRatio);
         browser.setScrollTimeout(scrollTimeout);
+
         PageSnapshot pageScreenshot = new PageSnapshot(driver, browser.getDevicePixelRatio());
         switch (scroll) {
-            case HORIZONTALLY:
-                pageScreenshot.setImage(browser.takeScreenshotScrollHorizontally());
+            case VIEWPORT_ONLY:
+                pageScreenshot.setImage(browser.takeScreenshot());
                 break;
-            case VERTICALLY:
-                pageScreenshot.setImage(browser.takeScreenshotScrollVertically());
-                break;
-            case BOTH_DIRECTIONS:
+            case WHOLE_PAGE:
                 pageScreenshot.setImage(browser.takeScreenshotEntirePage());
-                break;
-            case WHOLE_PAGE_CHROME:
-                pageScreenshot.setImage(browser.takeScreenshotEntirePageUsingChromeCommand());
                 break;
         }
         return pageScreenshot;
