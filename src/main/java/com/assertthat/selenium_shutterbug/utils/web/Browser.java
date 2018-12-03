@@ -94,7 +94,25 @@ public class Browser {
 
     }
 
+    /**Using different screenshot strategy dependently on driver:
+     * for  chrome - chrome command will be used
+     * for others - their default screenshot methods*/
     public BufferedImage takeScreenshotEntirePage() {
+        if (driver instanceof EventFiringWebDriver) {
+            driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();
+        }
+
+        if (driver instanceof ChromeDriver) {
+            return takeScreenshotEntirePageUsingChromeCommand();
+        } else if (driver instanceof RemoteWebDriver) {
+            if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome")) {
+                return takeScreenshotEntirePageUsingChromeCommand();
+            }
+        }
+        return takeScreenshotEntirePageDefault();
+    }
+
+    public BufferedImage takeScreenshotEntirePageDefault() {
         final int _docWidth = this.getDocWidth();
 		final int _docHeight = this.getDocHeight();
 		BufferedImage combinedImage = new BufferedImage(_docWidth, _docHeight, BufferedImage.TYPE_INT_ARGB);
@@ -128,7 +146,9 @@ public class Browser {
     }
 
     public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
-        this.driver = getDriverAfterValidation(this.driver);
+        //should use devicePixelRatio by default as chrome command executor makes screenshot account for that
+        Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
+        this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
 
         try {
             CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
@@ -156,55 +176,6 @@ public class Browser {
             throw new RuntimeException("Error while converting results from bytes to BufferedImage");
         }
         return bImageFromConvert;
-    }
-
-    private RemoteWebDriver getDriverAfterValidation(WebDriver driver) {
-        if (driver instanceof EventFiringWebDriver) {
-            driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();
-        }
-
-        if (driver instanceof ChromeDriver) {
-            return (ChromeDriver) driver;
-        } else if (driver instanceof RemoteWebDriver) {
-            if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome")) {
-                return (RemoteWebDriver) driver;
-            }
-        }
-        throw new UnsupportedOperationException("ScrollStrategy.WHOLE_PAGE_CHROME is only applicable for Chrome driver");
-    }
-
-    public BufferedImage takeScreenshotScrollHorizontally() {
-        BufferedImage combinedImage = new BufferedImage(this.getDocWidth(), this.getViewportHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = combinedImage.createGraphics();
-        int horizontalIterations = (int) Math.ceil(((double) this.getDocWidth()) / this.getViewportWidth());
-        for (int i = 0; i < horizontalIterations; i++) {
-            this.scrollTo(i * this.getViewportWidth(), 0);
-            wait(scrollTimeout);
-            Image image = takeScreenshot();
-            g.drawImage(image, this.getCurrentScrollX(), 0, null);
-            if(this.getDocWidth() == image.getWidth(null)){
-                break;
-            }
-        }
-        g.dispose();
-        return combinedImage;
-    }
-
-    public BufferedImage takeScreenshotScrollVertically() {
-        BufferedImage combinedImage = new BufferedImage(this.getViewportWidth(), this.getDocHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = combinedImage.createGraphics();
-        int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
-        for (int j = 0; j < verticalIterations; j++) {
-            this.scrollTo(0, j * this.getViewportHeight());
-            wait(scrollTimeout);
-            Image image = takeScreenshot();
-            g.drawImage(image, 0, this.getCurrentScrollY(), null);
-            if(this.getDocHeight() == image.getHeight(null)){
-                break;
-            }
-        }
-        g.dispose();
-        return combinedImage;
     }
 
     public WebDriver getUnderlyingDriver() {
