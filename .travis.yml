@@ -1,4 +1,14 @@
 language: java
+env:
+  global:
+    - secure: ""
+    - secure: ""
+    - secure: ""
+    - secure: ""
+
+
 script: ./gradlew test
 
-jdk: oraclejdk8
+after_success:
+  - ./cd/before-deploy.sh
+  - ./cd/deploy.sh
