@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 group 'com.assertthat'
 archivesBaseName = "selenium-shutterbug"
-version '0.9'
+version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -38,6 +38,13 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: "$System.env.OSSRH_JIRA_USERNAME", password: "$System.env.OSSRH_JIRA_PASSWORD")
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: "$System.env.OSSRH_JIRA_USERNAME", password: "$System.env.OSSRH_JIRA_PASSWORD")
+            }
             pom.project {
                 name 'Selenium Shutterbug'
                 packaging 'jar'
