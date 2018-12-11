@@ -193,7 +193,7 @@ public class ImageProcessor {
     public static BufferedImage scale(BufferedImage source, double ratio) {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
-        BufferedImage scaledImage = getCompatibleImage(w, h);
+        BufferedImage scaledImage = getCompatibleImage(w, h, source);
         Graphics2D resultGraphics = scaledImage.createGraphics();
         resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -202,11 +202,42 @@ public class ImageProcessor {
         return scaledImage;
     }
 
-    private static BufferedImage getCompatibleImage(int w, int h) {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        GraphicsConfiguration gc = gd.getDefaultConfiguration();
-        BufferedImage image = gc.createCompatibleImage(w, h);
-        return image;
+    private static BufferedImage getCompatibleImage(int w, int h, BufferedImage source) {
+        BufferedImage bimage = null;
+        try{
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice gd = ge.getDefaultScreenDevice();
+            GraphicsConfiguration gc = gd.getDefaultConfiguration();
+            bimage = gc.createCompatibleImage(w,h);
+        } catch (HeadlessException e) {
+            // The system does not have a screen
+        }
+        if (bimage == null) {
+            boolean hasAlpha = hasAlpha(source);
+            int type = BufferedImage.TYPE_INT_RGB;
+            if (hasAlpha) {
+                type = BufferedImage.TYPE_INT_ARGB;
+            }
+            bimage = new BufferedImage(w, h, type);
+        }
+        return bimage;
+    }
+
+    public static boolean hasAlpha(Image image) {
+        // If buffered image, the color model is readily available
+        if (image instanceof BufferedImage) {
+            BufferedImage bimage = (BufferedImage)image;
+            return bimage.getColorModel().hasAlpha();
+        }
+        // Use a pixel grabber to retrieve the image's color model;
+        // grabbing a single pixel is usually sufficient
+        PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+        try {
+            pg.grabPixels();
+        } catch (InterruptedException e) {
+        }
+        // Get the image's color model
+        ColorModel cm = pg.getColorModel();
+        return cm.hasAlpha();
     }
 }
