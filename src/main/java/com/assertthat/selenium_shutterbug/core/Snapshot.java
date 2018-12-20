@@ -77,7 +77,37 @@ public abstract class Snapshot<T extends Snapshot> {
         FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
     }
-
+    
+    /**
+     * Generate cropped thumbnail of the original screenshot.
+     * Will save different thumbnails depends on when it was called in the chain.
+     *
+     * @param path to save thumbnail image to
+     * @param name of the resulting image
+     * @param scale to apply
+     * @return instance of type Snapshot
+     */
+    public T withCroppedThumbnail(String path, String name, double scale,  double cropWidth, double cropHeight) {
+        File thumbnailFile = new File(path.toString(), name);
+        if(!Files.exists(Paths.get(path))) {
+            thumbnailFile.mkdirs();
+        }
+        thumbnailImage=ImageProcessor.cropAndScale(image,scale, cropWidth, cropHeight);
+        FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
+        return self();
+    }
+    
+    /**
+     * Generate cropped thumbnail of the original screenshot.
+     * Will save different thumbnails depends on when it was called in the chain.
+     *
+     * @param scale to apply
+     * @return instance of type Snapshot
+     */
+    public T withCroppedThumbnail(double scale, double cropWidth, double cropHeight) {
+        return withCroppedThumbnail(Paths.get(location.toString(), "./thumbnails").toString(), "thumb_" + fileName, scale,cropWidth,cropHeight);
+    }
+    
     /**
      * Generate a thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.

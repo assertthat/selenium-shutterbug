@@ -191,15 +191,19 @@ public class ImageProcessor {
     }
 
     public static BufferedImage scale(BufferedImage source, double ratio) {
-        int w = (int) (source.getWidth() * ratio);
-        int h = (int) (source.getHeight() * ratio);
+        return cropAndScale(source, ratio, 1.0,1.0);
+    }
+    
+    public static BufferedImage cropAndScale(BufferedImage source,double ratio, double cropWidth, double cropHeight) {
+        int w = source.getWidth();
+        int h = source.getHeight();
         BufferedImage scaledImage = getCompatibleImage(w, h, source);
         Graphics2D resultGraphics = scaledImage.createGraphics();
         resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         resultGraphics.drawImage(source, 0, 0, w, h, null);
         resultGraphics.dispose();
-        return scaledImage;
+        return scaledImage.getSubimage(0, 0, (int)(w*cropWidth),(int)(h*cropHeight));
     }
 
     private static BufferedImage getCompatibleImage(int w, int h, BufferedImage source) {
