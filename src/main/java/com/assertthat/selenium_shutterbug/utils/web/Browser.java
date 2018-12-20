@@ -96,7 +96,9 @@ public class Browser {
 
     /**Using different screenshot strategy dependently on driver:
      * for  chrome - chrome command will be used
-     * for others - their default screenshot methods*/
+     * for others - their default screenshot methods
+     * @return BufferedImage resulting image
+     * */
     public BufferedImage takeScreenshotEntirePage() {
         if (driver instanceof EventFiringWebDriver) {
             driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();

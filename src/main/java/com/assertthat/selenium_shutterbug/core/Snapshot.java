@@ -85,6 +85,8 @@ public abstract class Snapshot<T extends Snapshot> {
      * @param path to save thumbnail image to
      * @param name of the resulting image
      * @param scale to apply
+     * @param cropWidth e.g. 0.2 will leave 20% of the initial width
+     * @param cropHeight e.g. 0.1 will leave 10% of the initial width
      * @return instance of type Snapshot
      */
     public T withCroppedThumbnail(String path, String name, double scale,  double cropWidth, double cropHeight) {
@@ -102,6 +104,8 @@ public abstract class Snapshot<T extends Snapshot> {
      * Will save different thumbnails depends on when it was called in the chain.
      *
      * @param scale to apply
+     * @param cropWidth e.g. 0.2 will leave 20% of the initial width
+     * @param cropHeight e.g. 0.1 will leave 10% of the initial width
      * @return instance of type Snapshot
      */
     public T withCroppedThumbnail(double scale, double cropWidth, double cropHeight) {
