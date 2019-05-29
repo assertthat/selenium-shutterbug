@@ -7,7 +7,12 @@ env:
     - secure: "acycCTkj7uYZXjAqi8EKLP+J1azEkIzg+qKkRrd6IUWAViE28js8L1M2e5c4jFJwjYzRJxLOc6McjSsnC2YwMHmdApzFfexuDLS1+2IQEWODm974yldQZMHVbl7Dsa7KrXkViQjrU8Vat9FZ7w/QcyS3ytLNe84JzS3L2VYgX3Rty12V3O33ptBMHVCcyF3MUMiMH4qGy9xq6nKDgPFG22krweNKAe5GDUCB48FtsVb0095jAWy2JEpRw/9pYgobT6bwGVnTj+Am+PohdYxpRJFZgQuTWJptGXXvd/LdMvxvZTlPYHt2/YCvZ7W06x3tNDUxNKvJ9E+KXWC11o4/if/lgc/Nt5GW/l2IASYN6fH1yyJ9N1I5co6kg1ytbKBTEuRJV34oS8giYN1EdaEKtbT0kSICs8yyXNYp+SL1QpXGI/ykDOt/jEZBVH4Lra+e+lsvG33ipMJaz7SKc9xbDAnKk6TRGYX6U7110Vs+QBByHQpK5kjiMbym33kYmbjI8AncSCRvIJNUC6JioIlvCCjRl130Mn/lsapw/gSHGJY3odS5e1vR5LjQ+pM1Bu7eMgIELnTzgPUxcU7CaLI/ibiA5mdqigWs31Reb8AiL6PFqlPKOt1vmdy4THPDeb1NM248p5QSphGnLKDrqhkyu0+tFWjJgX56L5X5XYJxNYY="
 
 
-script: ./gradlew test
+install: mvn install -P !build-extras -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script: mvn test -P !build-extras -B
+
+cache:
+  directories:
+    - ~/.m2/repository
 
 after_success:
   - ./cd/before-deploy.sh
