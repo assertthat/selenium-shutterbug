@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 group 'com.assertthat'
 archivesBaseName = "selenium-shutterbug"
-version '1.0-SNAPSHOT'
+version '0.9.1'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -70,7 +70,7 @@ uploadArchives {
                     developer {
                         id 'glib-briia'
                         name 'Glib Briia'
-                        email 'glib.briia@assertthat.com'
+                        email 'glib@assertthat.com'
                     }
                 }
             }
