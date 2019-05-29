@@ -169,6 +169,7 @@ public class Browser {
         Object metrics = this.evaluate(FileUtil.getJsScript(ALL_METRICS));
         this.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
         Object result = this.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
+        this.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
         String base64EncodedPng = (String) ((Map<String, ?>) result).get("data");
         InputStream in = new ByteArrayInputStream(OutputType.BYTES.convertFromBase64Png(base64EncodedPng));
         BufferedImage bImageFromConvert;
