@@ -5,8 +5,6 @@
 
 package com.assertthat.selenium_shutterbug.utils.file;
 
-import org.openqa.selenium.WebDriverException;
-
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
