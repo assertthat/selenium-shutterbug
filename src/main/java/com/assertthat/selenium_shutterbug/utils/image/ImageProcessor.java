@@ -5,7 +5,7 @@
 
 package com.assertthat.selenium_shutterbug.utils.image;
 
-import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
+import com.assertthat.selenium_shutterbug.utils.image.model.ImageData;
 import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 
 import java.awt.*;
@@ -17,7 +17,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.PixelGrabber;
-import java.io.File;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
@@ -107,86 +106,30 @@ public class ImageProcessor {
     }
 
     public static boolean imagesAreEquals(BufferedImage image1, BufferedImage image2, double deviation) {
-        int width1 = image1.getWidth(null);
-        int width2 = image2.getWidth(null);
-        int height1 = image1.getHeight(null);
-        int height2 = image2.getHeight(null);
-        if ((width1 != width2) || (height1 != height2)) {
-            throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + width1 + "x" + height1 + "; image2 - " + width2 + "x" + height2);
+        ImageData image1Data = new ImageData(image1);
+        ImageData image2Data = new ImageData(image2);
+        if (image1Data.notEqualsDimensions(image2Data)) {
+            throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + image1Data.getWidth() + "x" + image1Data.getHeight() + "; image2 - " + image2Data.getWidth() + "x" + image2Data.getHeight());
         }
-        long diff = 0;
-        for (int y = 0; y < height1; y++) {
-            for (int x = 0; x < width1; x++) {
-                int rgb1 = image1.getRGB(x, y);
-                int rgb2 = image2.getRGB(x, y);
-                int r1 = (rgb1 >> 16) & 0xff;
-                int g1 = (rgb1 >> 8) & 0xff;
-                int b1 = (rgb1) & 0xff;
-                int r2 = (rgb2 >> 16) & 0xff;
-                int g2 = (rgb2 >> 8) & 0xff;
-                int b2 = (rgb2) & 0xff;
-                diff += Math.abs(r1 - r2);
-                diff += Math.abs(g1 - g2);
-                diff += Math.abs(b1 - b2);
-            }
-        }
-        double n = width1 * height1 * 3;
-        double p = diff / n / 255.0;
-        return p == 0 || p <= deviation;
+        return image1Data.equalsEachPixels(image2Data, deviation);
     }
 
     /**
      * Extends the functionality of imagesAreEqualsWithDiff, but creates a third BufferedImage and applies pixel manipulation to it.
-     * @param image1 The first image to compare
-     * @param image2 The second image to compare
+     *
+     * @param image1       The first image to compare
+     * @param image2       The second image to compare
      * @param pathFileName The output path filename for the third image, if null then is ignored
-     * @param deviation The upper limit of the pixel deviation for the test
+     * @param deviation    The upper limit of the pixel deviation for the test
      * @return If the test passes
      */
     public static boolean imagesAreEqualsWithDiff(BufferedImage image1, BufferedImage image2, String pathFileName, double deviation) {
-        BufferedImage output = new BufferedImage(image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_RGB);
-
-        int width1 = image1.getWidth(null);
-        int width2 = image2.getWidth(null);
-        int height1 = image1.getHeight(null);
-        int height2 = image2.getHeight(null);
-        if ((width1 != width2) || (height1 != height2)) {
-            throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + width1 + "x" + height1 + "; image2 - " + width2 + "x" + height2);
+        ImageData image1Data = new ImageData(image1);
+        ImageData image2Data = new ImageData(image2);
+        if (image1Data.notEqualsDimensions(image2Data)) {
+            throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + image1Data.getWidth() + "x" + image1Data.getHeight() + "; image2 - " + image2Data.getWidth() + "x" + image2Data.getHeight());
         }
-        long diff = 0;
-        long recordedDiff; // Records the difference so it can be compared, saves having to do three if statements
-        for (int y = 0; y < height1; y++) {
-            for (int x = 0; x < width1; x++) {
-                recordedDiff = diff;
-
-                // Grab RGB values of both images, then bit shift and bitwise AND to break them down into R, G and B
-                int rgb1 = image1.getRGB(x, y);
-                int rgb2 = image2.getRGB(x, y);
-                int r1 = (rgb1 >> 16) & 0xff;
-                int g1 = (rgb1 >> 8) & 0xff;
-                int b1 = (rgb1) & 0xff;
-                int r2 = (rgb2 >> 16) & 0xff;
-                int g2 = (rgb2 >> 8) & 0xff;
-                int b2 = (rgb2) & 0xff;
-                diff += Math.abs(r1 - r2);
-                diff += Math.abs(g1 - g2);
-                diff += Math.abs(b1 - b2);
-
-                // If difference > recorded difference, change pixel to red. If zero, set to image 1's original pixel
-                if(diff > recordedDiff)
-                    output.setRGB(x,y,new Color(255,0,0).getRGB() & rgb1); // Dark red = original position, Light red is moved to
-                else
-                    output.setRGB(x,y,rgb1);
-            }
-        }
-        int colourSpaceBytes = 3; // RGB is 24 bit, or 3 bytes
-        double totalPixels = width1 * height1 * colourSpaceBytes;
-        pixelError = diff / totalPixels / 255.0;
-
-        // Write the image as png, with the filename based on the path provided
-        if(pixelError > 0)
-            FileUtil.writeImage(output,"png",new File(pathFileName+".png"));
-        return pixelError == 0 || pixelError <= deviation;
+        return image1Data.equalsEachPixelsWithCreateDifferencesImage(image2Data, deviation, pathFileName);
     }
 
     public static BufferedImage scale(BufferedImage source, double ratio) {
