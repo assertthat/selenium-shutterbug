@@ -20,7 +20,7 @@ Create a feature branch and start improving:
 % git checkout -b my-feature-branch
 ```
 
-HEAD-based development is prefered, which means all changes are applied
+HEAD-based development is preferred, which means all changes are applied
 directly on top of master.
 
 ### Step 3: Commit
