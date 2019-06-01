@@ -98,7 +98,7 @@ public abstract class Snapshot<T extends Snapshot> {
         FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
     }
-    
+
     /**
      * Generate cropped thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.

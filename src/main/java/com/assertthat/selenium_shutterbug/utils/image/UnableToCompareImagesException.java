@@ -9,6 +9,7 @@ package com.assertthat.selenium_shutterbug.utils.image;
  * Created by Glib_Briia on 25/06/2016.
  */
 public class UnableToCompareImagesException extends RuntimeException {
+
     public UnableToCompareImagesException() {
         super();
     }

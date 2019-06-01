@@ -4,6 +4,7 @@ package com.assertthat.selenium_shutterbug.utils.web;
  * Created by Glib_Briia on 10/07/2016.
  */
 public class ElementOutsideViewportException extends RuntimeException  {
+
     public ElementOutsideViewportException() {
         super();
     }
