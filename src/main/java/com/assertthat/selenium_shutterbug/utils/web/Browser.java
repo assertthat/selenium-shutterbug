@@ -61,9 +61,9 @@ public class Browser {
 
     public Browser(WebDriver driver, boolean useDevicePixelRatio) {
         this.driver = driver;
-        if(useDevicePixelRatio) {
+        if (useDevicePixelRatio) {
             Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
-            this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
+            this.devicePixelRatio = devicePixelRatio instanceof Double ? (Double) devicePixelRatio : (Long) devicePixelRatio * 1.0;
         }
     }
 
@@ -79,7 +79,7 @@ public class Browser {
         }
     }
 
-    public void setScrollTimeout(int scrollTimeout){
+    public void setScrollTimeout(int scrollTimeout) {
         this.scrollTimeout = scrollTimeout;
     }
 
@@ -90,19 +90,21 @@ public class Browser {
         } catch (IOException e) {
             throw new UnableTakeSnapshotException(e);
         } finally {
-	    // add this to clean up leaving this file in the temporary directory forever...
-	    if (srcFile.exists()) {
-	       srcFile.delete();
-	    }
-	}
+            // add this to clean up leaving this file in the temporary directory forever...
+            if (srcFile.exists()) {
+                srcFile.delete();
+            }
+        }
 
     }
 
-    /**Using different screenshot strategy dependently on driver:
+    /**
+     * Using different screenshot strategy dependently on driver:
      * for  chrome - chrome command will be used
      * for others - their default screenshot methods
+     *
      * @return BufferedImage resulting image
-     * */
+     */
     public BufferedImage takeScreenshotEntirePage() {
         if (driver instanceof EventFiringWebDriver) {
             driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();
@@ -120,8 +122,8 @@ public class Browser {
 
     public BufferedImage takeScreenshotEntirePageDefault() {
         final int _docWidth = this.getDocWidth();
-		final int _docHeight = this.getDocHeight();
-		BufferedImage combinedImage = new BufferedImage(_docWidth, _docHeight, BufferedImage.TYPE_INT_ARGB);
+        final int _docHeight = this.getDocHeight();
+        BufferedImage combinedImage = new BufferedImage(_docWidth, _docHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = combinedImage.createGraphics();
         int _viewportWidth = this.getViewportWidth();
         int _viewportHeight = this.getViewportHeight();
@@ -130,10 +132,10 @@ public class Browser {
         if (_viewportWidth < _docWidth || (_viewportHeight < _docHeight && _viewportWidth - scrollBarMaxWidth < _docWidth))
             _viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar // TODO viewportHeight and scrollVarMaxWidth?
         if (_viewportHeight < _docHeight)
-        	_viewportWidth-=scrollBarMaxWidth; // some space for a scrollbar
+            _viewportWidth -= scrollBarMaxWidth; // some space for a scrollbar
 
-		int horizontalIterations = (int) Math.ceil(((double) _docWidth) / _viewportWidth);
-		int verticalIterations = (int) Math.ceil(((double) _docHeight) / _viewportHeight);
+        int horizontalIterations = (int) Math.ceil(((double) _docWidth) / _viewportWidth);
+        int verticalIterations = (int) Math.ceil(((double) _docHeight) / _viewportHeight);
         outer_loop:
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * _viewportHeight);
@@ -142,7 +144,7 @@ public class Browser {
                 wait(scrollTimeout);
                 Image image = takeScreenshot();
                 g.drawImage(image, this.getCurrentScrollX(), this.getCurrentScrollY(), null);
-                if(_docWidth == image.getWidth(null) && _docHeight == image.getHeight(null)){
+                if (_docWidth == image.getWidth(null) && _docHeight == image.getHeight(null)) {
                     break outer_loop;
                 }
             }
@@ -154,7 +156,7 @@ public class Browser {
     public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
         //should use devicePixelRatio by default as chrome command executor makes screenshot account for that
         Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
-        this.devicePixelRatio = devicePixelRatio instanceof Double? (Double)devicePixelRatio: (Long)devicePixelRatio*1.0;
+        this.devicePixelRatio = devicePixelRatio instanceof Double ? (Double) devicePixelRatio : (Long) devicePixelRatio * 1.0;
 
         try {
             CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
@@ -190,11 +192,11 @@ public class Browser {
     }
 
     public int getCurrentScrollX() {
-        return (int)(((Long) executeJsScript(Browser.CURRENT_SCROLL_X_JS))*devicePixelRatio);
+        return (int) (((Long) executeJsScript(Browser.CURRENT_SCROLL_X_JS)) * devicePixelRatio);
     }
 
     public int getCurrentScrollY() {
-        return (int)(((Long) executeJsScript(Browser.CURRENT_SCROLL_Y_JS))*devicePixelRatio);
+        return (int) (((Long) executeJsScript(Browser.CURRENT_SCROLL_Y_JS)) * devicePixelRatio);
     }
 
     public int getDocWidth() {
@@ -231,7 +233,7 @@ public class Browser {
     }
 
     public void scrollTo(int x, int y) {
-        executeJsScript(SCROLL_TO_JS, x/devicePixelRatio, y/devicePixelRatio);
+        executeJsScript(SCROLL_TO_JS, x / devicePixelRatio, y / devicePixelRatio);
     }
 
     public Object executeJsScript(String filePath, Object... arg) {
