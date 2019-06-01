@@ -198,19 +198,24 @@ public class Browser {
     }
 
     public int getDocWidth() {
-        return docWidth != -1 ? docWidth : (int)(((Long) executeJsScript(MAX_DOC_WIDTH_JS))*devicePixelRatio);
+        if (docWidth == -1) docWidth = (int) (((Long) executeJsScript(MAX_DOC_WIDTH_JS)) * devicePixelRatio);
+        return docWidth;
     }
 
     public int getDocHeight() {
-        return docHeight != -1 ? docHeight : (int)(((Long) executeJsScript(MAX_DOC_HEIGHT_JS))*devicePixelRatio);
+        if (docHeight == -1) docHeight = (int) (((Long) executeJsScript(MAX_DOC_HEIGHT_JS)) * devicePixelRatio);
+        return docHeight;
     }
 
     public int getViewportWidth() {
-        return viewportWidth != -1 ? viewportWidth : (int)(((Long) executeJsScript(VIEWPORT_WIDTH_JS))*devicePixelRatio);
+        if (viewportWidth == -1) viewportWidth = (int) (((Long) executeJsScript(VIEWPORT_WIDTH_JS)) * devicePixelRatio);
+        return viewportWidth;
     }
 
     public int getViewportHeight() {
-        return viewportHeight != -1 ? viewportHeight : (int)(((Long) executeJsScript(VIEWPORT_HEIGHT_JS)).intValue()*devicePixelRatio);
+        if (viewportHeight == -1)
+            viewportHeight = (int) (((Long) executeJsScript(VIEWPORT_HEIGHT_JS)) * devicePixelRatio);
+        return viewportHeight;
     }
 
     public Coordinates getBoundingClientRect(WebElement element) {
