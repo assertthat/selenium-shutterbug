@@ -10,7 +10,13 @@ import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ColorConvertOp;
+import java.awt.image.ColorModel;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.awt.image.PixelGrabber;
 import java.io.File;
 
 /**
@@ -87,8 +93,7 @@ public class ImageProcessor {
     }
 
     public static BufferedImage cropAround(BufferedImage sourceImage, Coordinates coords, int offsetX, int offsetY) {
-        BufferedImage subImage = sourceImage.getSubimage(coords.getX()-offsetX, coords.getY()-offsetY, coords.getWidth()+offsetX*2, coords.getHeight()+offsetY*2);
-        return subImage;
+        return sourceImage.getSubimage(coords.getX() - offsetX, coords.getY() - offsetY, coords.getWidth() + offsetX * 2, coords.getHeight() + offsetY * 2);
     }
 
     public static BufferedImage addTitle(BufferedImage sourceImage, String title, Color color, Font textFont) {

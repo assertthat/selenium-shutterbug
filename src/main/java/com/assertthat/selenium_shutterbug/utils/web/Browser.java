@@ -8,8 +8,12 @@ package com.assertthat.selenium_shutterbug.utils.web;
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
 import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.*;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.CommandInfo;
 import org.openqa.selenium.remote.HttpCommandExecutor;
@@ -210,7 +214,7 @@ public class Browser {
     }
 
     public Coordinates getBoundingClientRect(WebElement element) {
-        String script = FileUtil.getJsScript(RELATIVE_COORDS_JS);
+        FileUtil.getJsScript(RELATIVE_COORDS_JS);
         ArrayList<String> list = (ArrayList<String>) executeJsScript(RELATIVE_COORDS_JS, element);
         Point start = new Point(Integer.parseInt(list.get(0)), Integer.parseInt(list.get(1)));
         Dimension size = new Dimension(Integer.parseInt(list.get(2)), Integer.parseInt(list.get(3)));

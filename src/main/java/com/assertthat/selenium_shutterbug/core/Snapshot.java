@@ -176,7 +176,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return instance of type Snapshot
      */
     public T monochrome() {
-        this.image = ImageProcessor.convertToGrayAndWhite(this.image);
+        ImageProcessor.convertToGrayAndWhite(this.image);
         return self();
     }
 
