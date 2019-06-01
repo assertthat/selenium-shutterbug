@@ -25,7 +25,7 @@ import java.io.File;
 public class ImageProcessor {
 
     private static final int ARCH_SIZE = 10;
-    private static float[] matrix = new float[49];
+    private static final float[] matrix = new float[49];
     private static double pixelError = Double.MAX_VALUE;
 
     static {

@@ -14,10 +14,10 @@ import org.openqa.selenium.WebElement;
  */
 public class Coordinates {
 
-    private int width;
-    private int height;
-    private int x;
-    private int y;
+    private final int width;
+    private final int height;
+    private final int x;
+    private final int y;
 
     public Coordinates(WebElement element, Double devicePixelRatio) {
         Point point = element.getLocation();
