@@ -254,8 +254,8 @@ public class ImageProcessor {
     public static boolean hasAlpha(Image image) {
         // If buffered image, the color model is readily available
         if (image instanceof BufferedImage) {
-            BufferedImage bimage = (BufferedImage)image;
-            return bimage.getColorModel().hasAlpha();
+            BufferedImage bImage = (BufferedImage) image;
+            return bImage.getColorModel().hasAlpha();
         }
         // Use a pixel grabber to retrieve the image's color model;
         // grabbing a single pixel is usually sufficient
