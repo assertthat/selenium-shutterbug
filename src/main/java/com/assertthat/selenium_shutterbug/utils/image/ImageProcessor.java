@@ -160,7 +160,7 @@ public class ImageProcessor {
             throw new UnableToCompareImagesException("Images dimensions mismatch: image1 - " + width1 + "x" + height1 + "; image2 - " + width2 + "x" + height2);
         }
         long diff = 0;
-        long recordedDiff = 0; // Records the difference so it can be compared, saves having to do three if statements
+        long recordedDiff; // Records the difference so it can be compared, saves having to do three if statements
         for (int y = 0; y < height1; y++) {
             for (int x = 0; x < width1; x++) {
                 recordedDiff = diff;
