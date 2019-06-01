@@ -71,7 +71,7 @@ public class Browser {
         return devicePixelRatio;
     }
 
-    public static void wait(int milis) {
+    public static void wait(int ms) {
         try {
             Thread.sleep(milis);
         } catch (InterruptedException e) {
