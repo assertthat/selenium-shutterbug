@@ -190,40 +190,39 @@ public class ImageProcessor {
     }
 
     public static BufferedImage scale(BufferedImage source, double ratio) {
-        return cropAndScale(source, ratio, 1.0,1.0);
+        return cropAndScale(source, ratio, 1.0, 1.0);
     }
-    
-    public static BufferedImage cropAndScale(BufferedImage source,double ratio, double cropWidth, double cropHeight) {
+
+    public static BufferedImage cropAndScale(BufferedImage source, double ratio, double cropWidth, double cropHeight) {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
-        BufferedImage scaledImage = getCompatibleImage(w, h, source);
-        Graphics2D resultGraphics = scaledImage.createGraphics();
-        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        resultGraphics.drawImage(source, 0, 0, w, h, null);
-        resultGraphics.dispose();
-        return scaledImage.getSubimage(0, 0, (int)(w*cropWidth),(int)(h*cropHeight));
+        BufferedImage scaledImage = createAndDrawImage(source, w, h);
+        return scaledImage.getSubimage(0, 0, (int) (w * cropWidth), (int) (h * cropHeight));
     }
-    
-    public static BufferedImage cropAndScale(BufferedImage source,double ratio, int maxWidth, int maxHeight) {
+
+    public static BufferedImage cropAndScale(BufferedImage source, double ratio, int maxWidth, int maxHeight) {
         int w = (int) (source.getWidth() * ratio);
         int h = (int) (source.getHeight() * ratio);
-        BufferedImage scaledImage = getCompatibleImage(w, h, source);
-        Graphics2D resultGraphics = scaledImage.createGraphics();
-        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        resultGraphics.drawImage(source, 0, 0, w, h, null);
-        resultGraphics.dispose();
-        if(maxWidth != -1 && w > maxWidth){
+        BufferedImage scaledImage = createAndDrawImage(source, w, h);
+        if (maxWidth != -1 && w > maxWidth) {
             w = maxWidth;
         }
-        if(maxHeight != -1 && h > maxHeight){
+        if (maxHeight != -1 && h > maxHeight) {
             h = maxHeight;
         }
-        return scaledImage.getSubimage(0, 0, w,h);
+        return scaledImage.getSubimage(0, 0, w, h);
     }
-    
-    
+
+    private static BufferedImage createAndDrawImage(BufferedImage source, int w, int h) {
+        BufferedImage scaledImage = getCompatibleImage(w, h, source);
+        Graphics2D resultGraphics = scaledImage.createGraphics();
+        resultGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        resultGraphics.drawImage(source, 0, 0, w, h, null);
+        resultGraphics.dispose();
+        return scaledImage;
+    }
+
     private static BufferedImage getCompatibleImage(int w, int h, BufferedImage source) {
         BufferedImage bImage = null;
         try {
