@@ -262,7 +262,7 @@ public class ImageProcessor {
         PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
         try {
             pg.grabPixels();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
         // Get the image's color model
         ColorModel cm = pg.getColorModel();
