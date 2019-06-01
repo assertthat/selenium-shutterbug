@@ -69,7 +69,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return instance of type Snapshot
      */
     public T withThumbnail(String path, String name, double scale) {
-        File thumbnailFile = new File(path.toString(), name);
+        File thumbnailFile = new File(path, name);
         if(!Files.exists(Paths.get(path))) {
             thumbnailFile.mkdirs();
         }
@@ -90,10 +90,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return instance of type Snapshot
      */
     public T withCroppedThumbnail(String path, String name, double scale,  double cropWidth, double cropHeight) {
-        File thumbnailFile = new File(path.toString(), name);
-        if(!Files.exists(Paths.get(path))) {
-            thumbnailFile.mkdirs();
-        }
+        File thumbnailFile = getFile(path, name);
         thumbnailImage=ImageProcessor.cropAndScale(image,scale, cropWidth, cropHeight);
         FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
@@ -111,15 +108,27 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return instance of type Snapshot
      */
     public T withCroppedThumbnail(String path, String name, double scale,  int maxWidth, int maxHeight) {
-        File thumbnailFile = new File(path.toString(), name);
-        if(!Files.exists(Paths.get(path))) {
-            thumbnailFile.mkdirs();
-        }
+        File thumbnailFile = getFile(path, name);
         thumbnailImage=ImageProcessor.cropAndScale(image,scale, maxWidth, maxHeight);
         FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
     }
-    
+
+    /**
+     * Generate file for cropped thumbnail of the original screenshot.
+     *
+     * @param path to save thumbnail image to
+     * @param name of the resulting image
+     * @return instance of type File
+     */
+    private File getFile(String path, String name) {
+        File thumbnailFile = new File(path, name);
+        if (!Files.exists(Paths.get(path))) {
+            thumbnailFile.mkdirs();
+        }
+        return thumbnailFile;
+    }
+
     /**
      * Generate cropped thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.
