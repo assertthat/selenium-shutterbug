@@ -63,27 +63,21 @@ public class ImageProcessor {
 
     public static BufferedImage blurArea(BufferedImage sourceImage, Coordinates coords) {
         BufferedImage blurredImage = blur(sourceImage.getSubimage(coords.getX(), coords.getY(), coords.getWidth(), coords.getHeight()));
-        BufferedImage combined = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = combined.createGraphics();
-        g.drawImage(sourceImage, 0, 0, null);
-        g.drawImage(blurredImage, coords.getX(), coords.getY(), null);
-        g.dispose();
-        return combined;
+        return getBufferedImage(sourceImage, coords, blurredImage, sourceImage);
     }
 
     public static BufferedImage monochromeArea(BufferedImage sourceImage, Coordinates coords) {
         BufferedImage monochromedImage = convertToGrayAndWhite(sourceImage.getSubimage(coords.getX(), coords.getY(), coords.getWidth(), coords.getHeight()));
-        BufferedImage combined = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = combined.createGraphics();
-        g.drawImage(sourceImage, 0, 0, null);
-        g.drawImage(monochromedImage, coords.getX(), coords.getY(), null);
-        g.dispose();
-        return combined;
+        return getBufferedImage(sourceImage, coords, monochromedImage, sourceImage);
     }
 
     public static BufferedImage blurExceptArea(BufferedImage sourceImage, Coordinates coords) {
         BufferedImage subImage = sourceImage.getSubimage(coords.getX(), coords.getY(), coords.getWidth(), coords.getHeight());
         BufferedImage blurredImage = blur(sourceImage);
+        return getBufferedImage(sourceImage, coords, subImage, blurredImage);
+    }
+
+    private static BufferedImage getBufferedImage(BufferedImage sourceImage, Coordinates coords, BufferedImage subImage, BufferedImage blurredImage) {
         BufferedImage combined = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = combined.createGraphics();
         g.drawImage(blurredImage, 0, 0, null);
