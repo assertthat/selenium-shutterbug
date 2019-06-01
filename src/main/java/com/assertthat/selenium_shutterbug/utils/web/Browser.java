@@ -73,7 +73,7 @@ public class Browser {
 
     public static void wait(int ms) {
         try {
-            Thread.sleep(milis);
+            Thread.sleep(ms);
         } catch (InterruptedException e) {
             throw new UnableTakeSnapshotException(e);
         }
