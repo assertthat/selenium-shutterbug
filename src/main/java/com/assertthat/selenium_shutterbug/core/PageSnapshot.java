@@ -51,7 +51,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot highlight(WebElement element, Color color, int lineWidth) {
         try {
-            ImageProcessor.highlight(image, new Coordinates(element, devicePixelRatio), color, lineWidth);
+            image = ImageProcessor.highlight(image, new Coordinates(element, devicePixelRatio), color, lineWidth);
         } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
@@ -93,7 +93,7 @@ public class PageSnapshot extends Snapshot {
        try {
            highlight(element, elementColor, 0);
            Coordinates coords = new Coordinates(element, devicePixelRatio);
-           ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
+           image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
        } catch (RasterFormatException rfe) {
            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
        }
