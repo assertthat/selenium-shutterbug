@@ -130,7 +130,7 @@ public class Browser {
         final int scrollBarMaxWidth = 40; // this is probably too high, but better to be safe than sorry
 
         if (_viewportWidth < _docWidth || (_viewportHeight < _docHeight && _viewportWidth - scrollBarMaxWidth < _docWidth))
-            _viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar // TODO viewportHeight and scrollVarMaxWidth?
+            _viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar 
         if (_viewportHeight < _docHeight)
             _viewportWidth -= scrollBarMaxWidth; // some space for a scrollbar
 
