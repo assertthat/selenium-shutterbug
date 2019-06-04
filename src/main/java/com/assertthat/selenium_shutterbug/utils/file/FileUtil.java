@@ -24,7 +24,7 @@ public class FileUtil {
         try {
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
             if (is == null) {
-                // This is needed to load the files in an OSGI enviroment when enclosed in a bundle
+                // This is needed to load the files in an OSGI environment when enclosed in a bundle
                 is = FileUtil.class.getClassLoader().getResourceAsStream(filePath);
             }
             // if the input stream is still null, this will avoid a non descriptive null pointer exception

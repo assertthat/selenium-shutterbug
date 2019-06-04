@@ -5,9 +5,9 @@
 
 package com.assertthat.selenium_shutterbug.core;
 
-import com.assertthat.selenium_shutterbug.utils.web.ElementOutsideViewportException;
 import com.assertthat.selenium_shutterbug.utils.image.ImageProcessor;
 import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
+import com.assertthat.selenium_shutterbug.utils.web.ElementOutsideViewportException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
