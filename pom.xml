@@ -30,7 +30,7 @@
         <developer>
             <id>glib-briia</id>
             <name>Glib Briia</name>
-            <email>glib.briia@assertthat.com</email>
+            <email>glib@assertthat.com</email>
         </developer>
     </developers>
     <dependencies>
