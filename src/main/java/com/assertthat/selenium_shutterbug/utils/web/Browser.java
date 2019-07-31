@@ -6,6 +6,7 @@
 package com.assertthat.selenium_shutterbug.utils.web;
 
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
+import com.github.zafarkhaja.semver.Version;
 import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,6 +16,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.CommandInfo;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -101,6 +103,7 @@ public class Browser {
     /**
      * Using different screenshot strategy dependently on driver:
      * for  chrome - chrome command will be used
+     * for firefox - geckodriver endpoint will be used if available
      * for others - their default screenshot methods
      *
      * @return BufferedImage resulting image
@@ -112,9 +115,13 @@ public class Browser {
 
         if (driver instanceof ChromeDriver) {
             return takeScreenshotEntirePageUsingChromeCommand();
+        } else if (driver instanceof FirefoxDriver) {
+            return takeScreenshotEntirePageUsingGeckoDriver();
         } else if (driver instanceof RemoteWebDriver) {
             if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome")) {
                 return takeScreenshotEntirePageUsingChromeCommand();
+            } else if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("firefox")) {
+                return takeScreenshotEntirePageUsingGeckoDriver();
             }
         }
         return takeScreenshotEntirePageDefault();
@@ -158,14 +165,7 @@ public class Browser {
         Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
         this.devicePixelRatio = devicePixelRatio instanceof Double ? (Double) devicePixelRatio : (Long) devicePixelRatio * 1.0;
 
-        try {
-            CommandInfo cmd = new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST);
-            Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
-            defineCommand.setAccessible(true);
-            defineCommand.invoke(((RemoteWebDriver) this.driver).getCommandExecutor(), "sendCommand", cmd);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+        defineCustomCommand("sendCommand", new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST));
 
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
         for (int j = 0; j < verticalIterations; j++) {
@@ -176,15 +176,27 @@ public class Browser {
         this.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
         Object result = this.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
         this.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
-        String base64EncodedPng = (String) ((Map<String, ?>) result).get("data");
-        InputStream in = new ByteArrayInputStream(OutputType.BYTES.convertFromBase64Png(base64EncodedPng));
-        BufferedImage bImageFromConvert;
-        try {
-            bImageFromConvert = ImageIO.read(in);
-        } catch (IOException e) {
-            throw new RuntimeException("Error while converting results from bytes to BufferedImage");
+        return decodeBase64EncodedPng((String) ((Map<String, ?>) result).get("data"));
+    }
+
+    public BufferedImage takeScreenshotEntirePageUsingGeckoDriver() {
+        // Check geckodriver version (>= 0.24.0 is requried)
+        String version = (String) ((RemoteWebDriver) driver).getCapabilities().getCapability("moz:geckodriverVersion");
+        if (version == null || Version.valueOf(version).satisfies("<0.24.0")) {
+            return takeScreenshotEntirePageDefault();
         }
-        return bImageFromConvert;
+        defineCustomCommand("mozFullPageScreenshot", new CommandInfo("/session/:sessionId/moz/screenshot/full", HttpMethod.GET));
+        Object result = this.executeCustomCommand("mozFullPageScreenshot");
+        String base64EncodedPng;
+        if (result instanceof String) {
+            base64EncodedPng = (String) result;
+        } else if (result instanceof byte[]) {
+            base64EncodedPng = new String((byte[]) result);
+        } else {
+            throw new RuntimeException(String.format("Unexpected result for /moz/screenshot/full command: %s",
+                result == null ? "null" : result.getClass().getName() + "instance"));
+        }
+        return decodeBase64EncodedPng(base64EncodedPng);
     }
 
     public WebDriver getUnderlyingDriver() {
@@ -257,5 +269,37 @@ public class Browser {
         Object response = sendCommand("Runtime.evaluate", ImmutableMap.of("returnByValue", true, "expression", script));
         Object result = ((Map<String, ?>) response).get("result");
         return ((Map<String, ?>) result).get("value");
+    }
+
+    public Object executeCustomCommand(String commandName) {
+        try {
+            Method execute = RemoteWebDriver.class.getDeclaredMethod("execute", String.class);
+            execute.setAccessible(true);
+            Response res = (Response) execute.invoke(this.driver, commandName);
+            return res.getValue();
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void defineCustomCommand(String name, CommandInfo info) {
+        try {
+            Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
+            defineCommand.setAccessible(true);
+            defineCommand.invoke(((RemoteWebDriver) this.driver).getCommandExecutor(), name, info);
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private BufferedImage decodeBase64EncodedPng(String base64EncodedPng) {
+        InputStream in = new ByteArrayInputStream(OutputType.BYTES.convertFromBase64Png(base64EncodedPng));
+        BufferedImage bImageFromConvert;
+        try {
+            bImageFromConvert = ImageIO.read(in);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while converting results from bytes to BufferedImage");
+        }
+        return bImageFromConvert;
     }
 }
