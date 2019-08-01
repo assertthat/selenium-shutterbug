@@ -15,7 +15,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.WrapsDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.CommandInfo;
@@ -109,9 +108,7 @@ public class Browser {
      * @return BufferedImage resulting image
      */
     public BufferedImage takeScreenshotEntirePage() {
-        if (driver instanceof WrapsDriver) {
-            driver = ((WrapsDriver) this.driver).getWrappedDriver();
-        }
+        driver = unwrapDriver();
 
         if (driver instanceof ChromeDriver) {
             return takeScreenshotEntirePageUsingChromeCommand();
@@ -127,7 +124,22 @@ public class Browser {
         return takeScreenshotEntirePageDefault();
     }
 
-    public BufferedImage takeScreenshotEntirePageDefault() {
+    private WebDriver unwrapDriver() {
+        String[] wrapperClassNames = {"org.openqa.selenium.WrapsDriver", "org.openqa.selenium.internal.WrapsDriver"};
+        for (String wrapperClassName : wrapperClassNames) {
+            try {
+                Class<?> clazz = Class.forName(wrapperClassName);
+                if (clazz.isInstance(driver)) {
+                    return (WebDriver) clazz.getMethod("getWrappedDriver").invoke(driver);
+                }
+            } catch (ReflectiveOperationException e) {
+                // NOP
+            }
+        }
+        return driver;
+    }
+
+	public BufferedImage takeScreenshotEntirePageDefault() {
         final int _docWidth = this.getDocWidth();
         final int _docHeight = this.getDocHeight();
         BufferedImage combinedImage = new BufferedImage(_docWidth, _docHeight, BufferedImage.TYPE_INT_ARGB);
