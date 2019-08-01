@@ -43,8 +43,8 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>3.9.1</version>
-			<scope>compile</scope>
+            <version>3.141.59</version>
+	    <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
