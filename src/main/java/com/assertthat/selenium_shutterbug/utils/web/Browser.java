@@ -15,6 +15,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WrapsDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.CommandInfo;
@@ -22,7 +23,6 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.http.HttpMethod;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -109,8 +109,8 @@ public class Browser {
      * @return BufferedImage resulting image
      */
     public BufferedImage takeScreenshotEntirePage() {
-        if (driver instanceof EventFiringWebDriver) {
-            driver = ((EventFiringWebDriver) this.driver).getWrappedDriver();
+        if (driver instanceof WrapsDriver) {
+            driver = ((WrapsDriver) this.driver).getWrappedDriver();
         }
 
         if (driver instanceof ChromeDriver) {
