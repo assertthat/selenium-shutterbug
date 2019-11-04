@@ -47,6 +47,7 @@ public class Browser {
     private static final String VIEWPORT_WIDTH_JS = "js/viewport-width.js";
     private static final String SCROLL_TO_JS = "js/scroll-to.js";
     private static final String SCROLL_INTO_VIEW_JS = "js/scroll-element-into-view.js";
+    private static final String SCROLL_INTO_VIEW_VERTICAL_CENTERED_JS = "js/scroll-element-into-view-vertical-centered.js";
     private static final String CURRENT_SCROLL_Y_JS = "js/get-current-scrollY.js";
     private static final String CURRENT_SCROLL_X_JS = "js/get-current-scrollX.js";
     private static final String DEVICE_PIXEL_RATIO = "js/get-device-pixel-ratio.js";
@@ -256,6 +257,10 @@ public class Browser {
         executeJsScript(SCROLL_INTO_VIEW_JS, element);
     }
 
+    public void scrollToElementVerticalCentered(WebElement element) {
+    	executeJsScript(SCROLL_INTO_VIEW_VERTICAL_CENTERED_JS, element);
+    }
+    
     public void scrollTo(int x, int y) {
         executeJsScript(SCROLL_TO_JS, x / devicePixelRatio, y / devicePixelRatio);
     }

@@ -114,6 +114,17 @@ public class Shutterbug {
     }
 
     /**
+     * To be used when need to screenshot particular element by vertically centering it in viewport.
+     *
+     * @param driver  WebDriver instance
+     * @param element WebElement instance to be screenshotted
+     * @return ElementSnapshot instance
+     */
+    public static ElementSnapshot shootElementVerticallyCentered(WebDriver driver, WebElement element) {
+        return shootElementVerticallyCentered(driver,element,false);
+    }
+    
+    /**
      * To be used when need to screenshot particular element.
      *
      * @param driver  WebDriver instance
@@ -136,6 +147,23 @@ public class Shutterbug {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElement(element);
+        elementSnapshot.setImage(browser.takeScreenshot(),browser.getBoundingClientRect(element));
+        return elementSnapshot;
+    }
+    
+    /**
+     * To be used when need to screenshot particular element by vertically centering it within viewport.
+     *
+     * @param driver  WebDriver instance
+     * @param element WebElement instance to be screen shot
+     * @param useDevicePixelRatio whether or not take into account device pixel ratio
+     * 
+     * @return ElementSnapshot instance
+     */
+    public static ElementSnapshot shootElementVerticallyCentered(WebDriver driver, WebElement element, boolean useDevicePixelRatio) {
+        Browser browser = new Browser(driver, useDevicePixelRatio);
+        ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
+        browser.scrollToElementVerticalCentered(element);
         elementSnapshot.setImage(browser.takeScreenshot(),browser.getBoundingClientRect(element));
         return elementSnapshot;
     }
