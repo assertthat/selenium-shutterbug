@@ -65,11 +65,26 @@ public class Shutterbug {
      *
      * @param driver WebDriver instance
      * @param scroll ScrollStrategy How you need to scroll
-     * @param  scrollTimeout Timeout to wait after scrolling and before taking screen shot
+     * @param  betweenScrollTimeout Timeout to wait after scrolling and before taking screenshot
      * @return PageSnapshot instance
      */
-    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int scrollTimeout) {
-        return shootPage(driver,scroll,scrollTimeout,false);
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout) {
+        return shootPage(driver,scroll,betweenScrollTimeout,false);
+    }
+
+    /**
+     * To be used when screen shooting the page
+     * and need to scroll while making screen shots, either vertically or
+     * horizontally or both directions (Chrome).
+     *
+     * @param driver WebDriver instance
+     * @param scroll ScrollStrategy How you need to scroll
+     * @param  betweenScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @param  afterScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @return PageSnapshot instance
+     */
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout, int afterScrollTimeout) {
+        return shootPage(driver,scroll,betweenScrollTimeout,false, afterScrollTimeout);
     }
 
     /**
@@ -93,13 +108,45 @@ public class Shutterbug {
      *
      * @param driver WebDriver instance
      * @param scroll ScrollStrategy How you need to scroll
-     * @param  scrollTimeout Timeout to wait after scrolling and before taking screen shot
+     * @param  useDevicePixelRatio whether or not take into account device pixel ratio
+     * @param  afterScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @return PageSnapshot instance
+     */
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, boolean useDevicePixelRatio, int afterScrollTimeout) {
+        return shootPage(driver,scroll,0,useDevicePixelRatio, afterScrollTimeout);
+    }
+
+    /**
+     * To be used when screen shooting the page
+     * and need to scroll while making screen shots, either vertically or
+     * horizontally or both directions (Chrome).
+     *
+     * @param driver WebDriver instance
+     * @param scroll ScrollStrategy How you need to scroll
+     * @param  betweenScrollTimeout Timeout to wait between each scrolling operation
      * @param useDevicePixelRatio whether or not take into account device pixel ratio
      * @return PageSnapshot instance
      */
-    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int scrollTimeout, boolean useDevicePixelRatio) {
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout, boolean useDevicePixelRatio) {
+        return shootPage(driver,scroll,betweenScrollTimeout,useDevicePixelRatio,0);
+    }
+
+    /**
+     * To be used when screen shooting the page
+     * and need to scroll while making screen shots, either vertically or
+     * horizontally or both directions (Chrome).
+     *
+     * @param driver WebDriver instance
+     * @param scroll ScrollStrategy How you need to scroll
+     * @param  betweenScrollTimeout Timeout to wait between each scrolling operation
+     * @param  afterScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @param useDevicePixelRatio whether or not take into account device pixel ratio
+     * @return PageSnapshot instance
+     */
+    public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout, boolean useDevicePixelRatio, int afterScrollTimeout) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
-        browser.setScrollTimeout(scrollTimeout);
+        browser.setBetweenScrollTimeout(betweenScrollTimeout);
+        browser.setAfterScrollTimeout(afterScrollTimeout);
 
         PageSnapshot pageScreenshot = new PageSnapshot(driver, browser.getDevicePixelRatio());
         switch (scroll) {

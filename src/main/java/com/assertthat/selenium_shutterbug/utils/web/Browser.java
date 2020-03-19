@@ -58,7 +58,9 @@ public class Browser {
     private int docWidth = -1;
     private int viewportWidth = -1;
     private int viewportHeight = -1;
-    private int scrollTimeout;
+    private int betweenScrollTimeout;
+
+    private int afterScrollTimeout;
     private Double devicePixelRatio = 1.0;
 
     public Browser(WebDriver driver, boolean useDevicePixelRatio) {
@@ -81,9 +83,14 @@ public class Browser {
         }
     }
 
-    public void setScrollTimeout(int scrollTimeout) {
-        this.scrollTimeout = scrollTimeout;
+    public void setBetweenScrollTimeout(int betweenScrollTimeout) {
+        this.betweenScrollTimeout = betweenScrollTimeout;
     }
+
+    public void setAfterScrollTimeout(int afterScrollTimeout) {
+        this.afterScrollTimeout = afterScrollTimeout;
+    }
+
 
     public BufferedImage takeScreenshot() {
         File srcFile = ((TakesScreenshot) this.getUnderlyingDriver()).getScreenshotAs(OutputType.FILE);
@@ -161,7 +168,7 @@ public class Browser {
             this.scrollTo(0, j * _viewportHeight);
             for (int i = 0; i < horizontalIterations; i++) {
                 this.scrollTo(i * _viewportWidth, _viewportHeight * j);
-                wait(scrollTimeout);
+                wait(betweenScrollTimeout);
                 Image image = takeScreenshot();
                 g.drawImage(image, this.getCurrentScrollX(), this.getCurrentScrollY(), null);
                 if (_docWidth == image.getWidth(null) && _docHeight == image.getHeight(null)) {
@@ -183,10 +190,11 @@ public class Browser {
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
         for (int j = 0; j < verticalIterations; j++) {
             this.scrollTo(0, j * this.getViewportHeight());
-            wait(scrollTimeout);
+            wait(betweenScrollTimeout);
         }
         Object metrics = this.evaluate(FileUtil.getJsScript(ALL_METRICS));
         this.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
+        wait(afterScrollTimeout);
         Object result = this.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
         this.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
         return decodeBase64EncodedPng((String) ((Map<String, ?>) result).get("data"));
