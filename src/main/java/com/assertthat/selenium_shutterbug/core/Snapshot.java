@@ -277,8 +277,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(BufferedImage image, String resultingImagePath) {
-        if (this.getImage() == image) return true;
-        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image, resultingImagePath, 0) : image == null;
+        return equalsWithDiff(image, resultingImagePath,0);
     }
 
     /**
@@ -298,8 +297,7 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(Snapshot image, String resultingImagePath) {
-        if (this == image) return true;
-        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image.getImage(),resultingImagePath, 0) : image == null;
+        return equalsWithDiff(image, resultingImagePath,0);
     }
 
     /**
