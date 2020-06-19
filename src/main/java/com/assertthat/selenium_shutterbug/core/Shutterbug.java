@@ -26,7 +26,7 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver) {
-        return shootPage(driver,false);
+        return shootPage(driver, true);
     }
 
     /**
@@ -34,13 +34,13 @@ public class Shutterbug {
      * To be used when screen shooting the page
      * and don't need to scroll while making screen shots (FF, IE).
      *
-     * @param driver WebDriver instance
+     * @param driver              WebDriver instance
      * @param useDevicePixelRatio whether or not take into account device pixel ratio
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, boolean useDevicePixelRatio) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
-        PageSnapshot pageScreenshot = new PageSnapshot(driver,browser.getDevicePixelRatio());
+        PageSnapshot pageScreenshot = new PageSnapshot(driver, browser.getDevicePixelRatio());
         pageScreenshot.setImage(browser.takeScreenshot());
         return pageScreenshot;
     }
@@ -63,13 +63,13 @@ public class Shutterbug {
      * and need to scroll while making screen shots, either vertically or
      * horizontally or both directions (Chrome).
      *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @param  betweenScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @param driver               WebDriver instance
+     * @param scroll               ScrollStrategy How you need to scroll
+     * @param betweenScrollTimeout Timeout to wait after scrolling and before taking screenshot
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout) {
-        return shootPage(driver,scroll,betweenScrollTimeout,false);
+        return shootPage(driver, scroll, betweenScrollTimeout, true);
     }
 
     /**
@@ -77,14 +77,14 @@ public class Shutterbug {
      * and need to scroll while making screen shots, either vertically or
      * horizontally or both directions (Chrome).
      *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @param  betweenScrollTimeout Timeout to wait after scrolling and before taking screenshot
-     * @param  afterScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @param driver               WebDriver instance
+     * @param scroll               ScrollStrategy How you need to scroll
+     * @param betweenScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @param afterScrollTimeout   Timeout to wait after scrolling and before taking screenshot
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout, int afterScrollTimeout) {
-        return shootPage(driver,scroll,betweenScrollTimeout,false, afterScrollTimeout);
+        return shootPage(driver, scroll, betweenScrollTimeout, true, afterScrollTimeout);
     }
 
     /**
@@ -92,13 +92,13 @@ public class Shutterbug {
      * and need to scroll while making screen shots, either vertically or
      * horizontally or both directions (Chrome).
      *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @param  useDevicePixelRatio whether or not take into account device pixel ratio
+     * @param driver              WebDriver instance
+     * @param scroll              ScrollStrategy How you need to scroll
+     * @param useDevicePixelRatio whether or not take into account device pixel ratio
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, boolean useDevicePixelRatio) {
-        return shootPage(driver,scroll,0,useDevicePixelRatio);
+        return shootPage(driver, scroll, 0, useDevicePixelRatio);
     }
 
     /**
@@ -106,14 +106,14 @@ public class Shutterbug {
      * and need to scroll while making screen shots, either vertically or
      * horizontally or both directions (Chrome).
      *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @param  useDevicePixelRatio whether or not take into account device pixel ratio
-     * @param  afterScrollTimeout Timeout to wait after scrolling and before taking screenshot
+     * @param driver              WebDriver instance
+     * @param scroll              ScrollStrategy How you need to scroll
+     * @param useDevicePixelRatio whether or not take into account device pixel ratio
+     * @param afterScrollTimeout  Timeout to wait after scrolling and before taking screenshot
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, boolean useDevicePixelRatio, int afterScrollTimeout) {
-        return shootPage(driver,scroll,0,useDevicePixelRatio, afterScrollTimeout);
+        return shootPage(driver, scroll, 0, useDevicePixelRatio, afterScrollTimeout);
     }
 
     /**
@@ -121,14 +121,14 @@ public class Shutterbug {
      * and need to scroll while making screen shots, either vertically or
      * horizontally or both directions (Chrome).
      *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @param  betweenScrollTimeout Timeout to wait between each scrolling operation
-     * @param useDevicePixelRatio whether or not take into account device pixel ratio
+     * @param driver               WebDriver instance
+     * @param scroll               ScrollStrategy How you need to scroll
+     * @param betweenScrollTimeout Timeout to wait between each scrolling operation
+     * @param useDevicePixelRatio  whether or not take into account device pixel ratio
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout, boolean useDevicePixelRatio) {
-        return shootPage(driver,scroll,betweenScrollTimeout,useDevicePixelRatio,0);
+        return shootPage(driver, scroll, betweenScrollTimeout, useDevicePixelRatio, 0);
     }
 
     /**
@@ -136,11 +136,11 @@ public class Shutterbug {
      * and need to scroll while making screen shots, either vertically or
      * horizontally or both directions (Chrome).
      *
-     * @param driver WebDriver instance
-     * @param scroll ScrollStrategy How you need to scroll
-     * @param  betweenScrollTimeout Timeout to wait between each scrolling operation
-     * @param  afterScrollTimeout Timeout to wait after scrolling and before taking screenshot
-     * @param useDevicePixelRatio whether or not take into account device pixel ratio
+     * @param driver               WebDriver instance
+     * @param scroll               ScrollStrategy How you need to scroll
+     * @param betweenScrollTimeout Timeout to wait between each scrolling operation
+     * @param afterScrollTimeout   Timeout to wait after scrolling and before taking screenshot
+     * @param useDevicePixelRatio  whether or not take into account device pixel ratio
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootPage(WebDriver driver, ScrollStrategy scroll, int betweenScrollTimeout, boolean useDevicePixelRatio, int afterScrollTimeout) {
@@ -168,9 +168,9 @@ public class Shutterbug {
      * @return ElementSnapshot instance
      */
     public static ElementSnapshot shootElementVerticallyCentered(WebDriver driver, WebElement element) {
-        return shootElementVerticallyCentered(driver,element,false);
+        return shootElementVerticallyCentered(driver, element, true);
     }
-    
+
     /**
      * To be used when need to screenshot particular element.
      *
@@ -179,14 +179,14 @@ public class Shutterbug {
      * @return ElementSnapshot instance
      */
     public static ElementSnapshot shootElement(WebDriver driver, WebElement element) {
-        return shootElement(driver,element,false);
+        return shootElement(driver, element, true);
     }
 
     /**
      * To be used when need to screenshot particular element.
      *
-     * @param driver  WebDriver instance
-     * @param element WebElement instance to be screen shot
+     * @param driver              WebDriver instance
+     * @param element             WebElement instance to be screen shot
      * @param useDevicePixelRatio whether or not take into account device pixel ratio
      * @return ElementSnapshot instance
      */
@@ -194,24 +194,23 @@ public class Shutterbug {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElement(element);
-        elementSnapshot.setImage(browser.takeScreenshot(),browser.getBoundingClientRect(element));
+        elementSnapshot.setImage(browser.takeScreenshot(), browser.getBoundingClientRect(element));
         return elementSnapshot;
     }
-    
+
     /**
      * To be used when need to screenshot particular element by vertically centering it within viewport.
      *
-     * @param driver  WebDriver instance
-     * @param element WebElement instance to be screen shot
+     * @param driver              WebDriver instance
+     * @param element             WebElement instance to be screen shot
      * @param useDevicePixelRatio whether or not take into account device pixel ratio
-     * 
      * @return ElementSnapshot instance
      */
     public static ElementSnapshot shootElementVerticallyCentered(WebDriver driver, WebElement element, boolean useDevicePixelRatio) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElementVerticalCentered(element);
-        elementSnapshot.setImage(browser.takeScreenshot(),browser.getBoundingClientRect(element));
+        elementSnapshot.setImage(browser.takeScreenshot(), browser.getBoundingClientRect(element));
         return elementSnapshot;
     }
 }
