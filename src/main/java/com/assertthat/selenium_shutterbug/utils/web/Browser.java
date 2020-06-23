@@ -8,13 +8,9 @@ package com.assertthat.selenium_shutterbug.utils.web;
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
 import com.github.zafarkhaja.semver.Version;
 import com.google.common.collect.ImmutableMap;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.CommandInfo;
@@ -22,6 +18,7 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.http.HttpMethod;
+import org.openqa.selenium.support.ui.FluentWait;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -32,8 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
@@ -59,8 +58,9 @@ public class Browser {
     private int viewportWidth = -1;
     private int viewportHeight = -1;
     private int betweenScrollTimeout;
+    private Function<WebDriver,?> beforeShootCondition;
+    private int beforeShootTimeout;
 
-    private int afterScrollTimeout;
     private Double devicePixelRatio = 1.0;
 
     public Browser(WebDriver driver, boolean useDevicePixelRatio) {
@@ -83,16 +83,31 @@ public class Browser {
         }
     }
 
+    public void wait(Function<WebDriver,?> condition, int timeout) {
+        if(condition!=null) {
+            new FluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(timeout))
+                    .ignoring(StaleElementReferenceException.class, NoSuchMethodException.class)
+                    .until(condition);
+        }else if(timeout>0) {
+            wait(timeout);
+        }
+    }
+
     public void setBetweenScrollTimeout(int betweenScrollTimeout) {
         this.betweenScrollTimeout = betweenScrollTimeout;
     }
 
-    public void setAfterScrollTimeout(int afterScrollTimeout) {
-        this.afterScrollTimeout = afterScrollTimeout;
+    public void setBeforeShootTimeout(int beforeShootTimeout) {
+        this.beforeShootTimeout = beforeShootTimeout;
     }
 
+    public void setBeforeShootCondition(Function<WebDriver,?> beforeShootCondition) {
+        this.beforeShootCondition = beforeShootCondition;
+    }
 
     public BufferedImage takeScreenshot() {
+        wait(beforeShootCondition,beforeShootTimeout);
         File srcFile = ((TakesScreenshot) this.getUnderlyingDriver()).getScreenshotAs(OutputType.FILE);
         try {
             return ImageIO.read(srcFile);
@@ -157,7 +172,7 @@ public class Browser {
         final int scrollBarMaxWidth = 40; // this is probably too high, but better to be safe than sorry
 
         if (_viewportWidth < _docWidth || (_viewportHeight < _docHeight && _viewportWidth - scrollBarMaxWidth < _docWidth))
-            _viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar 
+            _viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar
         if (_viewportHeight < _docHeight)
             _viewportWidth -= scrollBarMaxWidth; // some space for a scrollbar
 
@@ -194,7 +209,7 @@ public class Browser {
         }
         Object metrics = this.evaluate(FileUtil.getJsScript(ALL_METRICS));
         this.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
-        wait(afterScrollTimeout);
+        wait(beforeShootCondition,beforeShootTimeout);
         Object result = this.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
         this.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
         return decodeBase64EncodedPng((String) ((Map<String, ?>) result).get("data"));
@@ -268,7 +283,7 @@ public class Browser {
     public void scrollToElementVerticalCentered(WebElement element) {
     	executeJsScript(SCROLL_INTO_VIEW_VERTICAL_CENTERED_JS, element);
     }
-    
+
     public void scrollTo(int x, int y) {
         executeJsScript(SCROLL_TO_JS, x / devicePixelRatio, y / devicePixelRatio);
     }
