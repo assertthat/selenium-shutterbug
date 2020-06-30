@@ -33,8 +33,11 @@ public class ImageData {
     }
 
     private boolean equalsEachPixelsWithCreateDifferencesImage(BufferedImage image, double deviation, String pathDifferenceImageFileName) {
-        createDifferencesImage(image, pathDifferenceImageFileName);
-        return equalsEachPixels(image, deviation);
+        boolean isEqual = equalsEachPixels(image, deviation);
+        if(!isEqual) {
+            createDifferencesImage(image, pathDifferenceImageFileName);
+        }
+        return isEqual;
     }
 
     private void createDifferencesImage(BufferedImage image, String pathDifferenceImageFileName) {
