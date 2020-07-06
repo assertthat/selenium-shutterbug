@@ -266,13 +266,13 @@ public class Shutterbug {
     }
 
         /**
-         * an alternate method to create a full-page screenshot, to be used with assertScreenshotFP
+         * an alternate method to create a full-page screenshot, designed to be used with assertScreenshotFP
          *
          * @param   driver      WebDriver instance
          * @param   fileName    String, name of image file to be created
          *                      If the fileName is omitted, the default value of the URL will be used (converted to remove forbidden characters)
          * @param   folderPath  String, path to the folder that will contain the screenshots
-         *                      If the folderPath is omitted, the default value of "expected" will be used.
+         *                      If the folderPath is omitted, the default value of "screenshots" will be used.
          */
     public static void screenshotFP(WebDriver driver, String folderPath, String fileName){
         shootPage(driver, ScrollStrategy.WHOLE_PAGE).withName(fileName).save(folderPath);
