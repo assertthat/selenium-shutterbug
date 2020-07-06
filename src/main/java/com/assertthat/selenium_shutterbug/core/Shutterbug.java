@@ -295,10 +295,4 @@ public class Shutterbug {
         url = url.replaceAll("[?*:<>\\|\"/]","-");
         return url;
     }
-
-    static void echo(Object object){
-        System.out.println("******************start echo*****************");
-        System.out.println(object);
-        System.out.println("******************end echo*****************");
-    }//\\
 }
