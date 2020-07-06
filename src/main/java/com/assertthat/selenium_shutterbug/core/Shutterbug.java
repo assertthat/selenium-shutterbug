@@ -7,10 +7,16 @@ package com.assertthat.selenium_shutterbug.core;
 
 import com.assertthat.selenium_shutterbug.utils.web.Browser;
 import com.assertthat.selenium_shutterbug.utils.web.ScrollStrategy;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import sun.jvm.hotspot.debugger.Page;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Function;
 
 /**
@@ -206,4 +212,95 @@ public class Shutterbug {
         elementSnapshot.setImage(browser.takeScreenshot(), browser.getBoundingClientRect(element));
         return elementSnapshot;
     }
+
+    /**
+     * a way to assert a full-page screenshot
+     *
+     * @param   driver                      WebDriver instance
+     * @param   expectedImageFolderPath     Optional: String - path to the folder containing the expected image. For example: "expected".
+     *                                      If omitted, the "screenshots" folder will be used.
+     * @param   expectedImageName           Optional: String - the name of the expected image file, including the .png file extension.
+     *                                      If omitted, a file name based on the URL will be used.
+     * @param   diffImageFolderPath         Optional: String - file path to the folder for the diff Image.
+     *                                      If omitted, the "screenshots" folder will be used.
+     * @param   diffImageName           Optional: String - name for the diffImage. The file extension should not be included.
+     *                                  If omitted, it will create a file name ending in "-DIFF_IMAGE.png"
+     * @param   deviation               Double - threshold or tolerance level considered acceptable before a difference is reported.
+     *                                  If omitted, the tolerance level will be 0.0. For example: 0.1
+     *
+     * @return  Boolean                 Returns true if assertion succeeds, returns false if it fails.
+     */
+    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolderPath, String expectedImageName, String diffImageFolderPath, String diffImageName, Double deviation) {
+        String expectedImagePath = expectedImageFolderPath + File.separator + expectedImageName;
+        String diffImagePath = diffImageFolderPath + File.separator + diffImageName;
+        BufferedImage expectedImage = null;
+        try {
+            expectedImage = ImageIO.read(new File(expectedImagePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Shutterbug.shootPage(driver, ScrollStrategy.WHOLE_PAGE).equalsWithDiff(expectedImage, diffImagePath, deviation);
+    }
+    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolderPath, String expectedImageName, String diffImageFolderPath, String diffImageName) {
+        Double deviation = 0.0;
+        return assertScreenshotFP(driver, expectedImageFolderPath, expectedImageName, diffImageFolderPath, diffImageName, deviation);
+    }
+    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolder, String diffImageFolder, Double deviation) {
+        String expectedImageName = convertUrlToFileName(driver.getCurrentUrl());
+        String diffImageName = expectedImageName + "-DIFF_IMAGE";
+        expectedImageName += ".png";
+        return assertScreenshotFP(driver, expectedImageFolder, expectedImageName, diffImageFolder, diffImageName, deviation);
+    }
+    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolderPath, String diffImageFolderPath) {
+        Double deviation = 0.0;
+        return assertScreenshotFP(driver, expectedImageFolderPath, diffImageFolderPath, deviation);
+    }
+    public static Boolean assertScreenshotFP(WebDriver driver, Double deviation) {
+        String expectedImageFolderPath = "screenshots";
+        String diffImageFolderPath = "screenshots";
+        return assertScreenshotFP(driver, expectedImageFolderPath, diffImageFolderPath, deviation);
+    }
+    public static Boolean assertScreenshotFP(WebDriver driver) {
+        Double deviation = 0.0;
+        return assertScreenshotFP(driver, deviation);
+    }
+
+        /**
+         * an alternate method to create a full-page screenshot, to be used with assertScreenshotFP
+         *
+         * @param   driver      WebDriver instance
+         * @param   fileName    String, name of image file to be created
+         *                      If the fileName is omitted, the default value of the URL will be used (converted to remove forbidden characters)
+         * @param   folderPath  String, path to the folder that will contain the screenshots
+         *                      If the folderPath is omitted, the default value of "expected" will be used.
+         */
+    public static void screenshotFP(WebDriver driver, String folderPath, String fileName){
+        shootPage(driver, ScrollStrategy.WHOLE_PAGE).withName(fileName).save(folderPath);
+    }
+    public static void screenshotFP(WebDriver driver, String folderPath){
+        String url = driver.getCurrentUrl();
+        String fileName = convertUrlToFileName(url);
+        screenshotFP(driver, folderPath, fileName);
+    }
+    public static void screenshotFP(WebDriver driver){
+        String folderPath = "screenshots";
+        screenshotFP(driver, folderPath);
+    }
+
+    /**
+     * converts a url String to a file name string, removing forbidden characters. For use with assertScreenshotFP
+     *
+     * @param url   String of the URL
+     */
+    private static String convertUrlToFileName(String url){
+        url = url.replaceFirst("https?://","");
+        url = url.replaceAll("[?*:<>\\|\"/]","-");
+        return url;
+    }
+
+    static void echo(Object object){
+        System.out.println("******************start echo*****************");
+        System.out.println(object);
+        System.out.println("******************end echo*****************");
+    }//\\
 }
