@@ -7,11 +7,9 @@ package com.assertthat.selenium_shutterbug.core;
 
 import com.assertthat.selenium_shutterbug.utils.web.Browser;
 import com.assertthat.selenium_shutterbug.utils.web.ScrollStrategy;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import sun.jvm.hotspot.debugger.Page;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
