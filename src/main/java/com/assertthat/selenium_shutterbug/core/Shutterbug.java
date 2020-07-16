@@ -296,7 +296,6 @@ public class Shutterbug {
         url = truncate(url,159);//Windows file name limit
         return url;
     }
-
     private static String truncate(String value, int length) {
         // Ensure String length is longer than requested size.
         if (value.length() > length) {
@@ -305,10 +304,4 @@ public class Shutterbug {
             return value;
         }//resource: https://www.dotnetperls.com/truncate-java
     }
-
-    static void echo(Object object){
-        System.out.println("******************start echo*****************");
-        System.out.println(object);
-        System.out.println("******************end echo*****************");
-    }//\\
 }
