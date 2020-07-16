@@ -228,7 +228,7 @@ public class Shutterbug {
      *
      * @return  Boolean                 Returns true if assertion succeeds, returns false if it fails.
      */
-    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolderPath, String expectedImageName, String diffImageFolderPath, String diffImageName, Double deviation) {
+    public static Boolean compareScreenshotFP(WebDriver driver, String expectedImageFolderPath, String expectedImageName, String diffImageFolderPath, String diffImageName, Double deviation) {
         String expectedImagePath = expectedImageFolderPath + File.separator + expectedImageName;
         String diffImagePath = diffImageFolderPath + File.separator + diffImageName;
         BufferedImage expectedImage = null;
@@ -239,32 +239,32 @@ public class Shutterbug {
         }
         return Shutterbug.shootPage(driver, ScrollStrategy.WHOLE_PAGE).equalsWithDiff(expectedImage, diffImagePath, deviation);
     }
-    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolderPath, String expectedImageName, String diffImageFolderPath, String diffImageName) {
+    public static Boolean compareScreenshotFP(WebDriver driver, String expectedImageFolderPath, String expectedImageName, String diffImageFolderPath, String diffImageName) {
         Double deviation = 0.0;
-        return assertScreenshotFP(driver, expectedImageFolderPath, expectedImageName, diffImageFolderPath, diffImageName, deviation);
+        return compareScreenshotFP(driver, expectedImageFolderPath, expectedImageName, diffImageFolderPath, diffImageName, deviation);
     }
-    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolder, String diffImageFolder, Double deviation) {
+    public static Boolean compareScreenshotFP(WebDriver driver, String expectedImageFolder, String diffImageFolder, Double deviation) {
         String expectedImageName = convertUrlToFileName(driver.getCurrentUrl());
         String diffImageName = expectedImageName + "-DIFF_IMAGE";
         expectedImageName += ".png";
-        return assertScreenshotFP(driver, expectedImageFolder, expectedImageName, diffImageFolder, diffImageName, deviation);
+        return compareScreenshotFP(driver, expectedImageFolder, expectedImageName, diffImageFolder, diffImageName, deviation);
     }
-    public static Boolean assertScreenshotFP(WebDriver driver, String expectedImageFolderPath, String diffImageFolderPath) {
+    public static Boolean compareScreenshotFP(WebDriver driver, String expectedImageFolderPath, String diffImageFolderPath) {
         Double deviation = 0.0;
-        return assertScreenshotFP(driver, expectedImageFolderPath, diffImageFolderPath, deviation);
+        return compareScreenshotFP(driver, expectedImageFolderPath, diffImageFolderPath, deviation);
     }
-    public static Boolean assertScreenshotFP(WebDriver driver, Double deviation) {
+    public static Boolean compareScreenshotFP(WebDriver driver, Double deviation) {
         String expectedImageFolderPath = "screenshots";
         String diffImageFolderPath = "screenshots";
-        return assertScreenshotFP(driver, expectedImageFolderPath, diffImageFolderPath, deviation);
+        return compareScreenshotFP(driver, expectedImageFolderPath, diffImageFolderPath, deviation);
     }
-    public static Boolean assertScreenshotFP(WebDriver driver) {
+    public static Boolean compareScreenshotFP(WebDriver driver) {
         Double deviation = 0.0;
-        return assertScreenshotFP(driver, deviation);
+        return compareScreenshotFP(driver, deviation);
     }
 
         /**
-         * an alternate method to create a full-page screenshot, designed to be used with assertScreenshotFP
+         * an alternate method to create a full-page screenshot, designed to be used with compareScreenshotFP
          *
          * @param   driver      WebDriver instance
          * @param   fileName    String, name of image file to be created
@@ -286,7 +286,7 @@ public class Shutterbug {
     }
 
     /**
-     * converts a url String to a file name string, removing forbidden characters. For use with assertScreenshotFP
+     * converts a url String to a file name string, removing forbidden characters. For use with compareScreenshotFP
      *
      * @param url   String of the URL
      */
