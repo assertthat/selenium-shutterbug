@@ -292,8 +292,18 @@ public class Shutterbug {
      */
     private static String convertUrlToFileName(String url){
         url = url.replaceFirst("https?://","");
-        url = url.replaceAll("[?*:<>\\|\"/]","-");
+        url = url.replaceAll("[?|*:<>\"/\\\\]","-");
+        url = truncate(url,159);//Windows file name limit
         return url;
+    }
+
+    private static String truncate(String value, int length) {
+        // Ensure String length is longer than requested size.
+        if (value.length() > length) {
+            return value.substring(0, length);
+        } else {
+            return value;
+        }//resource: https://www.dotnetperls.com/truncate-java
     }
 
     static void echo(Object object){
