@@ -9,5 +9,5 @@ package com.assertthat.selenium_shutterbug.utils.web;
  * Created by Glib_Briia on 17/06/2016.
  */
 public enum ScrollStrategy {
-   VIEWPORT_ONLY, WHOLE_PAGE
+   VIEWPORT_ONLY, WHOLE_PAGE, WHOLE_PAGE_SCROLL_AND_STITCH
 }
