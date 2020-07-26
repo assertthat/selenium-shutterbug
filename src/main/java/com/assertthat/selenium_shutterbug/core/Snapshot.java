@@ -9,9 +9,11 @@ import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
 import com.assertthat.selenium_shutterbug.utils.image.ImageProcessor;
 import org.openqa.selenium.WebDriver;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,12 +25,12 @@ import java.util.Date;
  */
 public abstract class Snapshot<T extends Snapshot> {
 
+    static final String ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE = "Requested element is outside the viewport";
     private static final String EXTENSION = "PNG";
-    protected static final String ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE = "Requested element is outside the viewport";
     protected BufferedImage image;
-    protected BufferedImage thumbnailImage;
-    protected WebDriver driver;
-    protected Double devicePixelRatio = 1D;
+    private BufferedImage thumbnailImage;
+    WebDriver driver;
+    Double devicePixelRatio = 1D;
     private String fileName = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS").format(new Date())
             + "." + EXTENSION.toLowerCase();
     private Path location = Paths.get("./screenshots/");
@@ -63,35 +65,17 @@ public abstract class Snapshot<T extends Snapshot> {
      * Generate a thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.
      *
-     * @param path to save thumbnail image to
-     * @param name of the resulting image
+     * @param path  to save thumbnail image to
+     * @param name  of the resulting image
      * @param scale to apply
      * @return instance of type Snapshot
      */
     public T withThumbnail(String path, String name, double scale) {
         File thumbnailFile = new File(path, name);
-        if(!Files.exists(Paths.get(path))) {
+        if (!Files.exists(Paths.get(path))) {
             thumbnailFile.mkdirs();
         }
-        thumbnailImage=ImageProcessor.scale(image,scale);
-        FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
-        return self();
-    }
-    
-    /**
-     * Generate cropped thumbnail of the original screenshot.
-     * Will save different thumbnails depends on when it was called in the chain.
-     *
-     * @param path to save thumbnail image to
-     * @param name of the resulting image
-     * @param scale to apply
-     * @param cropWidth e.g. 0.2 will leave 20% of the initial width
-     * @param cropHeight e.g. 0.1 will leave 10% of the initial width
-     * @return instance of type Snapshot
-     */
-    public T withCroppedThumbnail(String path, String name, double scale,  double cropWidth, double cropHeight) {
-        File thumbnailFile = getFile(path, name);
-        thumbnailImage=ImageProcessor.cropAndScale(image,scale, cropWidth, cropHeight);
+        thumbnailImage = ImageProcessor.scale(image, scale);
         FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
     }
@@ -100,16 +84,34 @@ public abstract class Snapshot<T extends Snapshot> {
      * Generate cropped thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.
      *
-     * @param path to save thumbnail image to
-     * @param name of the resulting image
-     * @param scale to apply
-     * @param maxWidth max width in pixels. If set to -1 the actual image width is used
+     * @param path       to save thumbnail image to
+     * @param name       of the resulting image
+     * @param scale      to apply
+     * @param cropWidth  e.g. 0.2 will leave 20% of the initial width
+     * @param cropHeight e.g. 0.1 will leave 10% of the initial width
+     * @return instance of type Snapshot
+     */
+    public T withCroppedThumbnail(String path, String name, double scale, double cropWidth, double cropHeight) {
+        File thumbnailFile = getFile(path, name);
+        thumbnailImage = ImageProcessor.cropAndScale(image, scale, cropWidth, cropHeight);
+        FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
+        return self();
+    }
+
+    /**
+     * Generate cropped thumbnail of the original screenshot.
+     * Will save different thumbnails depends on when it was called in the chain.
+     *
+     * @param path      to save thumbnail image to
+     * @param name      of the resulting image
+     * @param scale     to apply
+     * @param maxWidth  max width in pixels. If set to -1 the actual image width is used
      * @param maxHeight max height in pixels. If set to -1 the actual image height is used
      * @return instance of type Snapshot
      */
-    public T withCroppedThumbnail(String path, String name, double scale,  int maxWidth, int maxHeight) {
+    public T withCroppedThumbnail(String path, String name, double scale, int maxWidth, int maxHeight) {
         File thumbnailFile = getFile(path, name);
-        thumbnailImage=ImageProcessor.cropAndScale(image,scale, maxWidth, maxHeight);
+        thumbnailImage = ImageProcessor.cropAndScale(image, scale, maxWidth, maxHeight);
         FileUtil.writeImage(thumbnailImage, EXTENSION, thumbnailFile);
         return self();
     }
@@ -133,39 +135,39 @@ public abstract class Snapshot<T extends Snapshot> {
      * Generate cropped thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.
      *
-     * @param scale to apply
-     * @param cropWidth e.g. 0.2 will leave 20% of the initial width
+     * @param scale      to apply
+     * @param cropWidth  e.g. 0.2 will leave 20% of the initial width
      * @param cropHeight e.g. 0.1 will leave 10% of the initial width
      * @return instance of type Snapshot
      */
     public T withCroppedThumbnail(double scale, double cropWidth, double cropHeight) {
-        return withCroppedThumbnail(Paths.get(location.toString(), "./thumbnails").toString(), "thumb_" + fileName, scale,cropWidth,cropHeight);
+        return withCroppedThumbnail(Paths.get(location.toString(), "./thumbnails").toString(), "thumb_" + fileName, scale, cropWidth, cropHeight);
     }
-    
+
     /**
      * Generate cropped thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.
      *
-     * @param scale to apply
-     * @param maxWidth max width in pixels. If set to -1 the actual image width is used
+     * @param scale     to apply
+     * @param maxWidth  max width in pixels. If set to -1 the actual image width is used
      * @param maxHeight max height in pixels. If set to -1 the actual image height is used
      * @return instance of type Snapshot
      */
     public T withCroppedThumbnail(double scale, int maxWidth, int maxHeight) {
-        return withCroppedThumbnail(Paths.get(location.toString(), "./thumbnails").toString(), "thumb_" + fileName, scale, maxWidth,maxHeight);
+        return withCroppedThumbnail(Paths.get(location.toString(), "./thumbnails").toString(), "thumb_" + fileName, scale, maxWidth, maxHeight);
     }
-    
+
     /**
      * Generate a thumbnail of the original screenshot.
      * Will save different thumbnails depends on when it was called in the chain.
      *
-     * @param path to save thumbnail image to
-     * @param name of the resulting image
+     * @param path  to save thumbnail image to
+     * @param name  of the resulting image
      * @param scale to apply
      * @return instance of type Snapshot
      */
     public T withThumbnail(Path path, String name, double scale) {
-       return withThumbnail(path.toString(),name,scale);
+        return withThumbnail(path.toString(), name, scale);
     }
 
     /**
@@ -206,7 +208,7 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public void save() {
         File screenshotFile = new File(location.toString(), fileName);
-        if(!Files.exists(location)) {
+        if (!Files.exists(location)) {
             screenshotFile.mkdirs();
         }
         if (title != null && !title.isEmpty()) {
@@ -218,7 +220,8 @@ public abstract class Snapshot<T extends Snapshot> {
     /**
      * Final method to be called in the chain.
      * Actually saves processed image to the specified path.
-	 * @param path to save image to 
+     *
+     * @param path to save image to
      */
     public void save(String path) {
         this.location = Paths.get(path);
@@ -226,7 +229,7 @@ public abstract class Snapshot<T extends Snapshot> {
     }
 
     /**
-     * @param other Snapshot to compare with
+     * @param other     Snapshot to compare with
      * @param deviation allowed deviation while comparing.
      * @return true if the the percentage of differences
      * between current image and provided one is less than or equal to <b>deviation</b>
@@ -256,12 +259,20 @@ public abstract class Snapshot<T extends Snapshot> {
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equals(BufferedImage image) {
-        if (this.getImage() == image) return true;
-        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), image, 0) : image == null;
+        return equals(image, 0);
     }
 
     /**
-     * @param image BufferedImage to compare with.
+     * @param path path to image to compare to.
+     * @return true if the the provided image and current image are strictly equal.
+     * @throws IOException if unable to read image from path
+     */
+    public boolean equals(String path) throws IOException {
+        return equals(path, 0);
+    }
+
+    /**
+     * @param image     BufferedImage to compare with.
      * @param deviation allowed deviation while comparing.
      * @return true if the the percentage of differences
      * between current image and provided one is less than or equal to <b>deviation</b>
@@ -272,18 +283,31 @@ public abstract class Snapshot<T extends Snapshot> {
     }
 
     /**
-     * @param image BufferedImage to compare with.
+     * @param path      path to image to compare to.
+     * @param deviation allowed deviation while comparing.
+     * @return true if the the percentage of differences
+     * between current image and provided one is less than or equal to <b>deviation</b>
+     * @throws IOException if unable to read image from path
+     */
+    public boolean equals(String path, double deviation) throws IOException {
+        BufferedImage image = ImageIO.read(new File(path));
+        if (this.getImage() == image) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEquals(getImage(), image, deviation) : image == null;
+    }
+
+    /**
+     * @param image              BufferedImage to compare with.
      * @param resultingImagePath path with name to save to resulting images with diff
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(BufferedImage image, String resultingImagePath) {
-        return equalsWithDiff(image, resultingImagePath,0);
+        return equalsWithDiff(image, resultingImagePath, 0);
     }
 
     /**
-     * @param image BufferedImage to compare with.
+     * @param image              BufferedImage to compare with.
      * @param resultingImagePath path with name to save to resulting images with diff
-     * @param deviation allowed deviation while comparing
+     * @param deviation          allowed deviation while comparing
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(BufferedImage image, String resultingImagePath, double deviation) {
@@ -292,23 +316,49 @@ public abstract class Snapshot<T extends Snapshot> {
     }
 
     /**
-     * @param image Snapshot to compare with.
+     * @param image              Snapshot to compare with.
      * @param resultingImagePath path with name to save to resulting images with diff
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(Snapshot image, String resultingImagePath) {
-        return equalsWithDiff(image, resultingImagePath,0);
+        return equalsWithDiff(image, resultingImagePath, 0);
     }
 
     /**
-     * @param image Snapshot to compare with.
+     * @param image              Snapshot to compare with.
      * @param resultingImagePath path with name to save to resulting images with diff
-     * @param deviation allowed deviation while comparing
+     * @param deviation          allowed deviation while comparing
      * @return true if the the provided image and current image are strictly equal.
      */
     public boolean equalsWithDiff(Snapshot image, String resultingImagePath, double deviation) {
         if (this == image) return true;
-        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image.getImage(),resultingImagePath, deviation) : image == null;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image.getImage(), resultingImagePath, deviation) : image == null;
+    }
+
+    /*===========*/
+
+    /**
+     * @param path               path to image to compare to
+     * @param resultingImagePath path with name to save to resulting images with diff
+     * @return true if the the provided image and current image are strictly equal.
+     * @throws IOException if unable to read image from path
+     */
+    public boolean equalsWithDiff(String path, String resultingImagePath) throws IOException {
+        return equalsWithDiff(path, resultingImagePath, 0);
+    }
+
+    /**
+     * @param path               BufferedImage to compare with.
+     * @param resultingImagePath path with name to save to resulting images with diff
+     * @param deviation          allowed deviation while comparing
+     * @return true if the the provided image and current image are strictly equal.
+     * @throws IOException if unable to read image from path
+     */
+    public boolean equalsWithDiff(String path, String resultingImagePath,
+                                  double deviation) throws IOException {
+        BufferedImage image = ImageIO.read(new File(path));
+        if (this.getImage() == image) return true;
+        return getImage() != null ? ImageProcessor.imagesAreEqualsWithDiff(getImage(), image, resultingImagePath, deviation) : image == null;
     }
 
     /**
