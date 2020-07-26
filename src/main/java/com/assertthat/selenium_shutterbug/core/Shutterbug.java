@@ -151,6 +151,7 @@ public class Shutterbug {
                 break;
             case WHOLE_PAGE_SCROLL_AND_STITCH:
                 pageScreenshot.setImage(browser.takeScreenshotEntirePageDefault());
+                break;
         }
         return pageScreenshot;
     }

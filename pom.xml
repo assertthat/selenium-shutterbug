@@ -24,7 +24,7 @@
         <url>https://github.com/assertthat/selenium-shutterbug</url>
         <connection>scm:git:git://github.com/assertthat/selenium-shutterbug.git</connection>
         <developerConnection>scm:git:git@github.com:assertthat/selenium-shutterbug.git</developerConnection>
-        <tag>v0.9.4</tag>
+        <tag>v0.9.5</tag>
   </scm>
     <developers>
         <developer>
