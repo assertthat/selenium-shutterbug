@@ -3,11 +3,11 @@
  *  Distributed under the terms of the MIT License
  */
 
-package com.assertthat.selenium_shutterbug.utils.web;
+package com.assertthat.selenium_shutterbug.core;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
  */
-public enum ScrollStrategy {
-   VIEWPORT_ONLY, WHOLE_PAGE, WHOLE_PAGE_SCROLL_AND_STITCH
+public enum Capture {
+    VIEWPORT, FULL, FULL_SCROLL, VERTICAL_SCROLL, HORIZONTAL_SCROLL
 }

@@ -78,7 +78,7 @@ public class ImageProcessorTest {
     public void testHighlight() throws IOException {
         Point point = new Point(9,33);
         Dimension size = new Dimension(141,17);
-        Coordinates coords = new Coordinates(point, size, 1D);
+        Coordinates coords = new Coordinates(point, size, 0,0, 1D);
         BufferedImage clearImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("clearImage.png"));
         BufferedImage highlightedExpectedImage = ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("highlightedImage.png"));
         BufferedImage highlightedActualImage = ImageProcessor.highlight(clearImage, coords, Color.red, 3);

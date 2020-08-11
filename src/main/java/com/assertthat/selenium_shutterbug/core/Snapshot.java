@@ -12,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -198,6 +199,15 @@ public abstract class Snapshot<T extends Snapshot> {
         return image;
     }
 
+    /**
+     * @return byte[] - byte array representation of the image.
+     */
+    public byte[] getBytes() throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", outputStream);
+        return outputStream.toByteArray();
+    }
+
     protected void setImage(BufferedImage image) {
         self().image = image;
     }
@@ -214,6 +224,7 @@ public abstract class Snapshot<T extends Snapshot> {
         if (title != null && !title.isEmpty()) {
             image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
+        driver.switchTo().defaultContent();
         FileUtil.writeImage(image, EXTENSION, screenshotFile);
     }
 

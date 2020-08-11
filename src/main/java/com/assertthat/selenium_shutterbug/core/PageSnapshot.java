@@ -44,8 +44,8 @@ public class PageSnapshot extends Snapshot {
      * Highlights WebElement within the page with provided color
      * and line width.
      *
-     * @param element WebElement to be highlighted
-     * @param color color of the line
+     * @param element   WebElement to be highlighted
+     * @param color     color of the line
      * @param lineWidth width of the line
      * @return instance of type PageSnapshot
      */
@@ -64,8 +64,8 @@ public class PageSnapshot extends Snapshot {
      *
      * @param element WebElement to be highlighted with Color.red
      *                and line width 3
-     * @param text test to be places above highlighted element with
-     *             Color.red, font "Serif", BOLD, size 20
+     * @param text    test to be places above highlighted element with
+     *                Color.red, font "Serif", BOLD, size 20
      * @return instance of type PageSnapshot
      */
     public PageSnapshot highlightWithText(WebElement element, String text) {
@@ -81,22 +81,22 @@ public class PageSnapshot extends Snapshot {
      * Highlight WebElement within the page, same as in {@link #highlight(WebElement)}
      * but providing ability to override default color, font values.
      *
-     * @param element WebElement to be highlighted
+     * @param element      WebElement to be highlighted
      * @param elementColor element highlight color
-     * @param lineWidth line width around the element
-     * @param text text to be placed above the highlighted element
-     * @param textColor color of the text
-     * @param textFont text font
+     * @param lineWidth    line width around the element
+     * @param text         text to be placed above the highlighted element
+     * @param textColor    color of the text
+     * @param textFont     text font
      * @return instance of type PageSnapshot
      */
     public PageSnapshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
-       try {
-           highlight(element, elementColor, 0);
-           Coordinates coords = new Coordinates(element, devicePixelRatio);
-           image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
-       } catch (RasterFormatException rfe) {
-           throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
-       }
+        try {
+            highlight(element, elementColor, 0);
+            Coordinates coords = new Coordinates(element, devicePixelRatio);
+            image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
+        } catch (RasterFormatException rfe) {
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
+        }
         return this;
     }
 
@@ -119,7 +119,7 @@ public class PageSnapshot extends Snapshot {
     public PageSnapshot blur(WebElement element) {
         try {
             image = ImageProcessor.blurArea(image, new Coordinates(element, devicePixelRatio));
-        }catch(RasterFormatException rfe) {
+        } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
@@ -134,7 +134,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot monochrome(WebElement element) {
         try {
-            image = ImageProcessor.monochromeArea(image, new Coordinates(element,devicePixelRatio));
+            image = ImageProcessor.monochromeArea(image, new Coordinates(element, devicePixelRatio));
         } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
@@ -148,10 +148,10 @@ public class PageSnapshot extends Snapshot {
      * @return instance of type PageSnapshot
      */
     public PageSnapshot blurExcept(WebElement element) {
-        try{
-            image = ImageProcessor.blurExceptArea(image, new Coordinates(element,devicePixelRatio));
-        }catch(RasterFormatException rfe){
-            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE,rfe);
+        try {
+            image = ImageProcessor.blurExceptArea(image, new Coordinates(element, devicePixelRatio));
+        } catch (RasterFormatException rfe) {
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }
@@ -160,15 +160,15 @@ public class PageSnapshot extends Snapshot {
      * Crop the image around specified element with offset.
      *
      * @param element WebElement to crop around
-     * @param offsetX  offsetX around element in px
+     * @param offsetX offsetX around element in px
      * @param offsetY offsetY around element in px
      * @return instance of type PageSnapshot
      */
     public PageSnapshot cropAround(WebElement element, int offsetX, int offsetY) {
-        try{
-            image = ImageProcessor.cropAround(image, new Coordinates(element,devicePixelRatio), offsetX, offsetY);
-        }catch(RasterFormatException rfe){
-            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE,rfe);
+        try {
+            image = ImageProcessor.cropAround(image, new Coordinates(element, devicePixelRatio), offsetX, offsetY);
+        } catch (RasterFormatException rfe) {
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
         return this;
     }

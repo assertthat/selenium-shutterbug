@@ -8,9 +8,9 @@ package com.assertthat.selenium_shutterbug.utils.web;
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
 import com.github.zafarkhaja.semver.Version;
 import com.google.common.collect.ImmutableMap;
-import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.CommandInfo;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Created by Glib_Briia on 17/06/2016.
+ * Created by GlibBriia on 17/06/2016.
  */
 public class Browser {
 
@@ -45,12 +45,17 @@ public class Browser {
     private static final String VIEWPORT_HEIGHT_JS = "js/viewport-height.js";
     private static final String VIEWPORT_WIDTH_JS = "js/viewport-width.js";
     private static final String SCROLL_TO_JS = "js/scroll-to.js";
+    private static final String SCROLL_ELEMENT = "js/scroll-element.js";
     private static final String SCROLL_INTO_VIEW_JS = "js/scroll-element-into-view.js";
     private static final String SCROLL_INTO_VIEW_VERTICAL_CENTERED_JS = "js/scroll-element-into-view-vertical-centered.js";
     private static final String CURRENT_SCROLL_Y_JS = "js/get-current-scrollY.js";
     private static final String CURRENT_SCROLL_X_JS = "js/get-current-scrollX.js";
     private static final String DEVICE_PIXEL_RATIO = "js/get-device-pixel-ratio.js";
     private static final String ALL_METRICS = "js/all-metrics.js";
+    private static final String ELEMENT_CURRENT_SCROLL_X_JS = "js/get-current" +
+            "-element-scrollX.js";
+    private static final String ELEMENT_CURRENT_SCROLL_Y_JS = "js/get-current" +
+            "-element-scrollY.js";
 
     private WebDriver driver;
     private int docHeight = -1;
@@ -58,7 +63,7 @@ public class Browser {
     private int viewportWidth = -1;
     private int viewportHeight = -1;
     private int betweenScrollTimeout;
-    private Function<WebDriver,?> beforeShootCondition;
+    private Function<WebDriver, ?> beforeShootCondition;
     private int beforeShootTimeout;
 
     private Double devicePixelRatio = 1.0;
@@ -71,10 +76,6 @@ public class Browser {
         }
     }
 
-    public Double getDevicePixelRatio() {
-        return devicePixelRatio;
-    }
-
     public static void wait(int ms) {
         try {
             Thread.sleep(ms);
@@ -83,13 +84,17 @@ public class Browser {
         }
     }
 
-    public void wait(Function<WebDriver,?> condition, int timeout) {
-        if(condition!=null) {
+    public Double getDevicePixelRatio() {
+        return devicePixelRatio;
+    }
+
+    public void wait(Function<WebDriver, ?> condition, int timeout) {
+        if (condition != null) {
             new FluentWait<>(driver)
                     .withTimeout(Duration.ofSeconds(timeout))
                     .ignoring(StaleElementReferenceException.class, NoSuchMethodException.class)
                     .until(condition);
-        }else if(timeout>0) {
+        } else if (timeout > 0) {
             wait(timeout);
         }
     }
@@ -102,12 +107,12 @@ public class Browser {
         this.beforeShootTimeout = beforeShootTimeout;
     }
 
-    public void setBeforeShootCondition(Function<WebDriver,?> beforeShootCondition) {
+    public void setBeforeShootCondition(Function<WebDriver, ?> beforeShootCondition) {
         this.beforeShootCondition = beforeShootCondition;
     }
 
     public BufferedImage takeScreenshot() {
-        wait(beforeShootCondition,beforeShootTimeout);
+        wait(beforeShootCondition, beforeShootTimeout);
         File srcFile = ((TakesScreenshot) this.getUnderlyingDriver()).getScreenshotAs(OutputType.FILE);
         try {
             return ImageIO.read(srcFile);
@@ -123,28 +128,27 @@ public class Browser {
     }
 
     /**
-     * Using different screenshot strategy dependently on driver:
+     * Using different capture type dependently on driver:
      * for  chrome - chrome command will be used
      * for firefox - geckodriver endpoint will be used if available
      * for others - their default screenshot methods
      *
      * @return BufferedImage resulting image
      */
-    public BufferedImage takeScreenshotEntirePage() {
+    public BufferedImage takeFullPageScreenshot() {
         driver = unwrapDriver();
-
         if (driver instanceof ChromeDriver) {
-            return takeScreenshotEntirePageUsingChromeCommand();
+            return takeFullPageScreenshotChromeCommand();
         } else if (driver instanceof FirefoxDriver) {
-            return takeScreenshotEntirePageUsingGeckoDriver();
+            return takeFullPageScreesnshotGeckoDriver();
         } else if (driver instanceof RemoteWebDriver) {
             if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome")) {
-                return takeScreenshotEntirePageUsingChromeCommand();
+                return takeFullPageScreenshotChromeCommand();
             } else if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("firefox")) {
-                return takeScreenshotEntirePageUsingGeckoDriver();
+                return takeFullPageScreesnshotGeckoDriver();
             }
         }
-        return takeScreenshotEntirePageDefault();
+        return takeFullPageScreenshotScroll(false, null);
     }
 
     private WebDriver unwrapDriver() {
@@ -162,31 +166,41 @@ public class Browser {
         return driver;
     }
 
-	public BufferedImage takeScreenshotEntirePageDefault() {
-        final int _docWidth = this.getDocWidth();
-        final int _docHeight = this.getDocHeight();
-        BufferedImage combinedImage = new BufferedImage(_docWidth, _docHeight, BufferedImage.TYPE_INT_ARGB);
+    public BufferedImage takeFullPageScreenshotScroll(boolean isFrame,
+                                                      Coordinates coordinates) {
+        final int docWidth = this.getDocWidth();
+        final int docHeight = this.getDocHeight();
+        BufferedImage combinedImage = new BufferedImage(docWidth, docHeight,
+                BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = combinedImage.createGraphics();
-        int _viewportWidth = this.getViewportWidth();
-        int _viewportHeight = this.getViewportHeight();
-        final int scrollBarMaxWidth = 40; // this is probably too high, but better to be safe than sorry
+        int viewportWidth = this.getViewportWidth();
+        int viewportHeight = this.getViewportHeight();
+        final int scrollBarMaxWidth = 40;
 
-        if (_viewportWidth < _docWidth || (_viewportHeight < _docHeight && _viewportWidth - scrollBarMaxWidth < _docWidth))
-            _viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar
-        if (_viewportHeight < _docHeight)
-            _viewportWidth -= scrollBarMaxWidth; // some space for a scrollbar
+        if (viewportWidth < docWidth || (viewportHeight < docHeight && viewportWidth - scrollBarMaxWidth < docWidth))
+            viewportHeight -= scrollBarMaxWidth;
+        if (viewportHeight < docHeight)
+            viewportWidth -= scrollBarMaxWidth;
 
-        int horizontalIterations = (int) Math.ceil(((double) _docWidth) / _viewportWidth);
-        int verticalIterations = (int) Math.ceil(((double) _docHeight) / _viewportHeight);
+        int horizontalIterations = (int) Math.ceil(((double) docWidth) / viewportWidth);
+        int verticalIterations = (int) Math.ceil(((double) docHeight) / viewportHeight);
+        wait(beforeShootCondition, beforeShootTimeout);
         outer_loop:
         for (int j = 0; j < verticalIterations; j++) {
-            this.scrollTo(0, j * _viewportHeight);
+            this.scrollTo(0, j * viewportHeight);
             for (int i = 0; i < horizontalIterations; i++) {
-                this.scrollTo(i * _viewportWidth, _viewportHeight * j);
+                this.scrollTo(i * viewportWidth, viewportHeight * j);
                 wait(betweenScrollTimeout);
-                Image image = takeScreenshot();
-                g.drawImage(image, this.getCurrentScrollX(), this.getCurrentScrollY(), null);
-                if (_docWidth == image.getWidth(null) && _docHeight == image.getHeight(null)) {
+                BufferedImage image = takeScreenshot();
+                if (isFrame && coordinates != null) {
+                    image = image.getSubimage(coordinates.getX() + 1,
+                            coordinates.getY() + 1,
+                            coordinates.getWidth(), coordinates.getHeight());
+
+                }
+                g.drawImage(image, this.getCurrentScrollX(),
+                        this.getCurrentScrollY(), null);
+                if (docWidth == image.getWidth(null) && docHeight == image.getHeight(null)) {
                     break outer_loop;
                 }
             }
@@ -195,12 +209,262 @@ public class Browser {
         return combinedImage;
     }
 
-    public BufferedImage takeScreenshotEntirePageUsingChromeCommand() {
+    public BufferedImage takeFullPageHorizontalScreenshot(boolean isFrame,
+                                                          Coordinates coordinates) {
+        final int docWidth = this.getDocWidth();
+        final int docHeight = this.getDocHeight();
+        int viewportWidth = this.getViewportWidth();
+        int viewportHeight = this.getViewportHeight();
+        final int scrollBarMaxWidth = 40;
+
+        if (viewportWidth < docWidth || (viewportHeight < docHeight && viewportWidth - scrollBarMaxWidth < docWidth)) {
+            viewportHeight -= scrollBarMaxWidth;
+        }
+        if (viewportHeight < docHeight) {
+            viewportWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(docWidth, viewportHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        int horizontalIterations =
+                (int) Math.ceil(((double) docWidth) / viewportWidth);
+        for (int i = 0; i < horizontalIterations; i++) {
+            this.scrollTo(i * viewportWidth, 0);
+            wait(betweenScrollTimeout);
+            BufferedImage image = takeScreenshot();
+            if (isFrame && coordinates != null) {
+                image = image.getSubimage(coordinates.getX() + 1,
+                        coordinates.getY(),
+                        coordinates.getWidth(), coordinates.getHeight());
+            }
+            g.drawImage(image, this.getCurrentScrollX(), 0, null);
+            if (docWidth == image.getWidth(null)) {
+                break;
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFullPageVerticalScreenshot(boolean isFrame,
+                                                        Coordinates coordinates) {
+        final int docWidth = this.getDocWidth();
+        final int docHeight = this.getDocHeight();
+        int viewportWidth = this.getViewportWidth();
+        int viewportHeight = this.getViewportHeight();
+        final int scrollBarMaxWidth = 40;
+
+        if (viewportWidth < docWidth || (viewportHeight < docHeight && viewportWidth - scrollBarMaxWidth < docWidth)) {
+            viewportHeight -= scrollBarMaxWidth;
+        }
+        if (viewportHeight < docHeight) {
+            viewportWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(viewportWidth, docHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        int verticalIterations =
+                (int) Math.ceil(((double) docHeight) / viewportHeight);
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollTo(0, j * viewportHeight);
+            wait(betweenScrollTimeout);
+            BufferedImage image = takeScreenshot();
+            if (isFrame && coordinates != null) {
+                image = image.getSubimage(coordinates.getX(),
+                        coordinates.getY() + 1,
+                        coordinates.getWidth(), coordinates.getHeight());
+            }
+            g.drawImage(image, 0, this.getCurrentScrollY(), null);
+            if (this.getDocHeight() == image.getHeight(null)) {
+                break;
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFullElementVerticalScreenshot(WebElement element) {
+        Coordinates coordinates = this.getBoundingClientRect(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = 20;
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxWidth < scrollableWidth)) {
+            elementHeight -= scrollBarMaxWidth;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(elementWidth,
+                scrollableHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        int verticalIterations =
+                (int) Math.ceil(((double) scrollableHeight) / elementHeight);
+
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollElement(element, 0, j * elementHeight);
+            wait(betweenScrollTimeout);
+            BufferedImage image = takeScreenshot();
+            image = image.getSubimage(coordinates.getX(),
+                    coordinates.getY() + 1,
+                    elementWidth, elementHeight);
+            g.drawImage(image, 0, j * getElementCurrentScrollY(element),
+                    null);
+            if (scrollableHeight == image.getHeight(null)) {
+                break;
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFullElementHorizontalScreenshot(WebElement element) {
+        Coordinates coordinates = this.getBoundingClientRect(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = 20;
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxWidth < scrollableWidth)) {
+            elementHeight -= scrollBarMaxWidth;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(scrollableWidth,
+                elementHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        int horizontalIterations =
+                (int) Math.ceil(((double) scrollableWidth) / elementWidth);
+
+        for (int j = 0; j < horizontalIterations; j++) {
+            this.scrollElement(element, j * elementWidth, 0);
+            wait(betweenScrollTimeout);
+            BufferedImage image = takeScreenshot();
+            image = image.getSubimage(coordinates.getX() + 1,
+                    coordinates.getY(),
+                    elementWidth, elementHeight);
+            g.drawImage(image, j * getElementCurrentScrollX(element), 0,
+                    null);
+            if (scrollableWidth == image.getWidth(null)) {
+                break;
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFullElementScreenshot(WebElement element) {
+        Coordinates coordinates = this.getBoundingClientRect(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = 20;
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxWidth < scrollableWidth)) {
+            elementHeight -= scrollBarMaxWidth;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+
+        BufferedImage combinedImage = new BufferedImage(scrollableWidth,
+                scrollableHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        int horizontalIterations =
+                (int) Math.ceil(((double) scrollableWidth) / elementWidth);
+        int verticalIterations =
+                (int) Math.ceil(((double) scrollableHeight) / elementHeight);
+        wait(beforeShootCondition, beforeShootTimeout);
+        outer_loop:
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollElement(element, 0, j * elementHeight);
+            for (int i = 0; i < horizontalIterations; i++) {
+                this.scrollElement(element, i * elementWidth,
+                        elementHeight * j);
+                wait(betweenScrollTimeout);
+                BufferedImage image = takeScreenshot();
+                image = image.getSubimage(coordinates.getX() + 1,
+                        coordinates.getY() + 1,
+                        coordinates.getWidth(), coordinates.getHeight());
+
+                g.drawImage(image, i * getElementCurrentScrollX(element),
+                        j * getElementCurrentScrollY(element), null);
+                if (scrollableWidth == image.getWidth(null) && scrollableHeight == image.getHeight(null)) {
+                    break outer_loop;
+                }
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeElementViewportScreenshot(WebElement element) {
+        Coordinates coordinates = this.getBoundingClientRect(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = 20;
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxWidth < scrollableWidth)) {
+            elementHeight -= scrollBarMaxWidth;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(elementWidth,
+                elementHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        wait(beforeShootCondition, beforeShootTimeout);
+        BufferedImage image = takeScreenshot();
+        image = image.getSubimage(coordinates.getX() + 1,
+                coordinates.getY() + 1,
+                coordinates.getWidth(), coordinates.getHeight());
+        g.drawImage(image, 0,
+                0, null);
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFrameViewportScreenshot() {
+        final int docWidth = this.getDocWidth();
+        final int docHeight = this.getDocHeight();
+        int viewportWidth = this.getViewportWidth();
+        int viewportHeight = this.getViewportHeight();
+        final int scrollBarMaxWidth = 40; // this is probably too high, but better to be safe than sorry
+
+        if (viewportWidth < docWidth || (viewportHeight < docHeight && viewportWidth - scrollBarMaxWidth < docWidth))
+            viewportWidth -= scrollBarMaxWidth; // some space for a scrollbar
+        if (viewportHeight < docHeight)
+            viewportHeight -= scrollBarMaxWidth; // some space for a scrollbar
+        BufferedImage combinedImage = new BufferedImage(viewportWidth,
+                viewportHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        wait(beforeShootCondition, beforeShootTimeout);
+        Image image = takeScreenshot();
+        g.drawImage(image, this.getCurrentScrollX(),
+                this.getCurrentScrollY(), null);
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFullPageScreenshotChromeCommand() {
         //should use devicePixelRatio by default as chrome command executor makes screenshot account for that
         Object devicePixelRatio = executeJsScript(DEVICE_PIXEL_RATIO);
         this.devicePixelRatio = devicePixelRatio instanceof Double ? (Double) devicePixelRatio : (Long) devicePixelRatio * 1.0;
 
-        defineCustomCommand("sendCommand", new CommandInfo("/session/:sessionId/chromium/send_command_and_get_result", HttpMethod.POST));
+        defineCustomCommand("sendCommand", new CommandInfo("/session/:sessionId/chromium/sendcommandandgetresult", HttpMethod.POST));
 
         int verticalIterations = (int) Math.ceil(((double) this.getDocHeight()) / this.getViewportHeight());
         for (int j = 0; j < verticalIterations; j++) {
@@ -209,17 +473,17 @@ public class Browser {
         }
         Object metrics = this.evaluate(FileUtil.getJsScript(ALL_METRICS));
         this.sendCommand("Emulation.setDeviceMetricsOverride", metrics);
-        wait(beforeShootCondition,beforeShootTimeout);
+        wait(beforeShootCondition, beforeShootTimeout);
         Object result = this.sendCommand("Page.captureScreenshot", ImmutableMap.of("format", "png", "fromSurface", true));
         this.sendCommand("Emulation.clearDeviceMetricsOverride", ImmutableMap.of());
         return decodeBase64EncodedPng((String) ((Map<String, ?>) result).get("data"));
     }
 
-    public BufferedImage takeScreenshotEntirePageUsingGeckoDriver() {
+    public BufferedImage takeFullPageScreesnshotGeckoDriver() {
         // Check geckodriver version (>= 0.24.0 is requried)
         String version = (String) ((RemoteWebDriver) driver).getCapabilities().getCapability("moz:geckodriverVersion");
         if (version == null || Version.valueOf(version).satisfies("<0.24.0")) {
-            return takeScreenshotEntirePageDefault();
+            return takeFullPageScreenshotScroll(false, null);
         }
         defineCustomCommand("mozFullPageScreenshot", new CommandInfo("/session/:sessionId/moz/screenshot/full", HttpMethod.GET));
         Object result = this.executeCustomCommand("mozFullPageScreenshot");
@@ -230,7 +494,7 @@ public class Browser {
             base64EncodedPng = new String((byte[]) result);
         } else {
             throw new RuntimeException(String.format("Unexpected result for /moz/screenshot/full command: %s",
-                result == null ? "null" : result.getClass().getName() + "instance"));
+                    result == null ? "null" : result.getClass().getName() + "instance"));
         }
         return decodeBase64EncodedPng(base64EncodedPng);
     }
@@ -240,40 +504,53 @@ public class Browser {
     }
 
     public int getCurrentScrollX() {
-        return (int) (((Long) executeJsScript(Browser.CURRENT_SCROLL_X_JS)) * devicePixelRatio);
+        return (int) (Integer.parseInt(executeJsScript(Browser.CURRENT_SCROLL_X_JS).toString()) * devicePixelRatio);
     }
 
     public int getCurrentScrollY() {
-        return (int) (((Long) executeJsScript(Browser.CURRENT_SCROLL_Y_JS)) * devicePixelRatio);
+        return (int) (Integer.parseInt(executeJsScript(Browser.CURRENT_SCROLL_Y_JS).toString()) * devicePixelRatio);
+    }
+
+    public int getElementCurrentScrollX(WebElement element) {
+        return (int) (Integer.parseInt(executeJsScript(Browser.ELEMENT_CURRENT_SCROLL_X_JS, element).toString()) * devicePixelRatio);
+    }
+
+    public int getElementCurrentScrollY(WebElement element) {
+        return (int) (Integer.parseInt(executeJsScript(Browser.ELEMENT_CURRENT_SCROLL_Y_JS, element).toString()) * devicePixelRatio);
     }
 
     public int getDocWidth() {
-        if (docWidth == -1) docWidth = (int) (((Long) executeJsScript(MAX_DOC_WIDTH_JS)) * devicePixelRatio);
+        if (docWidth == -1)
+            docWidth =
+                    (int) (Integer.parseInt(executeJsScript(MAX_DOC_WIDTH_JS).toString()) * devicePixelRatio);
         return docWidth;
     }
 
     public int getDocHeight() {
-        if (docHeight == -1) docHeight = (int) (((Long) executeJsScript(MAX_DOC_HEIGHT_JS)) * devicePixelRatio);
+        if (docHeight == -1)
+            docHeight = (int) (Integer.parseInt(executeJsScript(MAX_DOC_HEIGHT_JS).toString()) * devicePixelRatio);
         return docHeight;
     }
 
     public int getViewportWidth() {
-        if (viewportWidth == -1) viewportWidth = (int) (((Long) executeJsScript(VIEWPORT_WIDTH_JS)) * devicePixelRatio);
+        if (viewportWidth == -1)
+            viewportWidth = (int) (Integer.parseInt(executeJsScript(VIEWPORT_WIDTH_JS).toString()) * devicePixelRatio);
         return viewportWidth;
     }
 
     public int getViewportHeight() {
         if (viewportHeight == -1)
-            viewportHeight = (int) (((Long) executeJsScript(VIEWPORT_HEIGHT_JS)) * devicePixelRatio);
+            viewportHeight = (int) (Integer.parseInt(executeJsScript(VIEWPORT_HEIGHT_JS).toString()) * devicePixelRatio);
         return viewportHeight;
     }
 
     public Coordinates getBoundingClientRect(WebElement element) {
-        FileUtil.getJsScript(RELATIVE_COORDS_JS);
         ArrayList<String> list = (ArrayList<String>) executeJsScript(RELATIVE_COORDS_JS, element);
         Point start = new Point(Integer.parseInt(list.get(0)), Integer.parseInt(list.get(1)));
         Dimension size = new Dimension(Integer.parseInt(list.get(2)), Integer.parseInt(list.get(3)));
-        return new Coordinates(start, size, devicePixelRatio);
+        return new Coordinates(start, size,
+                Integer.parseInt(list.get(4)), Integer.parseInt(list.get(5)),
+                devicePixelRatio);
     }
 
     public void scrollToElement(WebElement element) {
@@ -281,11 +558,16 @@ public class Browser {
     }
 
     public void scrollToElementVerticalCentered(WebElement element) {
-    	executeJsScript(SCROLL_INTO_VIEW_VERTICAL_CENTERED_JS, element);
+        executeJsScript(SCROLL_INTO_VIEW_VERTICAL_CENTERED_JS, element);
     }
 
     public void scrollTo(int x, int y) {
         executeJsScript(SCROLL_TO_JS, x / devicePixelRatio, y / devicePixelRatio);
+    }
+
+    public void scrollElement(WebElement element, int x, int y) {
+        executeJsScript(SCROLL_ELEMENT, element, x / devicePixelRatio,
+                y / devicePixelRatio);
     }
 
     public Object executeJsScript(String filePath, Object... arg) {
