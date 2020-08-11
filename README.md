@@ -47,7 +47,7 @@ compile ('com.assertthat:selenium-shutterbug:0.9.5') {
  
 Below are some basic examples of usage.
 
-###Page screenshots
+### Page screenshots
 - Take screenshot and save to default location (./screenshots/):
 ```java
   Shutterbug.shootPage(driver).save();
@@ -72,14 +72,14 @@ Below are some basic examples of usage.
 ```java
   Shutterbug.shootPage(driver, Capture.FULL,true).save();
 ```
-###WebElement screenshots
+### WebElement screenshots
 
 - Take screenshot of specified WebElement only:
 ```java
   Shutterbug.shootElement(driver, element).save();
 ```
 
-###Screenshots comparison
+### Screenshots comparison
 
 - Compare screenshot taken with the expected one with specified deviation rate:
 ```java
