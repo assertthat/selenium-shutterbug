@@ -27,6 +27,7 @@ The project is available in [Maven Central](http://search.maven.org/#search%7Cga
 	</exclusion>
      </exclusions>
 </dependency>
+
 ```
 ##### Using Gradle
 
