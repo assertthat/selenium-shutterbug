@@ -306,6 +306,21 @@ public class Shutterbug {
      * and need to scroll while making screenshots, either vertically or
      * horizontally or both directions.
      *
+     * @param driver              WebDriver instance
+     * @param capture             Capture type
+     * @return PageSnapshot instance
+     */
+    public static PageSnapshot shootFrame(WebDriver driver, WebElement frame,
+                                          Capture capture) {
+        return shootFrame(driver, frame, capture, 0,
+                true);
+    }
+
+    /**
+     * To be used when screenshotting the frame
+     * and need to scroll while making screenshots, either vertically or
+     * horizontally or both directions.
+     *
      * @param driver               WebDriver instance
      * @param frame                Frame WebElement
      * @param capture              Capture type
