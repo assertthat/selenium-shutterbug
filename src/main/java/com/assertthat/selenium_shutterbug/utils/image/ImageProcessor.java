@@ -8,6 +8,7 @@ package com.assertthat.selenium_shutterbug.utils.image;
 import com.assertthat.selenium_shutterbug.utils.image.model.ImageData;
 import com.assertthat.selenium_shutterbug.utils.web.Coordinates;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,8 @@ import java.awt.image.ColorModel;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.PixelGrabber;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * Created by Glib_Briia on 17/06/2016.
@@ -203,5 +206,14 @@ public class ImageProcessor {
         // Get the image's color model
         ColorModel cm = pg.getColorModel();
         return cm.hasAlpha();
+    }
+
+    public static BufferedImage createImageFromBytes(byte[] imageData) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+        try {
+            return ImageIO.read(bais);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

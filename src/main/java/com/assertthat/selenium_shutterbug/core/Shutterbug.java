@@ -154,14 +154,13 @@ public class Shutterbug {
                 pageScreenshot.setImage(browser.takeFullPageScreenshot());
                 break;
             case VERTICAL_SCROLL:
-                pageScreenshot.setImage(browser.takeFullPageVerticalScreenshot(false, null));
+                pageScreenshot.setImage(browser.takeFullPageVerticalScreenshotScroll(null));
                 break;
             case HORIZONTAL_SCROLL:
-                _SCROLL:
-                pageScreenshot.setImage(browser.takeFullPageHorizontalScreenshot(false, null));
+                pageScreenshot.setImage(browser.takeFullPageHorizontalScreenshotScroll(null));
                 break;
             case FULL_SCROLL:
-                pageScreenshot.setImage(browser.takeFullPageScreenshotScroll(false, null));
+                pageScreenshot.setImage(browser.takeFullPageScreenshotScroll(null));
                 break;
         }
         return pageScreenshot;
@@ -197,7 +196,8 @@ public class Shutterbug {
      * @return ElementSnapshot instance
      */
     public static ElementSnapshot shootElement(WebDriver driver,
-                                               WebElement element, Capture capture) {
+                                               WebElement element,
+                                               CaptureElement capture) {
         return shootElement(driver, element, capture, true);
     }
 
@@ -214,7 +214,7 @@ public class Shutterbug {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElement(element);
-        elementSnapshot.setImage(browser.takeScreenshot(), browser.getBoundingClientRect(element));
+        elementSnapshot.setImage(browser.takeScreenshot(), browser.getCoordinates(element));
         return elementSnapshot;
     }
 
@@ -230,23 +230,23 @@ public class Shutterbug {
      */
     public static ElementSnapshot shootElement(WebDriver driver,
                                                WebElement element,
-                                               Capture capture,
+                                               CaptureElement capture,
                                                boolean useDevicePixelRatio) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElement(element);
         switch (capture) {
-            case VIEWPORT:
-                elementSnapshot.setImage(browser.takeElementViewportScreenshot(element));
-                break;
             case VERTICAL_SCROLL:
-                elementSnapshot.setImage(browser.takeFullElementVerticalScreenshot(element));
+                elementSnapshot.setImage(browser.takeFullElementVerticalScreenshotScroll(element));
                 break;
             case HORIZONTAL_SCROLL:
-                elementSnapshot.setImage(browser.takeFullElementHorizontalScreenshot(element));
+                elementSnapshot.setImage(browser.takeFullElementHorizontalScreenshotScroll(element));
+                break;
+            case FULL_SCROLL:
+                elementSnapshot.setImage(browser.takeFullElementScreenshotScroll(element));
                 break;
             default:
-                elementSnapshot.setImage(browser.takeFullElementScreenshot(element));
+                elementSnapshot.setImage(browser.takeElementViewportScreenshot(element));
         }
         return elementSnapshot;
     }
@@ -263,7 +263,7 @@ public class Shutterbug {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
         browser.scrollToElementVerticalCentered(element);
-        elementSnapshot.setImage(browser.takeScreenshot(), browser.getBoundingClientRect(element));
+        elementSnapshot.setImage(browser.takeScreenshot(), browser.getCoordinates(element));
         return elementSnapshot;
     }
 
@@ -278,7 +278,7 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootFrame(WebDriver driver, String frameId,
-                                          Capture capture,
+                                          CaptureElement capture,
                                           boolean useDevicePixelRatio) {
         WebElement frame = driver.findElement(By.id(frameId));
         return shootFrame(driver, frame, capture, 0,
@@ -296,7 +296,8 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootFrame(WebDriver driver, WebElement frame,
-                                          Capture capture, boolean useDevicePixelRatio) {
+                                          CaptureElement capture,
+                                          boolean useDevicePixelRatio) {
         return shootFrame(driver, frame, capture, 0,
                 useDevicePixelRatio);
     }
@@ -306,12 +307,12 @@ public class Shutterbug {
      * and need to scroll while making screenshots, either vertically or
      * horizontally or both directions.
      *
-     * @param driver              WebDriver instance
-     * @param capture             Capture type
+     * @param driver  WebDriver instance
+     * @param capture Capture type
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootFrame(WebDriver driver, WebElement frame,
-                                          Capture capture) {
+                                          CaptureElement capture) {
         return shootFrame(driver, frame, capture, 0,
                 true);
     }
@@ -329,12 +330,22 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootFrame(WebDriver driver, WebElement frame,
-                                          Capture capture, int betweenScrollTimeout, boolean useDevicePixelRatio) {
+                                          CaptureElement capture,
+                                          int betweenScrollTimeout, boolean useDevicePixelRatio) {
         Browser browser = new Browser(driver, useDevicePixelRatio);
         browser.setBetweenScrollTimeout(betweenScrollTimeout);
-
         browser.scrollToElement(frame);
-        Coordinates coordinates = browser.getBoundingClientRect(frame);
+        Coordinates coordinates = browser.getCoordinates(frame);
+
+        Browser browserParent = new Browser(driver, useDevicePixelRatio);
+        if (capture != CaptureElement.VIEWPORT &&
+                (coordinates.getWidth() > browserParent.getViewportWidth() || coordinates.getHeight() > browserParent.getViewportHeight())) {
+            throw new UnsupportedOperationException("Full frame screenshot is" +
+                    " " +
+                    "only available if WHOLE frame is fully visible in the " +
+                    "viewport. Use CaptureElement.VIEWPORT in case frame is " +
+                    "outside of visible viewport.");
+        }
         driver.switchTo().frame(frame);
 
         if (beforeShootCondition != null) {
@@ -346,17 +357,23 @@ public class Shutterbug {
 
         PageSnapshot pageScreenshot = new PageSnapshot(driver, browser.getDevicePixelRatio());
         switch (capture) {
-            case VIEWPORT:
-                pageScreenshot.setImage(browser.takeFrameViewportScreenshot());
-                break;
             case VERTICAL_SCROLL:
-                pageScreenshot.setImage(browser.takeFullPageVerticalScreenshot(true, coordinates));
+                pageScreenshot.setImage(browser
+                        .takeFullPageVerticalScreenshotScroll(coordinates));
                 break;
             case HORIZONTAL_SCROLL:
-                pageScreenshot.setImage(browser.takeFullPageHorizontalScreenshot(true, coordinates));
+                pageScreenshot.setImage(browser
+                        .takeFullPageHorizontalScreenshotScroll(coordinates));
+                break;
+            case FULL_SCROLL:
+                pageScreenshot.setImage(browser
+                        .takeFullPageScreenshotScroll(coordinates));
                 break;
             default:
-                pageScreenshot.setImage(browser.takeFullPageScreenshotScroll(true, coordinates));
+                pageScreenshot.setImage(browser
+                        .takeFrameViewportScreenshot(coordinates));
+                break;
+
         }
         return pageScreenshot;
     }
@@ -372,14 +389,14 @@ public class Shutterbug {
      * @return PageSnapshot instance
      */
     public static PageSnapshot shootFrame(WebDriver driver, String frameId,
-                                          Capture capture) {
+                                          CaptureElement capture) {
         WebElement frame = driver.findElement(By.id(frameId));
         return shootFrame(driver, frame, capture, true);
     }
 
     /**
      * To be used when screenshotting the frame
-     * Takes full frame screenshot be default
+     * Takes viewport of the frame screenshot be default
      *
      * @param driver  WebDriver instance
      * @param frameId Id of the frame element
@@ -387,6 +404,6 @@ public class Shutterbug {
      */
     public static PageSnapshot shootFrame(WebDriver driver, String frameId) {
         WebElement frame = driver.findElement(By.id(frameId));
-        return shootFrame(driver, frame, Capture.FULL_SCROLL, true);
+        return shootFrame(driver, frame, CaptureElement.VIEWPORT, true);
     }
 }

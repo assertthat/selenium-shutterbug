@@ -20,6 +20,8 @@ public class Coordinates {
     private final int scrollHeight;
     private final int x;
     private final int y;
+    private final int absoluteX;
+    private final int absoluteY;
 
     public Coordinates(WebElement element,
                        Double devicePixelRatio) {
@@ -29,20 +31,33 @@ public class Coordinates {
         this.height = (int) (size.getHeight() * devicePixelRatio);
         this.x = (int) (point.getX() * devicePixelRatio);
         this.y = (int) (point.getY() * devicePixelRatio);
-        this.scrollWidth =  (int) (size.getWidth() * devicePixelRatio);
+        this.scrollWidth = (int) (size.getWidth() * devicePixelRatio);
         this.scrollHeight = (int) (size.getHeight() * devicePixelRatio);
+        this.absoluteX = (int) (point.getX() * devicePixelRatio);
+        this.absoluteY = (int) (point.getY() * devicePixelRatio);
     }
 
-    public Coordinates(Point point, Dimension size, int scrollWidth,
-                       int scrollHeight, Double devicePixelRatio) {
+    public Coordinates(Point absoluteLocation,Point currentLocation,
+                       Dimension size,
+                       Dimension scrollableSize,
+                       Double devicePixelRatio) {
         this.width = (int) (size.getWidth() * devicePixelRatio);
         this.height = (int) (size.getHeight() * devicePixelRatio);
-        this.x = (int) (point.getX() * devicePixelRatio);
-        this.y = (int) (point.getY() * devicePixelRatio);
-        this.scrollWidth = (int) (scrollWidth * devicePixelRatio);
-        this.scrollHeight = (int) (scrollHeight * devicePixelRatio);
+        this.absoluteX = (int) (absoluteLocation.getX() * devicePixelRatio);
+        this.absoluteY = (int) (absoluteLocation.getY() * devicePixelRatio);
+        this.x = (int) (currentLocation.getX() * devicePixelRatio);
+        this.y = (int) (currentLocation.getY() * devicePixelRatio);
+        this.scrollWidth = (int) (scrollableSize.getWidth() * devicePixelRatio);
+        this.scrollHeight = (int) (scrollableSize.getHeight() * devicePixelRatio);
     }
 
+    public int getAbsoluteX() {
+        return absoluteX;
+    }
+
+    public int getAbsoluteY() {
+        return absoluteY;
+    }
 
     public int getWidth() {
         return width;

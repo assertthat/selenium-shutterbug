@@ -104,20 +104,25 @@ Below are some basic examples of usage.
 ### Frame screenshots
 - Take screenshot of scrollable frame locatable by supplied `frameID`:
 ```java
-Shutterbug.shootFrame(driver, "frameID", Capture.FULL_SCROLL).save();
+Shutterbug.shootFrame(driver, "frameID", CaptureElement.FULL_SCROLL).save();
 ```
 
 - Take screenshot of scrollable frame web element:
 ```java
-Shutterbug.shootFrame(driver, frameWebElement, Capture.FULL_SCROLL).save();
+Shutterbug.shootFrame(driver, frameWebElement, CaptureElement.FULL_SCROLL).save();
 ```
+
+**Please note** that currently full scrollable frame screenshot is only possible
+ when the full frame is visible in the viewport. If frame size is greater
+  than viewport size UnsupportedOperationException will be throws suggesting
+   to use CaptureElement.VIEWPORT instead.
 
 ### Scrollable WebElements  screenshots
 
 
 - Take screenshot of scrollable web element. Horizontal capture only:
 ```java
-Shutterbug.shootElement(driver, webElement, Capture.HORIZONTAL_SCROLL).save();
+Shutterbug.shootElement(driver, webElement, CaptureElement.HORIZONTAL_SCROLL).save();
 ```
 
 ### Operations chaining
