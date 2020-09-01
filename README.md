@@ -104,18 +104,19 @@ Below are some basic examples of usage.
 ### Frame screenshots
 - Take screenshot of scrollable frame locatable by supplied `frameID`:
 ```java
+driver.switchTo().defaultContent();
 Shutterbug.shootFrame(driver, "frameID", CaptureElement.FULL_SCROLL).save();
 ```
 
 - Take screenshot of scrollable frame web element:
 ```java
+driver.switchTo().defaultContent();
 Shutterbug.shootFrame(driver, frameWebElement, CaptureElement.FULL_SCROLL).save();
 ```
 
-**Please note** that currently full scrollable frame screenshot is only possible
- when the full frame is visible in the viewport. If frame size is greater
-  than viewport size UnsupportedOperationException will be throws suggesting
-   to use CaptureElement.VIEWPORT instead.
+**Please note** 
+- Currently full scrollable frame screenshot is only possible when the full frame is visible in the viewport. If frame size is greater than viewport size UnsupportedOperationException will be throws suggesting to use CaptureElement.VIEWPORT instead.
+- Need to perform `driver.switchTo().defaultContent();` before frame screensot. After the screenshot is taken driver will stay switched to the target frame.
 
 ### Scrollable WebElements  screenshots
 
