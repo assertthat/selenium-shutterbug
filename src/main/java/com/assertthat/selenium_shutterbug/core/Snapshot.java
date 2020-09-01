@@ -224,7 +224,6 @@ public abstract class Snapshot<T extends Snapshot> {
         if (title != null && !title.isEmpty()) {
             image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
-        driver.switchTo().defaultContent();
         FileUtil.writeImage(image, EXTENSION, screenshotFile);
     }
 
