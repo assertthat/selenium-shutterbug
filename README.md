@@ -16,13 +16,13 @@ Supported features:
 - Capturing entire scrollable WebElement
 - Capturing frame
 - Screenshot comparison (with diff highlighting)
-- Creating thumbnains
-- Screenshot customisations: 
+- Creating thumbnails
+- Screenshot customizations: 
 	- Highlighting element on the page
    	- Highlighting element on the page with added text
    	- Blur WebElement on the page (e.g. sensitive information)
    	- Blur whole page
-  	- Blur whole page except speecific WebElement
+  	- Blur whole page except specific WebElement
    	- Monochrome WebElement
    	- Crop around specific WebElement with offsets
 
