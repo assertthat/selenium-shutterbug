@@ -9,6 +9,24 @@ Selenium Shutterbug is a utility library written in Java for making screenshots 
 
 The idea behind the project is to make testers life easier by enabling them to create descriptive screenshots which, in some cases, could be directly attached to the bug reports or serve as a source of information about system state at a specific moment of time. 
 
+Supported features: 
+
+- Capturing the entire page
+- Capturing the WebElement
+- Capturing entire scrollable WebElement
+- Capturing frame
+- Screenshot comparison (with diff highlighting)
+- Creating thumbnains
+- Screenshot customisations: 
+	- Highlighting element on the page
+   	- Highlighting element on the page with added text
+   	- Blur WebElement on the page (e.g. sensitive information)
+   	- Blur whole page
+  	- Blur whole page except speecific WebElement
+   	- Monochrome WebElement
+   	- Crop around specific WebElement with offsets
+
+
 ## Installation
 
 The project is available in [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22selenium-shutterbug%22 "Maven Central project location")
