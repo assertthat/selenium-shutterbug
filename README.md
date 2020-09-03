@@ -12,10 +12,10 @@ The idea behind the project is to make testers life easier by enabling them to c
 Supported features: 
 
 - Capturing the entire page
+- Screenshot comparison (with diff highlighting)
 - Capturing the WebElement
 - Capturing entire scrollable WebElement
 - Capturing frame
-- Screenshot comparison (with diff highlighting)
 - Creating thumbnails
 - Screenshot customizations: 
 	- Highlighting element on the page
