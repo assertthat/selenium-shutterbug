@@ -176,14 +176,16 @@ public class PageSnapshot extends Snapshot {
     /**
      * Cut out specified element with offset.
      *
-     * @param element WebElement to crop
+     * @param elements WebElement to crop
      * @param offsetX offsetX around element in px
      * @param offsetY offsetY around element in px
      * @return instance of type PageSnapshot
      */
-    public PageSnapshot cutOut(WebElement element, int offsetX, int offsetY) {
+    public PageSnapshot cutOut(int offsetX, int offsetY, WebElement... elements) {
         try {
-            image = ImageProcessor.cutOut(image, new Coordinates(element, devicePixelRatio), offsetX, offsetY);
+            for (WebElement element : elements) {
+                ImageProcessor.cutOut(image, new Coordinates(element, devicePixelRatio), offsetX, offsetY);
+            }
         } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
@@ -191,14 +193,16 @@ public class PageSnapshot extends Snapshot {
     }
 
     /**
-     * Cut out specified element.
+     * Cut out specified element(s).
      *
-     * @param element WebElement to crop
+     * @param elements WebElement to crop
      * @return instance of type PageSnapshot
      */
-    public PageSnapshot cutOut(WebElement element) {
+    public PageSnapshot cutOut(WebElement... elements) {
         try {
-            image = ImageProcessor.cutOut(image, new Coordinates(element, devicePixelRatio), 0, 0);
+            for (WebElement element : elements) {
+                ImageProcessor.cutOut(image, new Coordinates(element, devicePixelRatio), 0, 0);
+            }
         } catch (RasterFormatException rfe) {
             throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
         }
