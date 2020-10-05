@@ -173,6 +173,38 @@ public class PageSnapshot extends Snapshot {
         return this;
     }
 
+    /**
+     * Cut out specified element with offset.
+     *
+     * @param element WebElement to crop
+     * @param offsetX offsetX around element in px
+     * @param offsetY offsetY around element in px
+     * @return instance of type PageSnapshot
+     */
+    public PageSnapshot cutOut(WebElement element, int offsetX, int offsetY) {
+        try {
+            image = ImageProcessor.cutOut(image, new Coordinates(element, devicePixelRatio), offsetX, offsetY);
+        } catch (RasterFormatException rfe) {
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
+        }
+        return this;
+    }
+
+    /**
+     * Cut out specified element.
+     *
+     * @param element WebElement to crop
+     * @return instance of type PageSnapshot
+     */
+    public PageSnapshot cutOut(WebElement element) {
+        try {
+            image = ImageProcessor.cutOut(image, new Coordinates(element, devicePixelRatio), 0, 0);
+        } catch (RasterFormatException rfe) {
+            throw new ElementOutsideViewportException(ELEMENT_OUT_OF_VIEWPORT_EX_MESSAGE, rfe);
+        }
+        return this;
+    }
+
     @Override
     protected PageSnapshot self() {
         return this;

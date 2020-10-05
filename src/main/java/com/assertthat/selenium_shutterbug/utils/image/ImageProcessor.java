@@ -92,6 +92,13 @@ public class ImageProcessor {
         return sourceImage.getSubimage(coords.getX() - offsetX, coords.getY() - offsetY, coords.getWidth() + offsetX * 2, coords.getHeight() + offsetY * 2);
     }
 
+    public static BufferedImage cutOut(BufferedImage sourceImage, Coordinates coords, int offsetX, int offsetY) {
+        Graphics bg = sourceImage.getGraphics();
+        bg.setColor(Color.white);
+        bg.fillRect(coords.getX() - offsetX, coords.getY() - offsetY, coords.getScrollWidth() + offsetX * 2, coords.getScrollHeight() + offsetY * 2);
+        return sourceImage;
+    }
+
     public static BufferedImage addTitle(BufferedImage sourceImage, String title, Color color, Font textFont) {
         int textOffset = 5;
         BufferedImage combined = new BufferedImage(sourceImage.getWidth(), sourceImage.getHeight() + textFont.getSize(), BufferedImage.TYPE_INT_ARGB);
