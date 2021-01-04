@@ -839,8 +839,7 @@ public class Browser {
     }
 
     public void scrollToElement(By by) {
-        driver.findElement(by);
-        executeJsScript(SCROLL_INTO_VIEW_JS, by);
+        executeJsScript(SCROLL_INTO_VIEW_JS,  driver.findElement(by));
     }
 
     public void scrollToElementVerticalCentered(WebElement element) {
