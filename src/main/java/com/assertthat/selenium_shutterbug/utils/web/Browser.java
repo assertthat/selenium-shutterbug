@@ -368,7 +368,106 @@ public class Browser {
         return combinedImage;
     }
 
+    public BufferedImage takeFullElementScreenshotScroll(By element) {
+        Coordinates coordinates = getCoordinates(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = getElementScrollBarWidth(element);
+        final int scrollBarMaxHeight = getElementScrollBarHeight(element);
+
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxHeight < scrollableWidth)) {
+            elementHeight -= scrollBarMaxHeight;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(scrollableWidth,
+                scrollableHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        int horizontalIterations =
+                (int) Math.ceil((double) scrollableWidth / elementWidth);
+        int verticalIterations = (int) Math.ceil((double) scrollableHeight / elementHeight);
+        wait(beforeShootCondition, beforeShootTimeout);
+        outer_loop:
+        for (int j = 0; j < verticalIterations; j++) {
+
+            this.scrollElement(element, 0,
+                    j *
+                            elementHeight);
+            for (int i = 0; i < horizontalIterations; i++) {
+                this.scrollElement(element,
+                        i *
+                                elementWidth, j *
+                                elementHeight);
+                wait(betweenScrollTimeout);
+                BufferedImage image = takeFullPageElementScreenshot();
+                image = image.getSubimage(coordinates.getAbsoluteX(),
+                        coordinates.getAbsoluteY(),
+                        elementWidth,
+                        elementHeight);
+                g.drawImage(image, this.getElementCurrentScrollX(element),
+                        this.getElementCurrentScrollY(element), null);
+                if (scrollableWidth == image.getWidth(null) && scrollableHeight == image.getHeight(null)) {
+                    break outer_loop;
+                }
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
     public BufferedImage takeFullElementVerticalScreenshotScroll(WebElement element) {
+        Coordinates coordinates = getCoordinates(element);
+
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = getElementScrollBarWidth(element);
+        final int scrollBarMaxHeight = getElementScrollBarHeight(element);
+
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxHeight < scrollableWidth)) {
+            elementHeight -= scrollBarMaxHeight;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(elementWidth,
+                scrollableHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        int verticalIterations =
+                (int) Math.ceil(((double) scrollableHeight) / elementHeight);
+        BufferedImage image;
+        for (int j = 0; j < verticalIterations; j++) {
+            this.scrollElement(element, getElementCurrentScrollX(element),
+                    j *
+                            elementHeight);
+            wait(betweenScrollTimeout);
+            image = takeFullPageElementScreenshot();
+            image = image.getSubimage(coordinates.getAbsoluteX(),
+                    coordinates.getAbsoluteY(),
+                    elementWidth,
+                    elementHeight);
+
+            g.drawImage(image, 0, getElementCurrentScrollY(element),
+                    null);
+            if (scrollableHeight == image.getHeight(null)) {
+                break;
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeFullElementVerticalScreenshotScroll(By element) {
         Coordinates coordinates = getCoordinates(element);
 
         final int scrollableHeight = coordinates.getScrollHeight();
@@ -459,7 +558,83 @@ public class Browser {
         return combinedImage;
     }
 
+    public BufferedImage takeFullElementHorizontalScreenshotScroll(By element) {
+        Coordinates coordinates = getCoordinates(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = getElementScrollBarWidth(element);
+        final int scrollBarMaxHeight = getElementScrollBarHeight(element);
+
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxHeight < scrollableWidth)) {
+            elementHeight -= scrollBarMaxHeight;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(scrollableWidth,
+                elementHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+
+        int horizontalIterations =
+                (int) Math.ceil(((double) scrollableWidth) / elementWidth);
+        BufferedImage image;
+        for (int j = 0; j < horizontalIterations; j++) {
+            this.scrollElement(element,
+                    j *
+                            elementWidth, getElementCurrentScrollY(element));
+            wait(betweenScrollTimeout);
+            image = takeFullPageElementScreenshot();
+            image = image.getSubimage(coordinates.getAbsoluteX(),
+                    coordinates.getAbsoluteY(),
+                    elementWidth,
+                    elementHeight);
+
+            g.drawImage(image, getElementCurrentScrollX(element), 0,
+                    null);
+            if (scrollableWidth == image.getWidth(null)) {
+                break;
+            }
+        }
+        g.dispose();
+        return combinedImage;
+    }
+
     public BufferedImage takeElementViewportScreenshot(WebElement element) {
+        Coordinates coordinates = getCoordinates(element);
+        final int scrollableHeight = coordinates.getScrollHeight();
+        final int scrollableWidth = coordinates.getScrollWidth();
+        int elementWidth = coordinates.getWidth();
+        int elementHeight = coordinates.getHeight();
+        final int scrollBarMaxWidth = getElementScrollBarWidth(element);
+        final int scrollBarMaxHeight = getElementScrollBarHeight(element);
+
+        if (elementWidth < scrollableWidth || (elementHeight < scrollableHeight && elementWidth - scrollBarMaxHeight < scrollableWidth)) {
+            elementHeight -= scrollBarMaxHeight;
+        }
+        if (elementHeight < scrollableHeight) {
+            elementWidth -= scrollBarMaxWidth;
+        }
+        BufferedImage combinedImage = new BufferedImage(elementWidth,
+                elementHeight,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = combinedImage.createGraphics();
+        wait(betweenScrollTimeout);
+        BufferedImage image = takeFullPageElementScreenshot();
+        image = image.getSubimage(coordinates.getAbsoluteX(),
+                coordinates.getAbsoluteY(),
+                elementWidth,
+                elementHeight);
+        g.drawImage(image, 0, 0,
+                null);
+        g.dispose();
+        return combinedImage;
+    }
+
+    public BufferedImage takeElementViewportScreenshot(By element) {
         Coordinates coordinates = getCoordinates(element);
         final int scrollableHeight = coordinates.getScrollHeight();
         final int scrollableWidth = coordinates.getScrollWidth();
@@ -492,7 +667,6 @@ public class Browser {
 
 
     public BufferedImage takeFrameViewportScreenshot(Coordinates coordinates) {
-
         final int scrollableHeight = coordinates.getScrollHeight();
         final int scrollableWidth = coordinates.getScrollWidth();
         int elementWidth = coordinates.getWidth();
@@ -591,6 +765,14 @@ public class Browser {
         return (int) (Double.parseDouble(executeJsScript(Browser.ELEMENT_SCROLL_BAR_HEIGHT, element).toString()) * devicePixelRatio);
     }
 
+    public int getElementScrollBarWidth(By by) {
+        return (int) (Double.parseDouble(executeJsScript(Browser.ELEMENT_SCROLL_BAR_WIDTH, driver.findElement(by)).toString()) * devicePixelRatio);
+    }
+
+    public int getElementScrollBarHeight(By by) {
+        return (int) (Double.parseDouble(executeJsScript(Browser.ELEMENT_SCROLL_BAR_HEIGHT, driver.findElement(by)).toString()) * devicePixelRatio);
+    }
+
     public int getCurrentScrollY() {
         return (int) (Double.parseDouble(executeJsScript(Browser.CURRENT_SCROLL_Y_JS).toString()) * devicePixelRatio);
     }
@@ -601,6 +783,14 @@ public class Browser {
 
     public int getElementCurrentScrollY(WebElement element) {
         return (int) (Double.parseDouble(executeJsScript(Browser.ELEMENT_CURRENT_SCROLL_Y_JS, element).toString()) * devicePixelRatio);
+    }
+
+    public int getElementCurrentScrollX(By by){
+        return (int) (Double.parseDouble(executeJsScript(Browser.ELEMENT_CURRENT_SCROLL_X_JS, driver.findElement(by)).toString()) * devicePixelRatio);
+    }
+
+    public int getElementCurrentScrollY(By by) {
+        return (int) (Double.parseDouble(executeJsScript(Browser.ELEMENT_CURRENT_SCROLL_Y_JS, driver.findElement(by)).toString()) * devicePixelRatio);
     }
 
     public int getDocWidth() {
@@ -640,8 +830,17 @@ public class Browser {
                 devicePixelRatio);
     }
 
+    public Coordinates getCoordinates(By by) {
+       return getCoordinates(driver.findElement(by));
+    }
+
     public void scrollToElement(WebElement element) {
         executeJsScript(SCROLL_INTO_VIEW_JS, element);
+    }
+
+    public void scrollToElement(By by) {
+        driver.findElement(by);
+        executeJsScript(SCROLL_INTO_VIEW_JS, by);
     }
 
     public void scrollToElementVerticalCentered(WebElement element) {
@@ -659,6 +858,12 @@ public class Browser {
 
     public void scrollElement(WebElement element, int x, int y) {
         executeJsScript(SCROLL_ELEMENT, element, x / devicePixelRatio,
+                y / devicePixelRatio);
+    }
+
+
+    public void scrollElement(By by, int x, int y) {
+        executeJsScript(SCROLL_ELEMENT, driver.findElement(by), x / devicePixelRatio,
                 y / devicePixelRatio);
     }
 

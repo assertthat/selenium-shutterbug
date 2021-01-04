@@ -203,6 +203,19 @@ public class Shutterbug {
 
     /**
      * To be used when need to screenshot particular element.
+     *
+     * @param driver  WebDriver instance
+     * @param element By element locator
+     * @return ElementSnapshot instance
+     */
+    public static ElementSnapshot shootElement(WebDriver driver,
+                                               By element,
+                                               CaptureElement capture) {
+        return shootElement(driver, element, capture, true);
+    }
+
+    /**
+     * To be used when need to screenshot particular element.
      * Doesn't account for scrollable elements.
      *
      * @param driver              WebDriver instance
@@ -247,6 +260,39 @@ public class Shutterbug {
                 break;
             default:
                 elementSnapshot.setImage(browser.takeElementViewportScreenshot(element));
+        }
+        return elementSnapshot;
+    }
+
+    /**
+     * To be used when need to screenshot particular element.
+     * Can take  screenshots of scrollable elements if Capture type is supplied.
+     *
+     * @param driver              WebDriver instance
+     * @param by                  By element locator
+     * @param capture             Capture type
+     * @param useDevicePixelRatio whether to account for device pixel ratio
+     * @return ElementSnapshot instance
+     */
+    public static ElementSnapshot shootElement(WebDriver driver,
+                                               By by,
+                                               CaptureElement capture,
+                                               boolean useDevicePixelRatio) {
+        Browser browser = new Browser(driver, useDevicePixelRatio);
+        ElementSnapshot elementSnapshot = new ElementSnapshot(driver, browser.getDevicePixelRatio());
+        browser.scrollToElement(by);
+        switch (capture) {
+            case VERTICAL_SCROLL:
+                elementSnapshot.setImage(browser.takeFullElementVerticalScreenshotScroll(by));
+                break;
+            case HORIZONTAL_SCROLL:
+                elementSnapshot.setImage(browser.takeFullElementHorizontalScreenshotScroll(by));
+                break;
+            case FULL_SCROLL:
+                elementSnapshot.setImage(browser.takeFullElementScreenshotScroll(by));
+                break;
+            default:
+                elementSnapshot.setImage(browser.takeElementViewportScreenshot(by));
         }
         return elementSnapshot;
     }
