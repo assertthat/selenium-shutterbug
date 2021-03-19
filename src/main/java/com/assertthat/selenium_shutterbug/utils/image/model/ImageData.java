@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.DecimalFormat;
 
 @Getter
 public class ImageData {
@@ -55,7 +56,6 @@ public class ImageData {
                     output.setRGB(x, y, rgb1);
             }
         }
-
         FileUtil.writeImage(output, "png", new File(pathDifferenceImageFileName + ".png"));
     }
 
@@ -65,8 +65,14 @@ public class ImageData {
 
     private boolean equalsEachPixels(BufferedImage image, double deviation) {
         double p = calculatePixelsDifference(image);
-
-        return p == 0 || p <= deviation;
+        boolean areEqual =  p == 0 || p <= deviation;
+        if(!areEqual){
+            DecimalFormat df = new DecimalFormat("#");
+            df.setMaximumFractionDigits(8);
+            System.out.println("[INFO] Allowed deviation: " + df.format(deviation));
+            System.out.println("[INFO] Actual deviation: " + df.format(p));
+        }
+        return areEqual;
     }
 
     private double calculatePixelsDifference(BufferedImage image) {
