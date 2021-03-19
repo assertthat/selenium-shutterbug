@@ -100,12 +100,12 @@ Below are some basic examples of usage.
 
 ### Screenshots comparison
 
-- Compare screenshot taken with the expected one with specified deviation rate (for example 0.1 represents that if image differences are less than 10% the images will be considered to be equal):
+- Compare screenshot taken with the expected one with specified deviation rate (for example 0.1 represents that if image differences are less than 10% the images are considered to be equal):
 ```java
   Shutterbug.shootPage(driver).equals(otherImage,0.1);
 ```
-- Compare screenshot taken with the expected one with specified deviation rate and create new image with differences highlighted (for example 0.1 represents that if image differences are less than 10% the images will be considered to be equal and
- no resulting image with highlighted differences will be produced):
+- Compare screenshot taken with the expected one with specified deviation rate and create new image with differences highlighted (for example 0.1 represents that if image differences are less than 10% the images are considered to be equal and
+ no resulting image with highlighted differences produced):
 ```java
   Shutterbug.shootPage(driver).equalsWithDiff(otherImage,pathToNewImage,0.1);
 ```
