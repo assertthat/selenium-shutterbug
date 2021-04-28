@@ -37,7 +37,7 @@ The project is available in [Maven Central](http://search.maven.org/#search%7Cga
 <dependency>
     <groupId>com.assertthat</groupId>
     <artifactId>selenium-shutterbug</artifactId>
-    <version>1.3</version>
+    <version>1.5</version>
     <exclusions>
         <exclusion>
 	    <groupId>org.seleniumhq.selenium</groupId>
@@ -50,7 +50,7 @@ The project is available in [Maven Central](http://search.maven.org/#search%7Cga
 ##### Using Gradle
 
 ```
-compile ('com.assertthat:selenium-shutterbug:1.3') {
+compile ('com.assertthat:selenium-shutterbug:1.5') {
     exclude group: "org.seleniumhq.selenium", name: "selenium-java"
     }
 ```
