@@ -151,7 +151,9 @@ public class Browser {
         } else if (driver instanceof FirefoxDriver) {
             return takeFullPageScreenshotGeckoDriver();
         } else if (driver instanceof RemoteWebDriver) {
-            if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome") || ((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("MicrosoftEdge")) {
+            if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("chrome")
+                    || ((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("MicrosoftEdge")
+                    || ((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("msedge")) {
                 return takeFullPageScreenshotChromeCommand();
             } else if (((RemoteWebDriver) driver).getCapabilities().getBrowserName().equals("firefox")) {
                 return takeFullPageScreenshotGeckoDriver();
