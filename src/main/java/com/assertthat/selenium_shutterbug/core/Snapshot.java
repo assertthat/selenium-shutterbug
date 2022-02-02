@@ -58,6 +58,7 @@ public abstract class Snapshot<T extends Snapshot> {
      */
     public T withTitle(String title) {
         this.title = title;
+        image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         return self();
     }
 
@@ -220,9 +221,6 @@ public abstract class Snapshot<T extends Snapshot> {
         File screenshotFile = new File(location.toString(), fileName);
         if (!Files.exists(location)) {
             screenshotFile.mkdirs();
-        }
-        if (title != null && !title.isEmpty()) {
-            image = ImageProcessor.addTitle(image, title, Color.red, new Font("Serif", Font.BOLD, 20));
         }
         FileUtil.writeImage(image, EXTENSION, screenshotFile);
     }
