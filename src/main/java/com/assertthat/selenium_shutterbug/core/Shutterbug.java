@@ -27,6 +27,10 @@ public class Shutterbug {
 
     }
 
+    static {
+        System.setProperty("java.awt.headless", "true");
+    }
+
     /**
      * Make screenshot of the viewport only.
      * To be used when screenshotting the page
@@ -451,5 +455,9 @@ public class Shutterbug {
     public static PageSnapshot shootFrame(WebDriver driver, String frameId) {
         WebElement frame = driver.findElement(By.id(frameId));
         return shootFrame(driver, frame, CaptureElement.VIEWPORT, true);
+    }
+
+    public static Configurations configure() {
+        return new Configurations();
     }
 }
