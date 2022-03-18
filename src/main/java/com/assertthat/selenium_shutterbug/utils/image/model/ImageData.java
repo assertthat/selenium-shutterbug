@@ -1,16 +1,15 @@
 package com.assertthat.selenium_shutterbug.utils.image.model;
 
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
-import lombok.Getter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
 
-@Getter
 public class ImageData {
     private final int RED_RGB = new Color(255, 0, 0).getRGB();
+
     private final BufferedImage image;
     private final int width;
     private final int height;
@@ -19,6 +18,18 @@ public class ImageData {
         this.image = image;
         this.width = image.getWidth(null);
         this.height = image.getHeight(null);
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public boolean notEqualsDimensions(ImageData imageData) {
