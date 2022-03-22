@@ -8,26 +8,35 @@ package com.assertthat.selenium_shutterbug.utils.web;
 import com.assertthat.selenium_shutterbug.utils.file.FileUtil;
 import com.github.zafarkhaja.semver.Version;
 import com.google.common.collect.ImmutableMap;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.*;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.CommandInfo;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
+import org.openqa.selenium.remote.TracedCommandExecutor;
 import org.openqa.selenium.remote.http.HttpMethod;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -906,8 +915,14 @@ public class Browser {
         try {
             Method defineCommand = HttpCommandExecutor.class.getDeclaredMethod("defineCommand", String.class, CommandInfo.class);
             defineCommand.setAccessible(true);
-            defineCommand.invoke(((RemoteWebDriver) this.driver).getCommandExecutor(), name, info);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            CommandExecutor commandExecutor = ((RemoteWebDriver) this.driver).getCommandExecutor();
+            if (commandExecutor instanceof TracedCommandExecutor) {
+                Field delegateField = TracedCommandExecutor.class.getDeclaredField("delegate");
+                delegateField.setAccessible(true);
+                commandExecutor = (CommandExecutor) delegateField.get(commandExecutor);
+            }
+            defineCommand.invoke(commandExecutor, name, info);
+        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
     }
