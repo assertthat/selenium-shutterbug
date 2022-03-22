@@ -9,6 +9,8 @@ Selenium Shutterbug is a utility library written in Java for making screenshots 
 
 The idea behind the project is to make testers life easier by enabling them to create descriptive screenshots which, in some cases, could be directly attached to the bug reports or serve as a source of information about system state at a specific moment of time. 
 
+##### Selenium WebDriver version 4+ support starts from version 1.6
+
 Supported features: 
 
 - Capturing the entire page
