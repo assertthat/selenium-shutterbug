@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.assertthat</groupId>
     <artifactId>selenium-shutterbug</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
     <name>selenium-shutterbug</name>
     <description>Utility library to create customized screenshots using Selenium WebDriver and Java AWT</description>
     <url>http://www.assertthat.com</url>
@@ -24,7 +24,7 @@
         <url>https://github.com/assertthat/selenium-shutterbug</url>
         <connection>scm:git:git://github.com/assertthat/selenium-shutterbug.git</connection>
         <developerConnection>scm:git:git@github.com:assertthat/selenium-shutterbug.git</developerConnection>
-        <tag>v1.3</tag>
+        <tag>v1.6</tag>
   </scm>
     <developers>
         <developer>
