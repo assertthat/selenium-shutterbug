@@ -11,7 +11,28 @@ The idea behind the project is to make testers life easier by enabling them to c
 
 ##### Selenium WebDriver version 4+ support starts from version 1.6
 
-Supported features: 
+*Temporary workaround for Selenium v4+ in case of using `RemoteWebDriverBuilder`*
+
+Instead of:
+
+`
+WebDriver driver = RemoteWebDriver.builder().address("http://gridurl:4444").addAlternative(new ChromeOptions()).build();
+`
+
+use
+
+```
+URL remoteAddress = new URL("http://gridurl:4444/wd/hub");
+Tracer tracer = OpenTelemetryTracer.getInstance();
+ClientConfig config = ClientConfig.defaultConfig().baseUrl(remoteAddress);
+CommandExecutor executor = new HttpCommandExecutor(Collections.emptyMap(), config, new TracedHttpClient.Factory(tracer, org.openqa.selenium.remote.http.HttpClient.Factory.createDefault()));
+CommandExecutor executorTraced =  new TracedCommandExecutor(executor, tracer);
+WebDriver webDriver = new RemoteWebDriver(executorTraced, new ChromeOptions());
+```
+
+The reasoning is described in https://github.com/assertthat/selenium-shutterbug/issues/103
+
+#### Supported features: 
 
 - Capturing the entire page
 - Screenshot comparison (with diff highlighting)
