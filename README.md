@@ -3,8 +3,6 @@
 [![Build Status](https://travis-ci.org/assertthat/selenium-shutterbug.svg?branch=master)](https://travis-ci.org/assertthat/selenium-shutterbug)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.assertthat/selenium-shutterbug/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.assertthat/selenium-shutterbug)
 
-<a href="https://www.buymeacoffee.com/glibas" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
 ## Synopsis
 
 Selenium Shutterbug is a utility library written in Java for making screenshots using [Selenium WebDriver](http://www.seleniumhq.org/projects/webdriver/ "SeleniumHQ WebDriver page") and further customizing, comparing and processing them with the help of  [Java AWT](https://en.wikipedia.org/wiki/Abstract_Window_Toolkit "AWT wiki").
