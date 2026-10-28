@@ -91,7 +91,7 @@ public class PageSnapshot extends Snapshot {
      */
     public PageSnapshot highlightWithText(WebElement element, Color elementColor, int lineWidth, String text, Color textColor, Font textFont) {
         try {
-            highlight(element, elementColor, 0);
+            highlight(element, elementColor, lineWidth);
             Coordinates coords = new Coordinates(element, devicePixelRatio);
             image = ImageProcessor.addText(image, coords.getX(), coords.getY() - textFont.getSize() / 2, text, textColor, textFont);
         } catch (RasterFormatException rfe) {
